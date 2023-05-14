@@ -1,7 +1,7 @@
 package faang.school.servicetemplate.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.servicetemplate.ServiceTemplateApplication;
+import faang.school.achievementservice.AchievementServiceApplication;
 import faang.school.servicetemplate.config.ContainersEnvironment;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(
         classes = {
-                ServiceTemplateApplication.class
+                AchievementServiceApplication.class
         }
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

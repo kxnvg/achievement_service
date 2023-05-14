@@ -1,12 +1,12 @@
 package faang.school.servicetemplate.controller;
 
-import faang.school.servicetemplate.dto.CalculationResult;
-import faang.school.servicetemplate.dto.Error;
-import faang.school.servicetemplate.model.Calculation;
-import faang.school.servicetemplate.model.CalculationJpa;
-import faang.school.servicetemplate.model.CalculationType;
-import faang.school.servicetemplate.repository.CalculationJdbcRepository;
-import faang.school.servicetemplate.repository.CalculationJpaRepository;
+import faang.school.achievementservice.dto.CalculationResult;
+import faang.school.achievementservice.dto.Error;
+import faang.school.achievementservice.model.Calculation;
+import faang.school.achievementservice.model.CalculationJpa;
+import faang.school.achievementservice.model.CalculationType;
+import faang.school.achievementservice.repository.CalculationJdbcRepository;
+import faang.school.achievementservice.repository.CalculationJpaRepository;
 import faang.school.servicetemplate.util.BaseContextTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
