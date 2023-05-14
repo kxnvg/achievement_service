@@ -1,8 +1,8 @@
-package faang.school.servicetemplate.util;
+package faang.school.achievementservice.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.achievementservice.AchievementServiceApplication;
-import faang.school.servicetemplate.config.ContainersEnvironment;
+import faang.school.achievementservice.config.ContainersEnvironment;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

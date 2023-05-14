@@ -1,6 +1,6 @@
-package faang.school.servicetemplate.config;
+package faang.school.achievementservice.config;
 
-import faang.school.servicetemplate.containers.PostgresTestContainer;
+import faang.school.achievementservice.containers.PostgresTestContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;

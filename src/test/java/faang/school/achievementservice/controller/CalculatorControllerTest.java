@@ -1,4 +1,4 @@
-package faang.school.servicetemplate.controller;
+package faang.school.achievementservice.controller;
 
 import faang.school.achievementservice.dto.CalculationResult;
 import faang.school.achievementservice.dto.Error;
@@ -7,7 +7,7 @@ import faang.school.achievementservice.model.CalculationJpa;
 import faang.school.achievementservice.model.CalculationType;
 import faang.school.achievementservice.repository.CalculationJdbcRepository;
 import faang.school.achievementservice.repository.CalculationJpaRepository;
-import faang.school.servicetemplate.util.BaseContextTest;
+import faang.school.achievementservice.util.BaseContextTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

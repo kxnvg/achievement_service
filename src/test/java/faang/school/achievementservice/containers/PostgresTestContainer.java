@@ -1,4 +1,4 @@
-package faang.school.servicetemplate.containers;
+package faang.school.achievementservice.containers;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
