@@ -1,6 +1,5 @@
 package faang.school.achievement.client;
 
-
 import faang.school.achievement.config.context.UserContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -13,9 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(
-        classes = {
-                AchievementServiceApp.class
-        }
+        classes = {AchievementServiceApp.class}
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
