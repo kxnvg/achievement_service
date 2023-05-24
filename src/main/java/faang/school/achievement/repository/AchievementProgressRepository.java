@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,4 +26,6 @@ public interface AchievementProgressRepository extends CrudRepository<Achievemen
     """)
     @Modifying
     void createProgressIfNecessary(long userId, long achievementId);
+
+    List<AchievementProgress> findByUserId(long userId);
 }

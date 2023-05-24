@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserAchievementRepository extends CrudRepository<UserAchievement, Long> {
 
@@ -14,4 +16,6 @@ public interface UserAchievementRepository extends CrudRepository<UserAchievemen
             WHERE ua.userId = :userId AND ua.achievement.id = :achievementId
     """)
     boolean existsByUserIdAndAchievementId(long userId, long achievementId);
+
+    List<UserAchievement> findByUserId(long userId);
 }
