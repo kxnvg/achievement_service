@@ -10,7 +10,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableFeignClients("school.faang.achievement.client")
+@EnableFeignClients("faang.school.achievement.client")
 @EnableAsync
 @EnableRetry
 public class AchievementServiceApp {
