@@ -23,27 +23,23 @@ public class AchievementCache {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @PostConstruct
     public void initCache() {
 
         String hql = "SELECT DISTINCT a FROM Achievement a " +
-                "LEFT JOIN FETCH a.userAchievements ua "+
+                "LEFT JOIN FETCH a.userAchievements ua " +
                 "LEFT JOIN FETCH a.progresses p ";
         TypedQuery<Achievement> query = entityManager.createQuery(hql, Achievement.class);
         List<Achievement> achievements = query.getResultList();
 
         for (Achievement achievement : achievements) {
-           try {
+            try {
                 redisTemplate.opsForValue().set(achievement.getTitle(), objectMapper.writeValueAsString(achievement));
             } catch (JsonProcessingException e) {
-              throw new RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
-        System.out.println(get("First Achievement"));
     }
-
-
 
     public Achievement get(String title) {
         try {
