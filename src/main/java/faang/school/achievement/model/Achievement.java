@@ -5,18 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="achievement")
+@Table(name = "achievement")
 public class Achievement {
 
     @Id
@@ -34,10 +36,10 @@ public class Achievement {
     private Rarity rarity;
 
     @OneToMany(mappedBy = "achievement")
-    private List<UserAchievement> userAchievements;
+    private Set<UserAchievement> userAchievements;
 
     @OneToMany(mappedBy = "achievement")
-    private List<AchievementProgress> progresses;
+    private Set<AchievementProgress> progresses;
 
     @Column(name = "points", nullable = false)
     private long points;
