@@ -35,11 +35,11 @@ public class Achievement {
     @Enumerated(EnumType.ORDINAL)
     private Rarity rarity;
 
-    @OneToMany(mappedBy = "achievement")
-    private Set<UserAchievement> userAchievements;
+    @OneToMany(mappedBy = "achievement",fetch = FetchType.EAGER)
+    private List<UserAchievement> userAchievements;
 
-    @OneToMany(mappedBy = "achievement")
-    private Set<AchievementProgress> progresses;
+    @OneToMany(mappedBy = "achievement",fetch = FetchType.EAGER)
+    private List<AchievementProgress> progresses;
 
     @Column(name = "points", nullable = false)
     private long points;
