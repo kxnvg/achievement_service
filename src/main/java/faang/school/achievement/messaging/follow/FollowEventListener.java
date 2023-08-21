@@ -1,6 +1,5 @@
 package faang.school.achievement.messaging.follow;
 
-import faang.school.achievement.config.AsyncConfig;
 import faang.school.achievement.dto.follow.FollowEventDto;
 import faang.school.achievement.service.handler.EventHandler;
 import faang.school.achievement.util.JsonMapper;
@@ -11,7 +10,6 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 
 @Component
 @RequiredArgsConstructor
