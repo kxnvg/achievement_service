@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="achievement")
+@Table(name = "achievement")
 public class Achievement {
 
     @Id
@@ -33,10 +33,10 @@ public class Achievement {
     @Enumerated(EnumType.ORDINAL)
     private Rarity rarity;
 
-    @OneToMany(mappedBy = "achievement")
+    @OneToMany(mappedBy = "achievement", fetch = FetchType.EAGER)
     private List<UserAchievement> userAchievements;
 
-    @OneToMany(mappedBy = "achievement")
+    @OneToMany(mappedBy = "achievement", fetch = FetchType.EAGER)
     private List<AchievementProgress> progresses;
 
     @Column(name = "points", nullable = false)
@@ -51,4 +51,19 @@ public class Achievement {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return "Achievement{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", rarity=" + rarity +
+                ", userAchievements=" + userAchievements +
+                ", progresses=" + progresses +
+                ", points=" + points +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

@@ -49,4 +49,17 @@ public class AchievementProgress {
     public void increment() {
         currentPoints++;
     }
+
+    @Override
+    public String toString() {
+        return "AchievementProgress{" +
+                "id=" + id +
+                ", achievement=" + achievement.getTitle() +
+                ", userId=" + userId +
+                ", currentPoints=" + currentPoints +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", version=" + version +
+                '}';
+    }
 }
