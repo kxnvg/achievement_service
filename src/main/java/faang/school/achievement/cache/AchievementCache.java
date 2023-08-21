@@ -7,13 +7,10 @@ import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -28,11 +25,6 @@ public class AchievementCache {
     @PostConstruct
     public void initCache() {
 
-//        String hql = "SELECT DISTINCT a FROM Achievement a " +
-//                "LEFT JOIN FETCH a.userAchievements ua " +
-//                "LEFT JOIN FETCH a.progresses p ";
-//        TypedQuery<Achievement> query = entityManager.createQuery(hql, Achievement.class);
-//        List<Achievement> achievements = query.getResultList();
         Iterable<Achievement> achievements = achievementRepository.findAll();
         for (Achievement achievement : achievements) {
             try {
@@ -41,9 +33,6 @@ public class AchievementCache {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println(get("First Achievement"));
-//        System.out.println(get("Second Achievement"));
-//        System.out.println(get("Third Achievement"));
     }
 
     public Achievement get(String title) {
