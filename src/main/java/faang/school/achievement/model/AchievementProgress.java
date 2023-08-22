@@ -1,22 +1,26 @@
 package faang.school.achievement.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name="user_achievement_progress")
-public class AchievementProgress {
+public class AchievementProgress implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +28,7 @@ public class AchievementProgress {
 
     @ManyToOne
     @JoinColumn(name = "achievement_id", nullable = false)
+    @JsonBackReference
     private Achievement achievement;
 
     @Column(name = "user_id", nullable = false)

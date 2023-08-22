@@ -8,6 +8,8 @@ CREATE TABLE achievement (
     updated_at timestamptz DEFAULT current_timestamp
 );
 
+CREATE INDEX title_idx ON achievement (title);
+
 CREATE TABLE user_achievement (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY UNIQUE,
     user_id bigint NOT NULL,
@@ -33,3 +35,7 @@ CREATE TABLE user_achievement_progress (
 );
 
 CREATE UNIQUE INDEX user_achievement_progress_idx ON user_achievement_progress (user_id, achievement_id);
+
+INSERT INTO achievement (title, description, rarity, points)
+VALUES
+    ('Писатель', 'Писатель', 1, 10);
