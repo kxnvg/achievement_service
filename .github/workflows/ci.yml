@@ -25,6 +25,8 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+        volumes:
+          - ./src/test/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
 
     steps:
       - name: Checkout
