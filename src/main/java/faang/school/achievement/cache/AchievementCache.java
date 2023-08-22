@@ -4,6 +4,7 @@ import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Scope("singleton")
 public class AchievementCache {
     private final AchievementRepository achievementRepository;
     private Map<String, Achievement> achievements;
@@ -23,6 +25,6 @@ public class AchievementCache {
     @PostConstruct
     private void initAchievements() {
         achievements = achievementRepository.findAll().stream()
-                .collect(Collectors.toMap(Achievement::getTitle, Function.identity()));
+                .collect(Collectors.toUnmodifiableMap(Achievement::getTitle, Function.identity()));
     }
 }

@@ -3,14 +3,14 @@ package faang.school.achievement.cache;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.repository.AchievementRepository;
+import faang.school.achievement.testconfig.TestContainerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,14 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @Testcontainers
+@ContextConfiguration(classes = TestContainerConfig.class)
 public class AchievementCacheTest {
-    @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new
-            PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"))
-            .withDatabaseName("mydb")
-            .withUsername("myuser")
-            .withPassword("mypassword")
-            .withInitScript("init.sql");
+    @Autowired
+    private PostgreSQLContainer<?> postgreSQLContainer;
     @Autowired
     private AchievementRepository achievementRepository;
     @Autowired
