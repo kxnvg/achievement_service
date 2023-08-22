@@ -21,11 +21,8 @@ public class FollowEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         log.info("FollowEventListener has received a message: " + message.toString());
-        try {
-            var followEventDto = jsonMapper.toObject(message.toString(), FollowEventDto.class);
-            handlers.forEach(handler -> handler.handle(followEventDto));
-        } catch (InstantiationException | IllegalAccessException e) {
-            log.error("Error with parsing in FollowEventListener: " + e.getMessage());
-        }
+        jsonMapper.toObject(message.toString(), FollowEventDto.class).ifPresent(
+                (followEventDto) -> handlers.forEach(handler -> handler.handle(followEventDto))
+        );
     }
 }
