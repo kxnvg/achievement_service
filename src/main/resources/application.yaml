@@ -38,7 +38,10 @@ writer-achievement:
     corePoolSize: 4
 
 achievements:
-  writer_achievement: "Писатель"
+  writer_achievement:
+    name: "Писатель"
+    target: 100
+
 
 
 server:

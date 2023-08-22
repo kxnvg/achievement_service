@@ -38,4 +38,4 @@ CREATE UNIQUE INDEX user_achievement_progress_idx ON user_achievement_progress (
 
 INSERT INTO achievement (title, description, rarity, points)
 VALUES
-    ('Писатель', 'Писатель', 1, 10);
+    ('Писатель', 'Писатель', 1, 100);

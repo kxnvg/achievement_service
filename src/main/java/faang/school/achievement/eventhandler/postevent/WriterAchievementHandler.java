@@ -17,7 +17,7 @@ public class WriterAchievementHandler extends PostEventHandler {
 
     private final AchievementService achievementService;
 
-    @Value("${achievements.writer_achievement}")
+    @Value("${achievements.writer_achievement.name}")
     private String ACHIEVEMENT_NAME;
 
     @SneakyThrows
