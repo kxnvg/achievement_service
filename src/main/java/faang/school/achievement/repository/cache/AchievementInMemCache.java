@@ -1,18 +1,20 @@
-package faang.school.achievement.repository;
+package faang.school.achievement.repository.cache;
 
 import faang.school.achievement.model.Achievement;
+import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
 @Component
 @RequiredArgsConstructor
-public class AchievementCache {
+public class AchievementInMemCache implements AchievementCache{
     private final AchievementRepository achievementRepository;
     private Map<String, Achievement> achievements;
 
@@ -22,7 +24,7 @@ public class AchievementCache {
                 .collect(Collectors.toMap(Achievement::getTitle, Function.identity()));
     }
 
-    public Achievement getAchievement(String title) {
-        return achievements.get(title);
+    public Optional<Achievement> getAchievement(String title) {
+        return Optional.of(achievements.get(title));
     }
 }
