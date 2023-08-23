@@ -23,6 +23,7 @@ public class FollowEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         log.info("FollowEventListener has received a message: " + message.toString());
+
         try {
             var followEventDto = jsonMapper.toObject(message.toString(), FollowEventDto.class);
             handlers.forEach(handler -> handler.handle(followEventDto));
