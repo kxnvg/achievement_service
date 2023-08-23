@@ -42,3 +42,6 @@ event-handler-thread-pool:
   maxPoolSize: 4
   corePoolSize: 4
   threadNamePrefix: "poolThread-"
+
+achievements:
+  celebrity_achievement: "Знаменитость"
