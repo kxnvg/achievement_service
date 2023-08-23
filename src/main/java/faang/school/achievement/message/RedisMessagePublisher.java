@@ -2,26 +2,20 @@ package faang.school.achievement.message;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class RedisMessagePublisher implements MessagePublisher {
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    @Autowired
-    private ChannelTopic topic;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisMessagePublisher() {
-    }
-
-    public RedisMessagePublisher( RedisTemplate<String, Object> redisTemplate, ChannelTopic topic) {
+    @Autowired
+    public RedisMessagePublisher(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.topic = topic;
     }
 
-    public void publish(String message) {
-        redisTemplate.convertAndSend(topic.getTopic(), message);
+    @Override
+    public void publish(String topic, Object message) {
+        redisTemplate.convertAndSend(topic, message);
     }
 }
