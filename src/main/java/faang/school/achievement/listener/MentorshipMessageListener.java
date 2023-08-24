@@ -22,6 +22,6 @@ public class MentorshipMessageListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         MentorshipEventDto eventDto = jsonObjectMapper.readValue(message.getBody(), MentorshipEventDto.class);
-        handlers.forEach(handler -> handler.handler(eventDto));
+        handlers.forEach(h -> h.handler(eventDto));
     }
 }
