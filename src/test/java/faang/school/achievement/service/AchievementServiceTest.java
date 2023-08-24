@@ -179,7 +179,7 @@ class AchievementServiceTest {
     void getAchievementInformationTest() {
         when(achievementRepository.findById(2L)).thenReturn(Optional.of(firstAchievement));
 
-        AchievementDto result = achievementService.getAchievementInformation(2);
+        AchievementDto result = achievementService.getAchievementById(2);
 
         assertEquals(firstAchievementDto, result);
     }

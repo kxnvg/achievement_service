@@ -16,6 +16,8 @@ import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,10 +37,14 @@ public class AchievementService {
     private final AchievementMapper achievementMapper;
     private final UserAchievementMapper userAchievementMapper;
 
-    public AchievementDto getAchievementInformation(long id) {
+    public AchievementDto getAchievementById(long id) {
         Achievement achievement = achievementRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("There is no achievement with id: %d", id)));
         return achievementMapper.toAchievementDto(achievement);
+    }
+
+    public Page<Achievement> getAllAchievements(Pageable pageable) {
+        return achievementRepository.findAll(pageable);
     }
 
     public List<UserAchievementDto> getUserAchievements(long userId) {
