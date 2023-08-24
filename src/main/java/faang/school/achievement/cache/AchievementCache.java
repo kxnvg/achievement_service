@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,8 +19,6 @@ public class AchievementCache {
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
     private final AchievementRepository achievementRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @PostConstruct
     public void initCache() {
@@ -35,9 +33,15 @@ public class AchievementCache {
         }
     }
 
-    public Achievement get(String title) {
+    public Optional<Achievement> get(String title) {
         try {
-            return objectMapper.readValue(redisTemplate.opsForValue().get(title), Achievement.class);
+            String achievementJson = redisTemplate.opsForValue().get(title);
+            if (achievementJson != null) {
+                Achievement achievement = objectMapper.readValue(achievementJson, Achievement.class);
+                return Optional.of(achievement);
+            } else {
+                return achievementRepository.findByTitle(title);
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
