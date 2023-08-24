@@ -23,10 +23,10 @@ public class AchievementEventPublisher {
     private String achievementTopicName;
 
     public void publishMessage(AchievementEventDto event) {
-        log.info("Achievement event sending with achievementId: {}, receiverId: {}, has been sent",
-                event.getAchievementId(), event.getReceiverId());
-
         String json = mapper.writeValueAsString(event);
         redisTemplate.convertAndSend(achievementTopicName, json);
+
+        log.info("Achievement event sending with achievementId: {}, receiverId: {}, has been sent",
+                event.getAchievementId(), event.getReceiverId());
     }
 }
