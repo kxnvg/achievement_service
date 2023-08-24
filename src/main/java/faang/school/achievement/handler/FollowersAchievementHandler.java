@@ -29,7 +29,7 @@ public class FollowersAchievementHandler extends FollowerEventHandler {
         long userId = event.getFolloweeId();
 
         if (!achievementService.hasAchievement(achievement, userId)) {
-            AchievementProgress userAchievementProgress = achievementService.getUserProgressByAchievementAndUserId(achievement, userId);
+            AchievementProgress userAchievementProgress = achievementService.getUserProgressByAchievementAndUserId(achievement.getId(), userId);
             userAchievementProgress.increment();
             achievementService.addAchievementToUserIfEnoughPoints(userAchievementProgress, achievement, userId);
         }

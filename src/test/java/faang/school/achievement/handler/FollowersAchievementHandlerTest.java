@@ -70,7 +70,7 @@ class FollowersAchievementHandlerTest {
                 .thenReturn(achievement);
         when(achievementService.hasAchievement(achievement, 1))
                 .thenReturn(false);
-        when(achievementService.getUserProgressByAchievementAndUserId(achievement, 1))
+        when(achievementService.getUserProgressByAchievementAndUserId(1, 1))
                 .thenReturn(achievementProgress);
 
         followersAchievementHandler.handle(followerEventDto);
@@ -79,7 +79,7 @@ class FollowersAchievementHandlerTest {
 
         verify(achievementCache).get("subscribers");
         verify(achievementService).hasAchievement(achievement, 1);
-        verify(achievementService).getUserProgressByAchievementAndUserId(achievement, 1);
+        verify(achievementService).getUserProgressByAchievementAndUserId(1, 1);
         verify(achievementService).addAchievementToUserIfEnoughPoints(achievementProgress, achievement, 1);
     }
 }
