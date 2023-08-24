@@ -1,5 +1,6 @@
 package faang.school.achievement.config;
 
+import faang.school.achievement.messaging.invitation.InvitationListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -20,6 +22,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopic;
+    @Value("${spring.data.redis.channels.invitation_channel.name}")
+    private String invitationTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -39,14 +43,24 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter invitationListener(InvitationListener invitationListener) {
+        return new MessageListenerAdapter(invitationListener);
+    }
+    @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerTopic);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    ChannelTopic invitationTopic() {
+        return new ChannelTopic(invitationTopic);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter invitationListener) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(invitationListener, invitationTopic());
         return container;
     }
 }
