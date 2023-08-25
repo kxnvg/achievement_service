@@ -26,7 +26,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopic;
     @Value("${spring.data.redis.channels.invitation_channel.name}")
-    private String invitationTopic;
+    private String stageInvitationTopic;
     private final FollowEventListener followEventListener;
 
     @Bean
@@ -56,8 +56,8 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic invitationTopic() {
-        return new ChannelTopic(invitationTopic);
+    ChannelTopic stageInvitationTopic() {
+        return new ChannelTopic(stageInvitationTopic);
     }
 
     @Bean
@@ -65,7 +65,7 @@ public class RedisConfig {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
-        container.addMessageListener(invitationListener, invitationTopic());
+        container.addMessageListener(invitationListener, stageInvitationTopic());
         return container;
     }
 }
