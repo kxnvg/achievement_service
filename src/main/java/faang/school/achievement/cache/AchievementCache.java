@@ -36,14 +36,10 @@ public class AchievementCache {
     public Optional<Achievement> get(String title) {
         try {
             String achievementJson = redisTemplate.opsForValue().get(title);
-            if (achievementJson != null) {
-                Achievement achievement = objectMapper.readValue(achievementJson, Achievement.class);
-                return Optional.of(achievement);
-            } else {
-                return achievementRepository.findByTitle(title);
-            }
+            Achievement achievement = objectMapper.readValue(achievementJson, Achievement.class);
+            return Optional.of(achievement);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return Optional.empty();
         }
     }
 }
