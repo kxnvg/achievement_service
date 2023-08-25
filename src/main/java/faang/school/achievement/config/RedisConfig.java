@@ -1,5 +1,7 @@
 package faang.school.achievement.config;
 
+import faang.school.achievement.messaging.follow.FollowEventListener;
+import lombok.RequiredArgsConstructor;
 import faang.school.achievement.messaging.invitation.InvitationListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -24,6 +27,7 @@ public class RedisConfig {
     private String followerTopic;
     @Value("${spring.data.redis.channels.invitation_channel.name}")
     private String invitationTopic;
+    private final FollowEventListener followEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -60,6 +64,7 @@ public class RedisConfig {
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter invitationListener) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
         container.addMessageListener(invitationListener, invitationTopic());
         return container;
     }
