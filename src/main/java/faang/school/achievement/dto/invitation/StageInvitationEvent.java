@@ -5,9 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class InvitationEvent {
-    Long senderId;
-    Long receiverId;
+public class StageInvitationEvent {
+    Long authorId;
+    Long invitedId;
     Long projectId;
     LocalDateTime timestamp;
 }
