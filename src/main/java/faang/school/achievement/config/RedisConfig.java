@@ -3,6 +3,7 @@ package faang.school.achievement.config;
 import faang.school.achievement.messaging.invitation.InvitationListener;
 import faang.school.achievement.messaging.follow.FollowEventListener;
 import lombok.RequiredArgsConstructor;
+import faang.school.achievement.messaging.invitation.InvitationListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,15 +20,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
+    private final FollowEventListener followEventListener;
+    private final InvitationListener invitationListener;
+
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopic;
-    private final FollowEventListener followEventListener;
     @Value("${spring.data.redis.channels.invitation_channel.name}")
     private String invitationTopic;
+    private String stageInvitationTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -56,16 +60,16 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic invitationTopic() {
-        return new ChannelTopic(invitationTopic);
+    ChannelTopic stageInvitationTopic() {
+        return new ChannelTopic(stageInvitationTopic);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter invitationListener) {
+    RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
-        container.addMessageListener(invitationListener, invitationTopic());
+        container.addMessageListener(new MessageListenerAdapter(invitationListener), stageInvitationTopic());
         return container;
     }
 }

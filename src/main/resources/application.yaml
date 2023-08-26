@@ -47,3 +47,4 @@ event-handler-thread-pool:
 
 achievements:
   celebrity_achievement: "Знаменитость"
+  organizer: "Организатор"
