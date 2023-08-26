@@ -1,6 +1,7 @@
 package faang.school.achievement.config;
 
 import faang.school.achievement.messaging.follow.FollowEventListener;
+import faang.school.achievement.messaging.follow.Mentorship.MentorshipEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopic;
     private final FollowEventListener followEventListener;
+    private final MentorshipEventListener mentorshipEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -49,10 +51,16 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic MentorshipEvenTopic() {
+        return new ChannelTopic("MentorshipEvent");
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
+        container.addMessageListener(new MessageListenerAdapter(mentorshipEventListener), MentorshipEvenTopic());
         return container;
     }
 }
