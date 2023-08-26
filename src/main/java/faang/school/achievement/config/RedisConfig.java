@@ -1,9 +1,8 @@
 package faang.school.achievement.config;
 
-import faang.school.achievement.messaging.invitation.InvitationListener;
 import faang.school.achievement.messaging.follow.FollowEventListener;
-import lombok.RequiredArgsConstructor;
 import faang.school.achievement.messaging.invitation.InvitationListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopic;
     @Value("${spring.data.redis.channels.invitation_channel.name}")
-    private String invitationTopic;
     private String stageInvitationTopic;
 
     @Bean
@@ -50,10 +48,6 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public MessageListenerAdapter invitationListener(InvitationListener invitationListener) {
-        return new MessageListenerAdapter(invitationListener);
-    }
     @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerTopic);
