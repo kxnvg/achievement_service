@@ -1,7 +1,7 @@
 package faang.school.achievement.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.subscriber.InviteEventListener;
+import faang.school.achievement.listener.InviteEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +22,8 @@ public class RedisConfig {
     private String invitationTopicName;
 
     @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Bean
     MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new InviteEventListener());
+        return new MessageListenerAdapter(new InviteEventListener(new ObjectMapper()));
     }
 
     @Bean

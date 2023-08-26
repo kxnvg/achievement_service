@@ -1,4 +1,4 @@
-package faang.school.achievement.subscriber.event;
+package faang.school.achievement.listener.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
