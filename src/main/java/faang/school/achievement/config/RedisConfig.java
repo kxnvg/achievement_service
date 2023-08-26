@@ -19,6 +19,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
+    private final FollowEventListener followEventListener;
+    private final InvitationListener invitationListener;
+
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -27,7 +30,6 @@ public class RedisConfig {
     private String followerTopic;
     @Value("${spring.data.redis.channels.invitation_channel.name}")
     private String stageInvitationTopic;
-    private final FollowEventListener followEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -45,11 +47,6 @@ public class RedisConfig {
 
         return redisTemplate;
     }
-
-    @Bean
-    public MessageListenerAdapter invitationListener(InvitationListener invitationListener) {
-        return new MessageListenerAdapter(invitationListener);
-    }
     @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerTopic);
@@ -61,11 +58,11 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter invitationListener) {
+    RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
-        container.addMessageListener(invitationListener, stageInvitationTopic());
+        container.addMessageListener(new MessageListenerAdapter(invitationListener), stageInvitationTopic());
         return container;
     }
 }
