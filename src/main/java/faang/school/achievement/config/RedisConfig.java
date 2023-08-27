@@ -24,7 +24,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopic;
-    private final FollowEventListener followEventListener;
+    @Value("${spring.data.redis.channels.achievement_topic.name}")
+    private String achievementTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -49,10 +50,22 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    ChannelTopic achievementTopic() {
+        return new ChannelTopic(achievementTopic);
+    }
+
+    @Bean
+    public MessageListenerAdapter followEventAdapter(FollowEventListener followEventListener) {
+        return new MessageListenerAdapter(followEventListener);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(
+            MessageListenerAdapter followEventAdapter
+    ) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
+        container.addMessageListener(followEventAdapter, followerTopic());
         return container;
     }
 }
