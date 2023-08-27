@@ -25,6 +25,8 @@ spring:
         achievement: achievement_channel
         follower_channel:
           name: follower_channel
+        mentorship_even_topic:
+          name: mentorship_even_topic
 
 server:
   port: 8085
@@ -45,3 +47,4 @@ event-handler-thread-pool:
 
 achievements:
   celebrity_achievement: "Знаменитость"
+  sensey_achievement: "Сенсей"

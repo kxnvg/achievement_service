@@ -27,6 +27,8 @@ public class RedisConfig {
     private String followerTopic;
     private final FollowEventListener followEventListener;
     private final MentorshipEventListener mentorshipEventListener;
+    @Value("${spring.data.redis.channels.mentorship_even_topic.name}")
+    private String mentorshipEventTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -51,8 +53,8 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic MentorshipEvenTopic() {
-        return new ChannelTopic("MentorshipEvent");
+    ChannelTopic MentorshipEventTopic() {
+        return new ChannelTopic(mentorshipEventTopic);
     }
 
     @Bean
@@ -60,7 +62,7 @@ public class RedisConfig {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
-        container.addMessageListener(new MessageListenerAdapter(mentorshipEventListener), MentorshipEvenTopic());
+        container.addMessageListener(new MessageListenerAdapter(mentorshipEventListener), MentorshipEventTopic());
         return container;
     }
 }
