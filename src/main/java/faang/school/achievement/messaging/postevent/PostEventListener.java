@@ -1,7 +1,7 @@
 package faang.school.achievement.messaging.postevent;
 
 import faang.school.achievement.dto.post.PostEvent;
-import faang.school.achievement.eventhandler.postevent.PostEventHandler;
+import faang.school.achievement.eventhandler.EventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class PostEventListener {
 
-    private final List<PostEventHandler> postEventHandlers;
+    private final List<EventHandler<PostEvent>> postEventHandlers;
 
     @KafkaListener(topics = "post-publication")
     public void listen(PostEvent event) {

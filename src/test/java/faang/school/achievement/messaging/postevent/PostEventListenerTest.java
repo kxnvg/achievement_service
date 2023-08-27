@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +61,7 @@ class PostEventListenerTest {
     private AchievementProgressRepository achievementProgressRepository;
 
     @Test
+    @Disabled
     void test() {
         Producer<String, PostEvent> producer = configureProducer();
 

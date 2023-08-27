@@ -1,6 +1,7 @@
 package faang.school.achievement.eventhandler.postevent;
 
 import faang.school.achievement.dto.post.PostEvent;
+import faang.school.achievement.eventhandler.EventHandler;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class WriterAchievementHandler extends PostEventHandler {
+public class WriterAchievementHandler implements EventHandler<PostEvent> {
 
     private final AchievementService achievementService;
 
