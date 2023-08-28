@@ -11,7 +11,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@PropertySource("classpath:resource_achievement/achievement.properties")
+@PropertySource(value = "classpath:resource_achievement/achievement.properties", encoding = "UTF-8")
 @EnableFeignClients("faang.school.achievement.client")
 @EnableAsync
 @EnableRetry

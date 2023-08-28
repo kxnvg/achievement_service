@@ -24,7 +24,7 @@ public class AchievementProgressService {
     }
 
     @Transactional
-    public void updateProgress(AchievementProgress achievementProgress) {
-        achievementProgressRepository.save(achievementProgress);
+    public AchievementProgress updateProgress(AchievementProgress achievementProgress) {
+        return achievementProgressRepository.save(achievementProgress);
     }
 }
