@@ -2,7 +2,7 @@ package faang.school.achievement.achievementHandler;
 
 import faang.school.achievement.dto.invitation.StageInvitationEvent;
 
-public interface EventHandler {
+public interface EventHandler<T> {
 
-    void process(StageInvitationEvent event);
+    void process(T event);
 }
