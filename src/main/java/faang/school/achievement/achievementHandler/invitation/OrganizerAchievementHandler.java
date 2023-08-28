@@ -9,11 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrganizerAchievementHandler extends StageInvitationAchievement {
 
-    public OrganizerAchievementHandler(AchievementRepository repository,
-                                       AchievementService service,
+    public OrganizerAchievementHandler(AchievementService service,
                                        AchievementInMemCache cache,
                                        @Value("${achievement.organizer}") String achievementTitle) {
-        super(repository, service, cache, achievementTitle);
+        super(service, cache, achievementTitle);
     }
 }
 

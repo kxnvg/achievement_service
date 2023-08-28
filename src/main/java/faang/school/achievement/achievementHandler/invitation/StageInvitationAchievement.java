@@ -3,7 +3,6 @@ package faang.school.achievement.achievementHandler.invitation;
 import faang.school.achievement.achievementHandler.EventHandler;
 import faang.school.achievement.dto.invitation.StageInvitationEvent;
 import faang.school.achievement.model.Achievement;
-import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.cache.AchievementInMemCache;
 import faang.school.achievement.service.handler.AchievementService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.scheduling.annotation.Async;
 
 @RequiredArgsConstructor
 public abstract class StageInvitationAchievement implements EventHandler<StageInvitationEvent> {
-    private final AchievementRepository repository;
     private final AchievementService service;
     private final AchievementInMemCache cache;
     private final String achievementTitle;
