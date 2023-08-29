@@ -1,10 +1,7 @@
 package faang.school.achievement.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -51,8 +48,4 @@ public class Achievement {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public void setRarity(Rarity rarity) {
-        this.rarity = rarity;
-    }
 }

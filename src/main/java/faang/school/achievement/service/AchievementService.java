@@ -28,15 +28,14 @@ public class AchievementService {
     private final List<DtoAchievement> dtoAchievements;
 
     public List<DtoAchievement> allAchievements(DtoFilterAchievement filters) {
+        dtoAchievements.clear();
         achievementRepository.findAll().forEach(achievement -> dtoAchievements.add(achievementMapper.achievementToDto(achievement)));
-        return achievementFilters.stream().filter(filter -> filter.isApplicable(filters)).flatMap(filter -> filter.apply(dtoAchievements.stream(), filters))
-                .toList();
+        return achievementFilters.stream().filter(filter -> filter.isApplicable(filters)).flatMap(filter -> filter.apply(dtoAchievements.stream(), filters)).toList();
     }
 
     public List<DtoAchievement> userAchievement() {
         long id = userContext.getUserId();
-        return userAchievementRepository.findByUserId(id).stream().map(userAchievement ->
-                achievementMapper.achievementToDto(userAchievement.getAchievement())).toList();
+        return userAchievementRepository.findByUserId(id).stream().map(userAchievement -> achievementMapper.achievementToDto(userAchievement.getAchievement())).toList();
     }
 
     public DtoAchievement getAchievement(long id) {

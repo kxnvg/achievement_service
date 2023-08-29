@@ -15,6 +15,6 @@ public class FilterAchievementRarity implements AchievementFilter {
 
     @Override
     public Stream<DtoAchievement> apply(Stream<DtoAchievement> achievements, DtoFilterAchievement filters) {
-        return achievements.filter(rarity -> rarity.getRarity().equals(filters.getRarity()));
+        return achievements.filter(rarity -> rarity.getRarity().name().equals(filters.getRarity()));
     }
 }
