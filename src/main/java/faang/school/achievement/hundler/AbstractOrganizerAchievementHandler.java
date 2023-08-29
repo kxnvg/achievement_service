@@ -43,7 +43,7 @@ public abstract class AbstractOrganizerAchievementHandler implements EventHandle
     }
 
     private void giveAchievement(InviteSentEventDto inviteSentEvent, Achievement achievement, AchievementProgress progress) {
-        if (progress.getCurrentPoints() >= achievement.getPoints()) {
+        if (progress.getCurrentPoints() == achievement.getPoints()) {
             lock.lock();
             try {
                 UserAchievement userAchievement = UserAchievement.builder()
@@ -51,7 +51,7 @@ public abstract class AbstractOrganizerAchievementHandler implements EventHandle
                         .userId(inviteSentEvent.getAuthorId())
                         .build();
 
-                if (userAchievementService.hasAchievement(achievement.getId(), inviteSentEvent.getAuthorId())) {
+                if (!userAchievementService.hasAchievement(achievement.getId(), inviteSentEvent.getAuthorId())) {
                     userAchievementService.giveAchievement(userAchievement);
                 }
             } finally {
