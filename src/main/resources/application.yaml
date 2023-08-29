@@ -26,6 +26,13 @@ spring:
         follower: follower_channel
         invite: invitation_channel
 
+  async_config:
+    core_pool_size: 5
+    max_pool_size: 10
+    queue_capacity: 50
+    thread_name_prefix: AsyncTaskThread
+
+
 server:
   port: 8085
 
