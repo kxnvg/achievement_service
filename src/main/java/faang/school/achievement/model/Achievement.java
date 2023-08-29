@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="achievement")
+@Table(name = "achievement")
 public class Achievement {
 
     @Id
@@ -30,7 +30,7 @@ public class Achievement {
     private String description;
 
     @Column(name = "rarity", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Rarity rarity;
 
     @OneToMany(mappedBy = "achievement")
@@ -51,4 +51,8 @@ public class Achievement {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void setRarity(Rarity rarity) {
+        this.rarity = rarity;
+    }
 }

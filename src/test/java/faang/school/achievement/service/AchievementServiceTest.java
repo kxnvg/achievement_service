@@ -12,18 +12,17 @@ import faang.school.achievement.mapper.AchievementProgressMapper;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.Rarity;
+import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,36 +42,16 @@ class AchievementServiceTest {
     private AchievementProgressRepository achievementProgressRepository;
     private final AchievementProgressMapper achievementProgressMapper = AchievementProgressMapper.INSTANCE;
     private final AchievementMapper achievementMapper = AchievementMapper.INSTANCE;
-    @Mock
-    private final List<DtoAchievement> dtoAchievements = new ArrayList<>();
     @InjectMocks
     private AchievementService achievementService;
-    DtoAchievement achievement1 = new DtoAchievement();
-    DtoAchievement achievement2 = new DtoAchievement();
-    DtoAchievement achievement3 = new DtoAchievement();
+    DtoAchievement achievement1;
+    DtoAchievement achievement2;
+    DtoAchievement achievement3;
     List<DtoAchievement> value;
-
-    @BeforeEach
-    void setup() {
-        achievement1.setTitle("tomato");
-        achievement1.setId(1L);
-        achievement1.setDescription("tomatos");
-        achievement1.setRarity(Rarity.EPIC);
-
-        achievement2.setTitle("tiger");
-        achievement2.setId(2L);
-        achievement2.setDescription("tigers");
-        achievement2.setRarity(Rarity.LEGENDARY);
-
-        achievement3.setTitle("bear");
-        achievement3.setId(3L);
-        achievement3.setDescription("bears");
-        achievement3.setRarity(Rarity.RARE);
-        value = List.of(achievement1, achievement2, achievement3);
-    }
 
     @Test
     void allAchievements() {
+        createAchievementDto();
         DtoFilterAchievement filters = new DtoFilterAchievement();
         filters.setTitle("tomato");
         AchievementService service = new AchievementService(userContext, achievementRepository, userAchievementRepository, achievementProgressRepository,
@@ -87,9 +66,15 @@ class AchievementServiceTest {
 
     @Test
     void userAchievement() {
+        createAchievementDto();
+        UserAchievement userAchievement1 = UserAchievement.builder().achievement(achievementMapper.dtoToAchievement(achievement1)).build();
+        UserAchievement userAchievement2 = UserAchievement.builder().achievement(achievementMapper.dtoToAchievement(achievement2)).build();
         when(userContext.getUserId()).thenReturn(1L);
-        achievementService.userAchievement();
+        when(userAchievementRepository.findByUserId(1L)).thenReturn(List.of(userAchievement1, userAchievement2));
+        List<DtoAchievement> expected = achievementService.userAchievement();
         verify(userAchievementRepository, times(1)).findByUserId(1L);
+        assertEquals(expected.get(0).getTitle(), achievement1.getTitle());
+        assertEquals(expected.get(1).getTitle(), achievement2.getTitle());
     }
 
     @Test
@@ -106,5 +91,26 @@ class AchievementServiceTest {
         when(achievementProgressRepository.findByUserId(1L)).thenReturn(List.of(progress1));
         List<DtoAchievementProgress> expected = achievementService.unearnedAchievements();
         assertEquals(expected.get(0).getClass(), achievementProgressMapper.achievementProgressToDto(progress1).getClass());
+    }
+
+    private void createAchievementDto() {
+        achievement1 = new DtoAchievement();
+        achievement2 = new DtoAchievement();
+        achievement3 = new DtoAchievement();
+        achievement1.setTitle("tomato");
+        achievement1.setId(1L);
+        achievement1.setDescription("tomatos");
+        achievement1.setRarity(Rarity.EPIC);
+
+        achievement2.setTitle("tiger");
+        achievement2.setId(2L);
+        achievement2.setDescription("tigers");
+        achievement2.setRarity(Rarity.LEGENDARY);
+
+        achievement3.setTitle("bear");
+        achievement3.setId(3L);
+        achievement3.setDescription("bears");
+        achievement3.setRarity(Rarity.RARE);
+        value = List.of(achievement1, achievement2, achievement3);
     }
 }

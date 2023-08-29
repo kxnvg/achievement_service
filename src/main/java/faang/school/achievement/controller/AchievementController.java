@@ -15,22 +15,22 @@ import java.util.List;
 public class AchievementController {
     private final AchievementService achievementService;
 
-    @GetMapping("/all-achievements")
+    @PostMapping("/all")
     public List<DtoAchievement> allAchievements(@RequestBody() DtoFilterAchievement dtoFilterAchievement) {
         return achievementService.allAchievements(dtoFilterAchievement);
     }
 
-    @GetMapping("/user-achievement")
+    @GetMapping("/user")
     public List<DtoAchievement> userAchievement() {
         return achievementService.userAchievement();
     }
 
-    @GetMapping("/get-achievement/{achievementId}")
+    @GetMapping("/{achievementId}")
     public DtoAchievement getAchievement(@PathVariable long achievementId) {
         return achievementService.getAchievement(achievementId);
     }
 
-    @GetMapping("/unearned-achievements")
+    @GetMapping("/unearned")
     public List<DtoAchievementProgress> unearnedAchievement() {
         return achievementService.unearnedAchievements();
     }
