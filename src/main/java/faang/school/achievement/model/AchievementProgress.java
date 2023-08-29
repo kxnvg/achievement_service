@@ -60,4 +60,8 @@ public class AchievementProgress {
                 ", version=" + version +
                 '}';
     }
+
+    public long getCurrentPoints() {
+        return currentPoints;
+    }
 }
