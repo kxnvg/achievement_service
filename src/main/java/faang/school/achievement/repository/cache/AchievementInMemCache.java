@@ -25,6 +25,12 @@ public class AchievementInMemCache implements AchievementCache{
     }
 
     public Optional<Achievement> getAchievement(String title) {
-        return Optional.of(achievements.get(title));
+        return Optional.of(achievements.get(title))
+                .or(() -> {
+                    Optional<Achievement> optionalAchievement = achievementRepository.findByTitle(title);
+                    optionalAchievement.ifPresent(achievement -> achievements.put(title, achievement));
+
+                    return optionalAchievement;
+                });
     }
 }
