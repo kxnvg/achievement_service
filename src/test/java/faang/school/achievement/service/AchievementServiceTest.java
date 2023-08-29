@@ -1,5 +1,6 @@
 package faang.school.achievement.service;
 
+<<<<<<< HEAD
 import faang.school.achievement.config.context.UserContext;
 import faang.school.achievement.dto.achievement.DtoAchievement;
 import faang.school.achievement.dto.achievement.DtoAchievementProgress;
@@ -17,22 +18,42 @@ import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import org.junit.jupiter.api.Assertions;
+=======
+import faang.school.achievement.model.Achievement;
+import faang.school.achievement.model.AchievementProgress;
+import faang.school.achievement.model.UserAchievement;
+import faang.school.achievement.repository.AchievementProgressRepository;
+import faang.school.achievement.repository.UserAchievementRepository;
+>>>>>>> basilisk-master
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+<<<<<<< HEAD
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+=======
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+>>>>>>> basilisk-master
 
 @ExtendWith(MockitoExtension.class)
 class AchievementServiceTest {
     @Mock
+<<<<<<< HEAD
     private UserContext userContext;
     @Mock
     private AchievementRepository achievementRepository;
@@ -112,5 +133,64 @@ class AchievementServiceTest {
         achievement3.setDescription("bears");
         achievement3.setRarity(Rarity.RARE);
         value = List.of(achievement1, achievement2, achievement3);
+=======
+    private UserAchievementRepository userAchievementRepository;
+
+    @Mock
+    private AchievementProgressRepository achievementProgressRepository;
+
+    @InjectMocks
+    private AchievementService achievementService;
+
+    @Test
+    public void testHasAchievement() {
+        long userId = 1L;
+        long achievementId = 2L;
+
+        when(userAchievementRepository.existsByUserIdAndAchievementId(userId, achievementId))
+                .thenReturn(true);
+
+        boolean hasAchievement = achievementService.hasAchievement(userId, achievementId);
+
+        assertTrue(hasAchievement);
+    }
+
+    @Test
+    public void testGiveAchievement() {
+        long userId = 1L;
+        Achievement achievement = new Achievement(); // Создайте нужный Achievement
+
+        achievementService.giveAchievement(userId, achievement);
+
+        verify(userAchievementRepository).save(any(UserAchievement.class));
+    }
+
+    @Test
+    public void testGetAchievementProgressExisting() {
+        long userId = 1L;
+        long achievementId = 2L;
+        AchievementProgress progress = new AchievementProgress(); // Создайте нужный AchievementProgress
+
+        when(achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId))
+                .thenReturn(Optional.of(progress));
+
+        AchievementProgress result = achievementService.getAchievementProgress(userId, achievementId);
+
+        assertNotNull(result);
+        assertEquals(progress, result);
+    }
+
+    @Test
+    public void testGetAchievementProgressNonExisting() {
+        long userId = 1L;
+        long achievementId = 2L;
+
+        when(achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId))
+                .thenReturn(Optional.empty());
+
+        AchievementProgress result = achievementService.getAchievementProgress(userId, achievementId);
+
+        assertNull(result);
+>>>>>>> basilisk-master
     }
 }
