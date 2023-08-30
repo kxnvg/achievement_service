@@ -1,5 +1,6 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.messaging.AchievementPublisher;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.repository.AchievementProgressRepository;
@@ -22,6 +23,9 @@ public class AchievementServiceTest {
     private UserAchievementRepository userAchievementRepository;
     @Mock
     private AchievementProgressRepository achievementProgressRepository;
+    @Mock
+    private AchievementPublisher achievementPublisher;
+
     @InjectMocks
     private AchievementService achievementService;
     private Achievement achievement;

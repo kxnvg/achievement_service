@@ -3,7 +3,7 @@ package faang.school.achievement.service.followEvent;
 import faang.school.achievement.dto.follow.FollowEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.cache.AchievementInMemCache;
-import faang.school.achievement.service.handler.AchievementService;
+import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.handler.followHandler.CelebrityAchievementHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
