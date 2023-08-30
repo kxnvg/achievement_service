@@ -22,9 +22,9 @@ spring:
       port: 6379
       host: localhost
       channels:
-        achievement: achievement_channel
-        follower: follower_channel
-        invite: invitation_channel
+        achievement: achievement-channel
+        follower: follower-channel
+        invite: invitation-channel
 
   async_config:
     core_pool_size: 5
