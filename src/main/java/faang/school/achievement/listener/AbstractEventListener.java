@@ -8,7 +8,7 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class AbstractEventListener<T> {
+public abstract class AbstractEventListener<T> {
 
     private final ObjectMapper objectMapper;
 

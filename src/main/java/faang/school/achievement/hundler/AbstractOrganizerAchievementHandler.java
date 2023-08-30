@@ -34,7 +34,7 @@ public abstract class AbstractOrganizerAchievementHandler implements EventHandle
 
         if (!exists) {
             AchievementProgress achievementProgress = getAchievementProgress(inviteSentEventDto, achievement);
-
+            achievementProgress.setUpdatedAt(null);
             achievementProgress.increment();
             achievementProgress = achievementProgressService.updateProgress(achievementProgress);
 
