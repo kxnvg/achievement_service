@@ -24,8 +24,16 @@ spring:
       channel:
         achievement: achievement_channel
         follower: follower_channel
+        post: post_channel
         invitation_channel:
           name: invitation_channel
+
+async:
+  thread-pool:
+    settings:
+      core-pool-size: 4
+      max-pool-size: 8
+      queue-capacity: 100
 
 server:
   port: 8085
