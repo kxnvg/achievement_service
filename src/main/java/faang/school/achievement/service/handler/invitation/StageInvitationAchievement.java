@@ -1,10 +1,10 @@
-package faang.school.achievement.achievementHandler.invitation;
+package faang.school.achievement.service.handler.invitation;
 
-import faang.school.achievement.achievementHandler.EventHandler;
 import faang.school.achievement.dto.invitation.StageInvitationEvent;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.cache.AchievementInMemCache;
-import faang.school.achievement.service.handler.AchievementService;
+import faang.school.achievement.service.AchievementService;
+import faang.school.achievement.service.handler.EventHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 
@@ -14,10 +14,9 @@ public abstract class StageInvitationAchievement implements EventHandler<StageIn
     private final AchievementInMemCache cache;
     private final String achievementTitle;
 
-
     @Override
     @Async
-    public void process(StageInvitationEvent event) {
+    public void handle(StageInvitationEvent event) {
         Achievement achievement = cache.getAchievement(achievementTitle)
                 .orElseThrow(() -> new RuntimeException("Achievement not found"));
         service.updateAchievementProgress(event.getAuthorId(), achievement);

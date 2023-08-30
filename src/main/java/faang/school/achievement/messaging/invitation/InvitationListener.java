@@ -1,6 +1,6 @@
 package faang.school.achievement.messaging.invitation;
 
-import faang.school.achievement.achievementHandler.invitation.StageInvitationAchievement;
+import faang.school.achievement.service.handler.invitation.StageInvitationAchievement;
 import faang.school.achievement.dto.invitation.StageInvitationEvent;
 import faang.school.achievement.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class InvitationListener implements MessageListener {
     }
 
     private void achievementProcess(StageInvitationEvent event) {
-        achievements.forEach(achievement -> achievement.process(event));
+        achievements.forEach(achievement -> achievement.handle(event));
     }
 
     private StageInvitationEvent readValue(Message message) {

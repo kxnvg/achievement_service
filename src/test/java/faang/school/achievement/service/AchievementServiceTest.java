@@ -5,7 +5,6 @@ import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
-import faang.school.achievement.service.handler.AchievementService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

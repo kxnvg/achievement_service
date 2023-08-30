@@ -18,10 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-
-    private final FollowEventListener followEventListener;
-    private final InvitationListener invitationListener;
-
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -59,11 +55,23 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    MessageListenerAdapter followEventAdapter(FollowEventListener followEventListener) {
+        return new MessageListenerAdapter(followEventListener);
+    }
+    @Bean
+    MessageListenerAdapter invitationAdapter(InvitationListener invitationListener) {
+        return new MessageListenerAdapter(invitationListener);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(
+            MessageListenerAdapter followEventAdapter,
+            MessageListenerAdapter invitationAdapter
+    ) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
-        container.addMessageListener(new MessageListenerAdapter(invitationListener), stageInvitationTopic());
+        container.addMessageListener(followEventAdapter, followerTopic());
+        container.addMessageListener(invitationAdapter, stageInvitationTopic());
         return container;
     }
 }

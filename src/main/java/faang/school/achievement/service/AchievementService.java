@@ -1,4 +1,4 @@
-package faang.school.achievement.service.handler;
+package faang.school.achievement.service;
 
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.UserAchievement;
