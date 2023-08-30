@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AchievementCache {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisCacheTemplate;
     private final ObjectMapper objectMapper;
     private final AchievementRepository achievementRepository;
 
@@ -26,7 +26,7 @@ public class AchievementCache {
         Iterable<Achievement> achievements = achievementRepository.findAll();
         for (Achievement achievement : achievements) {
             try {
-                redisTemplate.opsForValue().set(achievement.getTitle(), objectMapper.writeValueAsString(achievement));
+                redisCacheTemplate.opsForValue().set(achievement.getTitle(), objectMapper.writeValueAsString(achievement));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -35,7 +35,7 @@ public class AchievementCache {
 
     public Optional<Achievement> get(String title) {
         try {
-            String achievementJson = redisTemplate.opsForValue().get(title);
+            String achievementJson = redisCacheTemplate.opsForValue().get(title);
             Achievement achievement = objectMapper.readValue(achievementJson, Achievement.class);
             return Optional.of(achievement);
         } catch (JsonProcessingException e) {
