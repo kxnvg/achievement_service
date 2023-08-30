@@ -1,5 +1,7 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.dto.achievement.AchievementEvent;
+import faang.school.achievement.messaging.AchievementPublisher;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.repository.AchievementProgressRepository;
@@ -17,6 +19,7 @@ public class AchievementService {
     private final AchievementRepository achievementRepository;
     private final UserAchievementRepository userAchievementRepository;
     private final AchievementProgressRepository achievementProgressRepository;
+    private final AchievementPublisher achievementPublisher;
 
     @Transactional
     public void updateAchievementProgress(long userId, Achievement achievement) {
@@ -29,6 +32,7 @@ public class AchievementService {
         if (progress.getCurrentPoints() >= achievement.getPoints()) {
             UserAchievement userAchievement = UserAchievement.builder().userId(userId).achievement(achievement).build();
             userAchievementRepository.save(userAchievement);
+            achievementPublisher.publish(new AchievementEvent(userId, achievement.getTitle(),achievement.getDescription()));
             log.info("User with id: " + userId + " has received achievement: " + achievement.getTitle());
         }
     }

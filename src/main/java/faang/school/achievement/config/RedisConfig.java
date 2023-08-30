@@ -26,6 +26,8 @@ public class RedisConfig {
     private String followerTopic;
     @Value("${spring.data.redis.channels.invitation_channel.name}")
     private String stageInvitationTopic;
+    @Value("${spring.data.redis.channels.achievement_topic.name}")
+    private String achievementTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -52,6 +54,10 @@ public class RedisConfig {
     @Bean
     ChannelTopic stageInvitationTopic() {
         return new ChannelTopic(stageInvitationTopic);
+    }
+    @Bean
+    ChannelTopic achievementTopic() {
+        return new ChannelTopic(achievementTopic);
     }
 
     @Bean
