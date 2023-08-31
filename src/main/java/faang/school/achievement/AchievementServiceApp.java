@@ -30,7 +30,7 @@ public class AchievementServiceApp {
     }
 
     @Bean
-    public Map<String, Achievement> achievementCache() {
+    public Map<String, Achievement> achievements() {
         return new HashMap<>();
     }
 }
