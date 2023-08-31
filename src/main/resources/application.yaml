@@ -28,7 +28,8 @@ spring:
           name: follower_channel
         invitation_channel:
           name: invitation_channel
-
+        mentorship_event_topic:
+          name: mentorship_event_topic
 
 server:
   port: 8085
@@ -49,4 +50,3 @@ event-handler-thread-pool:
 
 achievements:
   celebrity_achievement: "Знаменитость"
-  organizer: "Организатор"
