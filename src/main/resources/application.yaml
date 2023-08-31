@@ -25,8 +25,8 @@ spring:
         achievement: achievement_channel
         follower_channel:
           name: follower_channel
-        mentorship_even_topic:
-          name: mentorship_even_topic
+        mentorship_event_topic:
+          name: mentorship_event_topic
 
 server:
   port: 8085
