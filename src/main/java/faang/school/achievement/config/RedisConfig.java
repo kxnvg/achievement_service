@@ -1,7 +1,7 @@
 package faang.school.achievement.config;
 
 import faang.school.achievement.messaging.follow.FollowEventListener;
-import faang.school.achievement.messaging.follow.Mentorship.MentorshipEventListener;
+import faang.school.achievement.messaging.Mentorship.MentorshipEventListener;
 import faang.school.achievement.messaging.invitation.InvitationListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,6 +89,7 @@ public class RedisConfig {
         container.addMessageListener(followEventAdapter, followerTopic());
         container.addMessageListener(invitationAdapter, stageInvitationTopic());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
+        container.addMessageListener(new MessageListenerAdapter(mentorshipEventListener), mentorshipEventTopic());
         return container;
     }
 }

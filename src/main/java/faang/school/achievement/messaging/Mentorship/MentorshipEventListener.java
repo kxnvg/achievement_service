@@ -1,4 +1,4 @@
-package faang.school.achievement.messaging.follow.Mentorship;
+package faang.school.achievement.messaging.Mentorship;
 
 import faang.school.achievement.dto.follow.Mentorship.MentorshipEventDto;
 import faang.school.achievement.service.handler.EventHandler;
