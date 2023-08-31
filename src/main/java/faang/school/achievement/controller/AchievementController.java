@@ -16,36 +16,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/achievements")
-public class AchievementController {
+//@RestController
+//@RequiredArgsConstructor
+//@RequestMapping("/achievements")
+//public class AchievementController {
+//
+//    private final AchievementService achievementService;
+//
+//    @GetMapping("/{id}")
+//    public AchievementDto getAchievementById(@PathVariable long id){
+//        return achievementService.getAchievementById(id);
+//    }
 
-    private final AchievementService achievementService;
+//    @GetMapping
+//    public Page<Achievement> getAllAchievements(@PageableDefault(size = 20) Pageable pageable){
+//        return achievementService.getAllAchievements(pageable);
+//    }
 
-    @GetMapping("/{id}")
-    public AchievementDto getAchievementById(@PathVariable long id){
-        return achievementService.getAchievementById(id);
-    }
-
-    @GetMapping
-    public Page<Achievement> getAllAchievements(@PageableDefault(size = 20) Pageable pageable){
-        return achievementService.getAllAchievements(pageable);
-    }
-
-    @GetMapping("/{userId}")
-    public List<UserAchievementDto> getUserAchievements(@PathVariable long userId) {
-        return achievementService.getUserAchievements(userId);
-    }
-
-    @GetMapping("/progress/{userId}")
-    public List<AchievementProgressDto> getAllAchievementProgressByUserId(@PathVariable long userid) {
-        return achievementService.getAllAchievementProgressByUserId(userid);
-    }
-
-    @GetMapping("/{achievementId}/progress/{userId}")
-    public AchievementProgressDto getAchievementProgressByUserId(@PathVariable long achievementId, @PathVariable long userId) {
-        return achievementService.getAchievementProgressByUserId(achievementId, userId);
-    }
-
-}
+//    @GetMapping("/{userId}")
+//    public List<UserAchievementDto> getUserAchievements(@PathVariable long userId) {
+//        return achievementService.getUserAchievements(userId);
+//    }
+//
+//    @GetMapping("/progress/{userId}")
+//    public List<AchievementProgressDto> getAllAchievementProgressByUserId(@PathVariable long userid) {
+//        return achievementService.getAllAchievementProgressByUserId(userid);
+//    }
+//
+//    @GetMapping("/{achievementId}/progress/{userId}")
+//    public AchievementProgressDto getAchievementProgressByUserId(@PathVariable long achievementId, @PathVariable long userId) {
+//        return achievementService.getAchievementProgressByUserId(achievementId, userId);
+//    }
+//
+//}

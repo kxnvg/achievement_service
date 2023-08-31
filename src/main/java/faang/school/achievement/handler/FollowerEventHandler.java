@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public abstract class FollowerEventHandler implements EventHandler<FollowerEventDto>{
+    @Override
+    public void handle(FollowerEventDto event) {
 
-    public abstract void handle(FollowerEventDto event);
+    }
 }

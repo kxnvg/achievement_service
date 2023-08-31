@@ -9,15 +9,15 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = AchievementMapper.class)
-public interface AchievementProgressMapper {
-
-    @Mapping(target = "achievementDto", source = "achievement", qualifiedByName = "toAchievementDto")
-    AchievementProgressDto toDto(AchievementProgress achievementProgress);
-
-    default List<AchievementProgressDto> toDtoList(List<AchievementProgress> achievementProgresses) {
-        return achievementProgresses.stream()
-                .map(this::toDto)
-                .toList();
-    }
-}
+//@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = AchievementMapper.class)
+//public interface AchievementProgressMapper {
+//
+//    @Mapping(target = "achievementDto", source = "achievement", qualifiedByName = "toAchievementDto")
+//    AchievementProgressDto toDto(AchievementProgress achievementProgress);
+//
+//    default List<AchievementProgressDto> toDtoList(List<AchievementProgress> achievementProgresses) {
+//        return achievementProgresses.stream()
+//                .map(this::toDto)
+//                .toList();
+//    }
+//}

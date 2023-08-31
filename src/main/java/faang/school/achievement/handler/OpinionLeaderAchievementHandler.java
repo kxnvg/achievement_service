@@ -5,6 +5,7 @@ import faang.school.achievement.dto.EventDto;
 import faang.school.achievement.dto.EventPostDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -21,14 +22,15 @@ public class OpinionLeaderAchievementHandler extends PostAchievementHandler {
 
     @Async("threadPoolForAchievementHandler")
     @Override
-    public void handle(EventDto eventDto) {
-        EventPostDto postDto = (EventPostDto) eventDto;
-        Achievement achievement = cache.get(ACHIEVEMENT_TITTLE).orElseThrow();
+    public void handle(EventPostDto postDto) {
+        Achievement achievement = cache.get(ACHIEVEMENT_TITTLE)
+                .or(() -> service.getAchievement(ACHIEVEMENT_TITTLE))
+                .orElseThrow(() -> new EntityNotFoundException(String.format("There is no achievement named: %s", ACHIEVEMENT_TITTLE)));
         long authorId = getIfOfPostAuthor(postDto);
         long achievementId = achievement.getId();
 
         if (!service.hasAchievement(authorId, achievementId)) {
-            service.createProgressIfNecessary(achievementId, authorId);
+            service.checkAndCreateAchievementProgress(achievementId, authorId);
         }
 
         long progress = service.getProgress(authorId, achievementId);

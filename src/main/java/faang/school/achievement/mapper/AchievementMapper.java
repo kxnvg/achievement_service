@@ -7,9 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = UserAchievementMapper.class)
-public interface AchievementMapper {
-
-    @Named("toAchievementDto")
-    AchievementDto toAchievementDto(Achievement achievement);
-}
+//@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = UserAchievementMapper.class)
+//public interface AchievementMapper {
+//
+//    @Named("toAchievementDto")
+//    AchievementDto toAchievementDto(Achievement achievement);
+//}
