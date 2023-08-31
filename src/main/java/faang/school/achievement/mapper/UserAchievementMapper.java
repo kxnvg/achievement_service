@@ -9,16 +9,16 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-//@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = AchievementMapper.class)
-//public interface UserAchievementMapper {
-//
-//    @Mapping(target = "achievementDto", source = "achievement", qualifiedByName = "toAchievementDto")
-//    @Mapping(target = "receivedAt", source = "createdAt")
-//    UserAchievementDto toDto(UserAchievement userAchievement);
-//
-//    default List<UserAchievementDto> toDtoList(List<UserAchievement> userAchievements) {
-//        return userAchievements.stream()
-//                .map(this::toDto)
-//                .toList();
-//    }
-//}
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = AchievementMapper.class)
+public interface UserAchievementMapper {
+
+    @Mapping(target = "achievementDto", source = "achievement", qualifiedByName = "toAchievementDto")
+    @Mapping(target = "receivedAt", source = "createdAt")
+    UserAchievementDto toDto(UserAchievement userAchievement);
+
+    default List<UserAchievementDto> toDtoList(List<UserAchievement> userAchievements) {
+        return userAchievements.stream()
+                .map(this::toDto)
+                .toList();
+    }
+}
