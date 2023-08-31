@@ -28,9 +28,4 @@ public class AchievementServiceApp {
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
-
-    @Bean
-    public Map<String, Achievement> achievements() {
-        return new HashMap<>();
-    }
 }

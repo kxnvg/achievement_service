@@ -6,13 +6,14 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class AchievementCache {
 
-    private final Map<String, Achievement> achievements;
+    private final Map<String, Achievement> achievements = new HashMap<>();
     private final AchievementRepository achievementRepository;
 
     @PostConstruct
