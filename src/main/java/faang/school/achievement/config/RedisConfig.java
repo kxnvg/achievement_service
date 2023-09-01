@@ -1,6 +1,5 @@
 package faang.school.achievement.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.achievement.listener.InviteEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     private final MessageListener postEventListener;
+    private final InviteEventListener inviteEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -28,10 +28,13 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channel.post}")
     private String postTopicName;
+    @Value("spring.data.redis.channels.invitation_channel.name")
+    private String invitationTopicName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+
         return new JedisConnectionFactory(config);
     }
 
@@ -40,6 +43,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(postEventListener), new ChannelTopic(postTopicName));
+        container.addMessageListener(new MessageListenerAdapter(inviteEventListener), new ChannelTopic(invitationTopicName));
 
         return container;
     }
@@ -52,35 +56,5 @@ public class RedisConfig {
         template.setValueSerializer(new StringRedisSerializer());
 
         return template;
-    }
-    @Value("spring.data.redis.host")
-    private String host;
-    @Value("spring.data.redis.port")
-    private int port;
-    @Value("spring.data.redis.channels.invitation_channel.name")
-    private String invitationTopicName;
-
-    @Bean
-    MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new InviteEventListener(new ObjectMapper()));
-    }
-
-    @Bean
-    RedisMessageListenerContainer invitationContainer() {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(invitationConnectionFactory());
-        container.addMessageListener(messageListener(), invitationTopic());
-        return container;
-    }
-
-    @Bean
-    public JedisConnectionFactory invitationConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
-        return new JedisConnectionFactory(configuration);
-    }
-
-    @Bean
-    public ChannelTopic invitationTopic() {
-        return new ChannelTopic(invitationTopicName);
     }
 }
