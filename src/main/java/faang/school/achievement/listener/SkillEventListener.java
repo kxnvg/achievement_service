@@ -21,7 +21,7 @@ public class SkillEventListener extends AbstractListener<SkillAcquiredEventDto> 
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        SkillAcquiredEventDto event = readValue(new String(message.getBody()), SkillAcquiredEventDto.class);
+        SkillAcquiredEventDto event = readValue(message.getBody(), SkillAcquiredEventDto.class);
         handleEvent(event, achievementTitle);
     }
 }

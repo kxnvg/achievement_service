@@ -16,7 +16,7 @@ public abstract class AbstractListener<T> implements MessageListener {
     private final ObjectMapper objectMapper;
     private final List<EventHandler<T>> handlers;
 
-    protected T readValue(String json, Class<T> type) {
+    protected T readValue(byte[] json, Class<T> type) {
         try {
             return objectMapper.readValue(json, type);
         } catch (IOException e) {
