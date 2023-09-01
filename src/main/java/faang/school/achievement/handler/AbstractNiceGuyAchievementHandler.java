@@ -8,21 +8,22 @@ import faang.school.achievement.service.AchievementProgressService;
 import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.UserAchievementService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AbstractNiceGuyAchievementHandler implements EventHandler<RecommendationEventDto> {
 
     private final AchievementService achievementService;
     private final UserAchievementService userAchievementService;
     private final AchievementProgressService achievementProgressService;
-    private String title;
-    private String description;
-    private long points;
+    private final String title;
+    private final String description;
+    private final long points;
     private final Lock lock = new ReentrantLock();
 
     @Override
@@ -61,8 +62,7 @@ public class AbstractNiceGuyAchievementHandler implements EventHandler<Recommend
     }
 
     private AchievementProgress getAchievementProgress(RecommendationEventDto event, Achievement achievement) {
-        Optional<AchievementProgress> progress =
-                achievementProgressService.getProgress(event.getAuthorId(), achievement.getId());
+        Optional<AchievementProgress> progress = achievementProgressService.getProgress(event.getAuthorId(), achievement.getId());
 
         if (progress.isEmpty()) {
             AchievementProgress achievementProgress = AchievementProgress.builder()
