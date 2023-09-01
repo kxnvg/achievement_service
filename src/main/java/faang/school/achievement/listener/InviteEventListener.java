@@ -5,6 +5,7 @@ import faang.school.achievement.dto.InviteSentEventDto;
 import faang.school.achievement.handler.invite_event.InviteHandler;
 import faang.school.achievement.handler.invite_event.OrganizerAchievementHandler;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @Data
+@Slf4j
 public class InviteEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final OrganizerAchievementHandler organizerAchievementHandler;
@@ -21,11 +23,13 @@ public class InviteEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        log.info("InviteEventListener has received a new message from Redis.");
         InviteSentEventDto event;
 
         try {
             event = objectMapper.readValue(message.getBody(), InviteSentEventDto.class);
         } catch (IOException e) {
+            log.error("IOException while parsing message in InviteEventListener.");
             throw new RuntimeException(e);
         }
 

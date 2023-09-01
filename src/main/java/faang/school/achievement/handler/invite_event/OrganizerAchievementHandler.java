@@ -7,6 +7,7 @@ import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @EnableAsync
+@Slf4j
 public class OrganizerAchievementHandler implements InviteHandler {
 
     private final AchievementService service;
@@ -28,21 +30,24 @@ public class OrganizerAchievementHandler implements InviteHandler {
         long userId = getUserId(eventDto);
         long achievementId = achievement.getId();
 
-        if(!service.hasAchievement(userId, achievementId)){
+        if (!service.hasAchievement(userId, achievementId)) {
             service.createProgressIfNecessary(userId, achievementId);
             long progress = service.getProgress(userId, achievementId);
             progress++;
-            if (progress >= achievement.getPoints()){
+            if (progress >= achievement.getPoints()) {
                 service.giveAchievement(userId, achievementId);
+                log.info("Achievement {} has been given to user with id {}.", OrganizerAchievementName, userId);
             }
         }
     }
 
-    private long getUserId (EventDto eventDto){
+    private long getUserId(EventDto eventDto) {
         InviteSentEventDto event;
         if (eventDto instanceof InviteSentEventDto) {
             event = (InviteSentEventDto) eventDto;
+            log.info("InviteSentEventDto with authorId {} has been handled.", event.getAuthorId());
         } else {
+            log.error("EventDto is not InviteSentEventDto.");
             throw new RuntimeException();
         }
         return event.getAuthorId();
