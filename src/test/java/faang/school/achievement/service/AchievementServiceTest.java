@@ -15,64 +15,91 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-//@ExtendWith(MockitoExtension.class)
-//public class AchievementServiceTest {
-//
-//    @Mock
-//    private AchievementPublisher achievementPublisher;
-//    @Mock
-//    private AchievementProgressRepository progressRepository;
-//    @Mock
-//    private AchievementRepository achievementRepository;
-//    @Mock
-//    private UserAchievementRepository userAchievementRepository;
-//    @InjectMocks
-//    private AchievementService achievementService;
-//
-//    private AchievementProgress achievementProgress;
-//    private Achievement achievement;
-//    private final long ACHIEVEMENT_ID = 1L;
-//    private final long AUTHOR_ID = 1L;
-//    private final long CURRENT_POINTS = 999L;
-//    private final String ACHIEVEMENT_TITTLE = "Opinion leader";
-//
-//    @BeforeEach
-//    void initData() {
-//        achievementProgress = AchievementProgress.builder()
-//                .userId(AUTHOR_ID)
-//                .currentPoints(CURRENT_POINTS)
-//                .build();
-//        achievement = Achievement.builder()
-//                .id(ACHIEVEMENT_ID)
-//                .title(ACHIEVEMENT_TITTLE)
-//                .build();
-//    }
-//
+@ExtendWith(MockitoExtension.class)
+public class AchievementServiceTest {
+
+    @Mock
+    private AchievementPublisher achievementPublisher;
+    @Mock
+    private AchievementProgressRepository progressRepository;
+    @Mock
+    private AchievementRepository achievementRepository;
+    @Mock
+    private UserAchievementRepository userAchievementRepository;
+    @InjectMocks
+    private AchievementService achievementService;
+
+    private AchievementProgress achievementProgress;
+    private Achievement achievement;
+    private final long ACHIEVEMENT_ID = 1L;
+    private final long AUTHOR_ID = 1L;
+    private final long CURRENT_POINTS = 999L;
+    private final String ACHIEVEMENT_TITTLE = "Opinion leader";
+
+    @BeforeEach
+    void initData() {
+        achievementProgress = AchievementProgress.builder()
+                .userId(AUTHOR_ID)
+                .currentPoints(CURRENT_POINTS)
+                .build();
+        achievement = Achievement.builder()
+                .id(ACHIEVEMENT_ID)
+                .title(ACHIEVEMENT_TITTLE)
+                .build();
+    }
+
+
+    @Test
+    void testHasAchievement() {
+        achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(userAchievementRepository).existsByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
+    @Test
+    void testGetProgressFirstScenario() {
+        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
+                .thenReturn(Optional.ofNullable(achievementProgress));
+        long actualProgress = achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        assertEquals(1000L, actualProgress);
+        verify(progressRepository).save(achievementProgress);
+    }
+
+    @Test
+    void testGetProgressSecondScenario() {
+        doReturn(Optional.empty()).doReturn(Optional.ofNullable(achievementProgress))
+                .when(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        verify(progressRepository, times(2)).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
+    @Test
+    void checkAndCreateAchievementProgressTest() {
+        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
+                .thenReturn(Optional.empty());
+
+        achievementService.checkAndCreateAchievementProgress(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        verify(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
 //    @Test
-//    void testHasAchievement() {
-//        achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
-//        verify(userAchievementRepository).existsByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
-//    }
+//    void giveAchievementTest() {
 //
-//    @Test
-//    void testCreateProgressIfNecessary() {
-//        achievementService.createProgressIfNecessary(ACHIEVEMENT_ID, AUTHOR_ID);
-//        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+//        achievementService.giveAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
 //    }
-//
-//    @Test
-//    void testGetProgress() {
-//        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
-//                .thenReturn(Optional.ofNullable(achievementProgress));
-//        long actualProgress = achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID);
-//
-//        assertEquals(1000L, actualProgress);
-//        verify(progressRepository).save(achievementProgress);
-//    }
-//}
+
+}
 //@ExtendWith(MockitoExtension.class)
 //class AchievementServiceTest {
 //

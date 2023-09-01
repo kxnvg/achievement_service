@@ -1,7 +1,6 @@
 package faang.school.achievement.handler;
 
 import faang.school.achievement.cache.AchievementCache;
-import faang.school.achievement.dto.EventDto;
 import faang.school.achievement.dto.EventPostDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
@@ -30,7 +29,7 @@ public class OpinionLeaderAchievementHandler extends PostAchievementHandler {
         long achievementId = achievement.getId();
 
         if (!service.hasAchievement(authorId, achievementId)) {
-            service.checkAndCreateAchievementProgress(achievementId, authorId);
+            service.checkAndCreateAchievementProgress(authorId, achievementId);
         }
 
         long progress = service.getProgress(authorId, achievementId);
