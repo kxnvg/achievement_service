@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AchievementProgressMapperTest {
 
@@ -97,6 +97,22 @@ class AchievementProgressMapperTest {
         List<AchievementProgressDto> expected = List.of(firstDto, secondDto);
 
         List<AchievementProgressDto> result = achievementProgressMapper.toDtoList(List.of(firstProgress, secondProgress));
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void toEntity() {
+        AchievementProgress result = achievementProgressMapper.toEntity(firstDto);
+
+        assertEquals(firstProgress, result);
+    }
+
+    @Test
+    void toEntityList() {
+        List<AchievementProgress> expected = List.of(firstProgress, secondProgress);
+
+        List<AchievementProgress> result = achievementProgressMapper.toEntityList(List.of(firstDto, secondDto));
 
         assertEquals(expected, result);
     }

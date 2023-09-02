@@ -21,4 +21,14 @@ public interface UserAchievementMapper {
                 .map(this::toDto)
                 .toList();
     }
+
+    @Mapping(target = "achievement", source = "achievementDto", qualifiedByName = "toAchievementEntity")
+    @Mapping(target = "createdAt", source = "receivedAt")
+    UserAchievement toEntity(UserAchievementDto userAchievementDto);
+
+    default List<UserAchievement> toEntityList(List<UserAchievementDto> userAchievements) {
+        return userAchievements.stream()
+                .map(this::toEntity)
+                .toList();
+    }
 }

@@ -19,12 +19,3 @@ public class AchievementEventDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime achievedAt;
 }
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Builder
-//public class AchievementEventDto {
-//    private long achievementId;
-//    private long receiverId;
-//    private LocalDateTime achievedAt;
-//}

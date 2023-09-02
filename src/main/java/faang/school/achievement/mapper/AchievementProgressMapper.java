@@ -20,4 +20,13 @@ public interface AchievementProgressMapper {
                 .map(this::toDto)
                 .toList();
     }
+
+    @Mapping(target = "achievement", source = "achievementDto", qualifiedByName = "toAchievementEntity")
+    AchievementProgress toEntity(AchievementProgressDto achievementProgressDto);
+
+    default List<AchievementProgress> toEntityList(List<AchievementProgressDto> achievementProgresses) {
+        return achievementProgresses.stream()
+                .map(this::toEntity)
+                .toList();
+    }
 }

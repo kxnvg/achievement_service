@@ -1,21 +1,44 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.cache.AchievementCache;
+import faang.school.achievement.dto.AchievementDto;
+import faang.school.achievement.dto.AchievementEventDto;
+import faang.school.achievement.dto.AchievementProgressDto;
+import faang.school.achievement.dto.UserAchievementDto;
+import faang.school.achievement.mapper.AchievementMapper;
+import faang.school.achievement.mapper.AchievementMapperImpl;
+import faang.school.achievement.mapper.AchievementProgressMapper;
+import faang.school.achievement.mapper.AchievementProgressMapperImpl;
+import faang.school.achievement.mapper.UserAchievementMapper;
+import faang.school.achievement.mapper.UserAchievementMapperImpl;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
+import faang.school.achievement.model.Rarity;
+import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.publisher.AchievementPublisher;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,11 +55,25 @@ public class AchievementServiceTest {
     private AchievementRepository achievementRepository;
     @Mock
     private UserAchievementRepository userAchievementRepository;
+    @Spy
+    private AchievementMapper achievementMapper = new AchievementMapperImpl();
+    @Spy
+    private AchievementProgressMapper achievementProgressMapper = new AchievementProgressMapperImpl(achievementMapper);
+    @Spy
+    private UserAchievementMapper userAchievementMapper = new UserAchievementMapperImpl(achievementMapper);
+    @Mock
+    private AchievementCache achievementCache;
     @InjectMocks
     private AchievementService achievementService;
 
     private AchievementProgress achievementProgress;
+    private AchievementProgress controllerAchievementProgress;
+    private AchievementProgressDto controllerAchievementProgressDto;
     private Achievement achievement;
+    private Achievement controllerAchievement;
+    private Achievement secondAchievement;
+    private AchievementDto achievementDto;
+    private AchievementDto secondAchievementDto;
     private final long ACHIEVEMENT_ID = 1L;
     private final long AUTHOR_ID = 1L;
     private final long CURRENT_POINTS = 999L;
@@ -52,8 +89,118 @@ public class AchievementServiceTest {
                 .id(ACHIEVEMENT_ID)
                 .title(ACHIEVEMENT_TITTLE)
                 .build();
+        controllerAchievement = Achievement.builder()
+                .id(ACHIEVEMENT_ID)
+                .title(ACHIEVEMENT_TITTLE)
+                .description("Must be a leader!")
+                .rarity(Rarity.RARE)
+                .points(500)
+                .build();
+        achievementDto = AchievementDto.builder()
+                .id(ACHIEVEMENT_ID)
+                .title(ACHIEVEMENT_TITTLE)
+                .description("Must be a leader!")
+                .rarity(Rarity.RARE)
+                .points(500)
+                .build();
+        secondAchievement = Achievement.builder()
+                .id(2)
+                .title("subscribers")
+                .description("Must have 1000 subscribers")
+                .rarity(Rarity.EPIC)
+                .points(1000)
+                .build();
+        secondAchievementDto = AchievementDto.builder()
+                .id(2)
+                .title("subscribers")
+                .description("Must have 1000 subscribers")
+                .rarity(Rarity.EPIC)
+                .points(1000)
+                .build();
+        controllerAchievementProgress = AchievementProgress.builder()
+                .id(1)
+                .achievement(controllerAchievement)
+                .userId(2)
+                .currentPoints(100)
+                .build();
+        controllerAchievementProgressDto = AchievementProgressDto.builder()
+                .id(1)
+                .achievementDto(achievementDto)
+                .userId(2)
+                .currentPoints(100)
+                .build();
     }
 
+    @Test
+    void getAchievementByTitleTest() {
+        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(controllerAchievement));
+
+        AchievementDto result = achievementService.getAchievementByTitle(ACHIEVEMENT_TITTLE);
+
+        assertEquals(achievementDto, result);
+    }
+
+    @Test
+    void getAllAchievementsTest() {
+        Pageable pageable = PageRequest.of(0, 2);
+
+        List<Achievement> achievements = List.of(controllerAchievement, secondAchievement);
+        List<AchievementDto> expected = List.of(achievementDto, secondAchievementDto);
+
+        Page<Achievement> achievementPage = new PageImpl<>(achievements, pageable, achievements.size());
+
+        when(achievementRepository.findAll(pageable)).thenReturn(achievementPage);
+
+        List<AchievementDto> result = achievementService.getAllAchievements(pageable);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getUserAchievements() {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        UserAchievement userAchievement = UserAchievement.builder()
+                .id(1)
+                .achievement(controllerAchievement)
+                .userId(2)
+                .createdAt(currentTime)
+                .build();
+
+        UserAchievementDto userAchievementDto = UserAchievementDto.builder()
+                .id(1)
+                .achievementDto(achievementDto)
+                .userId(2)
+                .receivedAt(currentTime)
+                .build();
+
+        when(userAchievementRepository.findByUserId(AUTHOR_ID)).thenReturn(List.of(userAchievement));
+
+        List<UserAchievementDto> result = achievementService.getUserAchievements(AUTHOR_ID);
+
+        assertEquals(List.of(userAchievementDto), result);
+    }
+
+    @Test
+    void getAchievementsProgressByUserIdTest() {
+        List<AchievementProgress> achievementProgresses = List.of(controllerAchievementProgress);
+
+        when(progressRepository.findByUserId(AUTHOR_ID)).thenReturn(achievementProgresses);
+
+        List<AchievementProgressDto> result = achievementService.getAchievementsProgressByUserId(AUTHOR_ID);
+
+        assertEquals(List.of(controllerAchievementProgressDto), result);
+    }
+
+    @Test
+    void getAchievementProgressByUserIdTest() {
+        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
+                .thenReturn(Optional.of(controllerAchievementProgress));
+
+        AchievementProgressDto result = achievementService.getAchievementProgressByUserId(ACHIEVEMENT_ID, AUTHOR_ID);
+
+        assertEquals(controllerAchievementProgressDto, result);
+    }
 
     @Test
     void testHasAchievement() {
@@ -93,251 +240,56 @@ public class AchievementServiceTest {
         verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
     }
 
-//    @Test
-//    void giveAchievementTest() {
-//
-//        achievementService.giveAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
-//    }
+    @Test
+    void giveAchievementTest() {
+        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.empty());
+        when(achievementRepository.findByTitle(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(achievement));
 
+        achievementService.giveAchievement(1, ACHIEVEMENT_TITTLE);
+
+        verify(userAchievementRepository).save(any(UserAchievement.class));
+        verify(achievementPublisher)
+                .publish(any(AchievementEventDto.class));
+    }
+
+    @Test
+    void getAchievementTest() {
+        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.empty());
+        when(achievementRepository.findByTitle(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(achievement));
+
+        Achievement result = achievementService.getAchievement(ACHIEVEMENT_TITTLE);
+
+        assertEquals(achievement, result);
+    }
+
+    @Test
+    void getAchievementThrowException() {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> achievementService.getAchievement(ACHIEVEMENT_TITTLE));
+
+        assertEquals("There is no achievement named: Opinion leader", exception.getMessage());
+    }
+
+    @Test
+    void getUserProgressByAchievementAndUserIdTest() {
+        doReturn(Optional.empty()).doReturn(Optional.of(achievementProgress))
+                .when(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        AchievementProgress result = achievementService.getUserProgressByAchievementAndUserId(ACHIEVEMENT_ID, AUTHOR_ID);
+
+        assertEquals(achievementProgress, result);
+
+        verify(progressRepository, times(2)).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
+    @Test
+    void createAndGetAchievementProgressTest() {
+        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
+                .thenReturn(Optional.of(achievementProgress));
+
+        AchievementProgress result = achievementService.createAndGetAchievementProgress(ACHIEVEMENT_ID, AUTHOR_ID);
+
+        assertEquals(achievementProgress, result);
+    }
 }
-//@ExtendWith(MockitoExtension.class)
-//class AchievementServiceTest {
-//
-//    @Mock
-//    private AchievementProgressRepository achievementProgressRepository;
-//    @Mock
-//    private UserAchievementRepository userAchievementRepository;
-//    @Mock
-//    private AchievementRepository achievementRepository;
-//    @Mock
-//    private AchievementEventPublisher achievementEventPublisher;
-//    @Spy
-//    private AchievementMapper achievementMapper = new AchievementMapperImpl();
-//    @Spy
-//    private AchievementProgressMapper achievementProgressMapper = new AchievementProgressMapperImpl(achievementMapper);
-//    @Spy
-//    private UserAchievementMapper userAchievementMapper = new UserAchievementMapperImpl(achievementMapper);
-//    @InjectMocks
-//    private AchievementService achievementService;
-//
-//    private Achievement achievement;
-//    private Achievement firstAchievement;
-//    private Achievement secondAchievement;
-//
-//    private UserAchievement firstUserAchievement;
-//    private UserAchievement secondUserAchievement;
-//
-//    private AchievementProgress firstProgress;
-//    private AchievementProgress secondProgress;
-//
-//    private UserAchievementDto firstUserAchievementDto;
-//    private UserAchievementDto secondUserAchievementDto;
-//
-//    private AchievementProgressDto firstDto;
-//    private AchievementProgressDto secondDto;
-//
-//    private AchievementDto firstAchievementDto;
-//    private AchievementDto secondAchievementDto;
-//
-//    private LocalDateTime currentTime;
-//
-//
-//    @BeforeEach
-//    void setUp() {
-//        UserAchievement first = UserAchievement.builder()
-//                .userId(1)
-//                .build();
-//        UserAchievement second = UserAchievement.builder()
-//                .userId(2)
-//                .build();
-//        achievement = Achievement.builder()
-//                .id(1)
-//                .userAchievements(List.of(first, second))
-//                .build();
-//        currentTime = LocalDateTime.now();
-//        firstAchievement = Achievement.builder()
-//                .id(1)
-//                .title("first title")
-//                .description("first description")
-//                .rarity(Rarity.COMMON)
-//                .points(100)
-//                .build();
-//        firstUserAchievement = UserAchievement.builder()
-//                .id(1)
-//                .achievement(firstAchievement)
-//                .userId(1)
-//                .createdAt(currentTime)
-//                .build();
-//        firstProgress = AchievementProgress.builder()
-//                .id(1)
-//                .achievement(firstAchievement)
-//                .userId(1)
-//                .currentPoints(35)
-//                .build();
-//        secondAchievement = Achievement.builder()
-//                .id(2)
-//                .title("second title")
-//                .description("second description")
-//                .rarity(Rarity.RARE)
-//                .points(200)
-//                .build();
-//        secondUserAchievement = UserAchievement.builder()
-//                .id(2)
-//                .achievement(secondAchievement)
-//                .userId(2)
-//                .createdAt(currentTime)
-//                .build();
-//        secondProgress = AchievementProgress.builder()
-//                .id(2)
-//                .achievement(secondAchievement)
-//                .userId(2)
-//                .currentPoints(55)
-//                .build();
-//        firstAchievementDto = AchievementDto.builder()
-//                .id(1)
-//                .title("first title")
-//                .description("first description")
-//                .rarity(Rarity.COMMON)
-//                .points(100)
-//                .build();
-//        firstUserAchievementDto = UserAchievementDto.builder()
-//                .id(1)
-//                .achievementDto(firstAchievementDto)
-//                .userId(1)
-//                .receivedAt(currentTime)
-//                .build();
-//        firstDto = AchievementProgressDto.builder()
-//                .id(1)
-//                .achievementDto(firstAchievementDto)
-//                .userId(1)
-//                .currentPoints(35)
-//                .build();
-//        secondAchievementDto = AchievementDto.builder()
-//                .id(2)
-//                .title("second title")
-//                .description("second description")
-//                .rarity(Rarity.RARE)
-//                .points(200)
-//                .build();
-//        secondUserAchievementDto = UserAchievementDto.builder()
-//                .id(2)
-//                .achievementDto(secondAchievementDto)
-//                .userId(2)
-//                .receivedAt(currentTime)
-//                .build();
-//        secondDto = AchievementProgressDto.builder()
-//                .id(2)
-//                .achievementDto(secondAchievementDto)
-//                .userId(2)
-//                .currentPoints(55)
-//                .build();
-//    }
-////  private long id;
-////    private String title;
-////    private String description;
-////    private Rarity rarity;
-////    private long points;
-//
-//    @Test
-//    void getAchievementInformationTest() {
-//        when(achievementRepository.findById(2L)).thenReturn(Optional.of(firstAchievement));
-//
-//        AchievementDto result = achievementService.getAchievementById(2);
-//
-//        assertEquals(firstAchievementDto, result);
-//    }
-//
-//    @Test
-//    void getUserAchievementsTest() {
-//        when(userAchievementRepository.findByUserId(2)).thenReturn(List.of(firstUserAchievement, secondUserAchievement));
-//
-//        List<UserAchievementDto> expected = List.of(firstUserAchievementDto, secondUserAchievementDto);
-//
-//        List<UserAchievementDto> result = achievementService.getUserAchievements(2);
-//
-//        assertEquals(expected, result);
-//
-//        verify(userAchievementRepository).findByUserId(2);
-//    }
-//
-//    @Test
-//    void getAllAchievementProgressByUserIdTest() {
-//        when(achievementProgressRepository.findByUserId(5)).thenReturn(List.of(firstProgress, secondProgress));
-//
-//        List<AchievementProgressDto> expected = List.of(firstDto, secondDto);
-//
-//        List<AchievementProgressDto> result = achievementService.getAllAchievementProgressByUserId(5);
-//
-//        assertEquals(expected, result);
-//
-//        verify(achievementProgressRepository).findByUserId(5);
-//    }
-//
-//    @Test
-//    void getAchievementProgressByUserIdTest() {
-//        when(achievementProgressRepository.findByUserIdAndAchievementId(2, 1))
-//                .thenReturn(Optional.of(firstProgress));
-//
-//        AchievementProgressDto result = achievementService.getAchievementProgressByUserId(1, 2);
-//
-//        assertEquals(firstDto, result);
-//    }
-//
-//    @Test
-//    void giveAchievementTest() {
-//        achievementService.giveAchievement(achievement, 1);
-//
-//        verify(userAchievementRepository).save(any(UserAchievement.class));
-//        verify(achievementEventPublisher).publishMessage(any(AchievementEventDto.class));
-//    }
-//
-//    @Test
-//    void addAchievementToUserIfEnoughPointsTest() {
-//        AchievementProgress achievementProgress = AchievementProgress.builder()
-//                .currentPoints(100)
-//                .build();
-//
-//        achievementService.addAchievementToUserIfEnoughPoints(achievementProgress, achievement, 1);
-//
-//        verify(userAchievementRepository).save(any(UserAchievement.class));
-//        verify(achievementEventPublisher).publishMessage(any(AchievementEventDto.class));
-//    }
-//
-//    @Test
-//    void getUserProgressByAchievementAndUserIdFirstScenarioTest() {
-//        AchievementProgress expectedAchievementProgress = AchievementProgress.builder()
-//                .currentPoints(35)
-//                .build();
-//
-//        when(achievementProgressRepository.findByUserIdAndAchievementId(1, 1))
-//                .thenReturn(Optional.of(expectedAchievementProgress));
-//
-//        AchievementProgress result = achievementService.getUserProgressByAchievementAndUserId(achievement.getId(), 1);
-//
-//        assertEquals(expectedAchievementProgress, result);
-//    }
-//
-//    @Test
-//    void getUserProgressByAchievementAndUserIdSecondScenarioTest() {
-//        AchievementProgress achievementProgress = AchievementProgress.builder()
-//                .currentPoints(0)
-//                .build();
-//
-//        doReturn(Optional.empty()).doReturn(Optional.of(achievementProgress))
-//                .when(achievementProgressRepository).findByUserIdAndAchievementId(2, 1);
-//
-//        AchievementProgress result = achievementService.getUserProgressByAchievementAndUserId(achievement.getId(), 2);
-//
-//        assertEquals(achievementProgress, result);
-//
-//        verify(achievementProgressRepository).createProgressIfNecessary(2, 1);
-//        verify(achievementProgressRepository, times(2)).findByUserIdAndAchievementId(2, 1);
-//    }
-//
-//    @Test
-//    void hasAchievementTest() {
-//        boolean result = achievementService.hasAchievement(achievement, 2);
-//
-//        assertTrue(result);
-//    }
-//}

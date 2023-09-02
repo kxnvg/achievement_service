@@ -1,11 +1,8 @@
 package faang.school.achievement.handler;
 
-import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.EventPostDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
-import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,10 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,8 +18,7 @@ public class OpinionLeaderAchievementHandlerTest {
 
     @Mock
     private AchievementService achievementService;
-    @Mock
-    private AchievementCache achievementCache;
+
     @InjectMocks
     private OpinionLeaderAchievementHandler achievementHandler;
 
@@ -50,32 +42,23 @@ public class OpinionLeaderAchievementHandlerTest {
     }
 
     @Test
-    void testHandleThrowException() {
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> achievementHandler.handle(postDto));
-
-        assertEquals("There is no achievement named: Opinion leader", exception.getMessage());
-    }
-
-    @Test
     void testHandle() {
-        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.ofNullable(achievement));
+        when(achievementService.getAchievement(ACHIEVEMENT_TITTLE)).thenReturn(achievement);
         when(achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(true);
         when(achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(ACHIEVEMENT_POINTS);
 
         achievementHandler.handle(postDto);
-        verify(achievementService).giveAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(achievementService).giveAchievement(AUTHOR_ID, ACHIEVEMENT_TITTLE);
     }
 
     @Test
     void testHandleWithCreateProgress() {
-        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.empty());
-        when(achievementService.getAchievement(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(achievement));
+        when(achievementService.getAchievement(ACHIEVEMENT_TITTLE)).thenReturn(achievement);
         when(achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(false);
         when(achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(ACHIEVEMENT_POINTS);
 
         achievementHandler.handle(postDto);
-        verify(achievementService).giveAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(achievementService).giveAchievement(AUTHOR_ID, ACHIEVEMENT_TITTLE);
         verify(achievementService).checkAndCreateAchievementProgress(ACHIEVEMENT_ID, ACHIEVEMENT_ID);
     }
 }

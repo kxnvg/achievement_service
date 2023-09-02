@@ -12,4 +12,7 @@ public interface AchievementMapper {
 
     @Named(value = "toAchievementDto")
     AchievementDto toAchievementDto(Achievement achievement);
+
+    @Named("toAchievementEntity")
+    Achievement toAchievementEntity (AchievementDto achievementDto);
 }

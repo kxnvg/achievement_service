@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserAchievementMapperTest {
 
@@ -101,6 +101,22 @@ class UserAchievementMapperTest {
         List<UserAchievementDto> expected = List.of(firstUserAchievementDto, secondUserAchievementDto);
 
         List<UserAchievementDto> result = userAchievementMapper.toDtoList(List.of(firstUserAchievement, secondUserAchievement));
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void toEntity() {
+        UserAchievement result = userAchievementMapper.toEntity(firstUserAchievementDto);
+
+        assertEquals(firstUserAchievement, result);
+    }
+
+    @Test
+    void toEntityList() {
+        List<UserAchievement> expected = List.of(firstUserAchievement, secondUserAchievement);
+
+        List<UserAchievement> result = userAchievementMapper.toEntityList(List.of(firstUserAchievementDto, secondUserAchievementDto));
 
         assertEquals(expected, result);
     }

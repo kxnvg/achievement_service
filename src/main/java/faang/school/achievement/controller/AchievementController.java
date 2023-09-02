@@ -3,10 +3,8 @@ package faang.school.achievement.controller;
 import faang.school.achievement.dto.AchievementDto;
 import faang.school.achievement.dto.AchievementProgressDto;
 import faang.school.achievement.dto.UserAchievementDto;
-import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +22,14 @@ public class AchievementController {
     private final AchievementService achievementService;
 
     @GetMapping("/achievement/{title}")
-    public AchievementDto getAchievementById(@PathVariable long id){
-        return achievementService.getAchievementById(id);
+    public AchievementDto getAchievementTitle(@PathVariable String title) {
+        return achievementService.getAchievementByTitle(title);
     }
 
-//    @GetMapping
-//    public Page<Achievement> getAllAchievements(@PageableDefault(size = 20) Pageable pageable){
-//        return achievementService.getAllAchievements(pageable);
-//    }
+    @GetMapping
+    public List<AchievementDto> getAllAchievements(@PageableDefault(size = 20) Pageable pageable) {
+        return achievementService.getAllAchievements(pageable);
+    }
 
     @GetMapping("/user/{userId}")
     public List<UserAchievementDto> getUserAchievements(@PathVariable long userId) {

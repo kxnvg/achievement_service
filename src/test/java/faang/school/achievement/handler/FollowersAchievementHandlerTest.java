@@ -1,11 +1,9 @@
 package faang.school.achievement.handler;
 
-import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.FollowerEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.service.AchievementService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,10 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,8 +20,6 @@ import static org.mockito.Mockito.when;
 class FollowersAchievementHandlerTest {
     @Mock
     private AchievementService achievementService;
-    @Mock
-    private AchievementCache achievementCache;
 
     private FollowersAchievementHandler followersAchievementHandler;
 
@@ -40,7 +33,7 @@ class FollowersAchievementHandlerTest {
 
     @BeforeEach
     void setUp() {
-        followersAchievementHandler = new FollowersAchievementHandler(achievementService, achievementCache);
+        followersAchievementHandler = new FollowersAchievementHandler(achievementService);
         followersAchievementHandler.setFollowersAchievementName(ACHIEVEMENT_NAME);
         UserAchievement firstUserAchievement = UserAchievement.builder()
                 .id(1)
@@ -64,19 +57,9 @@ class FollowersAchievementHandlerTest {
     }
 
     @Test
-    void handleThrowExceptionTest() {
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> followersAchievementHandler.handle(followerEventDto));
-
-        assertEquals("There is no achievement named: subscribers", exception.getMessage());
-    }
-
-    @Test
     void handleTest() {
-        when(achievementCache.get(ACHIEVEMENT_NAME))
-                .thenReturn(Optional.empty());
         when(achievementService.getAchievement(ACHIEVEMENT_NAME))
-                .thenReturn(Optional.of(achievement));
+                .thenReturn(achievement);
         when(achievementService.hasAchievement(1, 1))
                 .thenReturn(false);
         when(achievementService.getProgress(1, 1))
@@ -84,11 +67,10 @@ class FollowersAchievementHandlerTest {
 
         followersAchievementHandler.handle(followerEventDto);
 
-        verify(achievementCache).get(ACHIEVEMENT_NAME);
         verify(achievementService).getAchievement(ACHIEVEMENT_NAME);
         verify(achievementService).hasAchievement(1, 1);
         verify(achievementService).checkAndCreateAchievementProgress(1, 1);
         verify(achievementService).getProgress(1, 1);
-        verify(achievementService).giveAchievement(1, 1);
+        verify(achievementService).giveAchievement(1, ACHIEVEMENT_NAME);
     }
 }
