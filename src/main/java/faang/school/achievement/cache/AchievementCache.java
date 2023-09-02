@@ -7,24 +7,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Scope("singleton")
 public class AchievementCache {
     private final AchievementRepository achievementRepository;
-    private Map<String, Achievement> achievementMap;
+    private static Map<String, Achievement> achievementMap;
 
     public Achievement getAchievement(String achievementName){
         return achievementMap.get(achievementName);
     }
 
     @PostConstruct
-    private void fillInAchievementCache(){
+    private void init(){
         achievementMap = achievementRepository.findAll().stream()
-                .collect(Collectors.toMap(Achievement::getTitle, Function.identity()));
+                .collect(Collectors.toUnmodifiableMap(Achievement::getTitle, Function.identity()));
     }
 }
