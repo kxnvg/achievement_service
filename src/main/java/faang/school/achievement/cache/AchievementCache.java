@@ -2,6 +2,8 @@ package faang.school.achievement.cache;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.achievement.dto.AchievementCacheDto;
+import faang.school.achievement.mapper.AchievementCacheMapper;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
@@ -19,6 +21,7 @@ public class AchievementCache {
     private final RedisTemplate<String, String> redisCacheTemplate;
     private final ObjectMapper objectMapper;
     private final AchievementRepository achievementRepository;
+    private final AchievementCacheMapper achievementCacheMapper;
 
     @PostConstruct
     public void initCache() {
@@ -26,7 +29,8 @@ public class AchievementCache {
         Iterable<Achievement> achievements = achievementRepository.findAll();
         for (Achievement achievement : achievements) {
             try {
-                redisCacheTemplate.opsForValue().set(achievement.getTitle(), objectMapper.writeValueAsString(achievement));
+                AchievementCacheDto achievementCacheDto = achievementCacheMapper.toDto(achievement);
+                redisCacheTemplate.opsForValue().set(achievement.getTitle(), objectMapper.writeValueAsString(achievementCacheDto));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -36,7 +40,8 @@ public class AchievementCache {
     public Optional<Achievement> get(String title) {
         try {
             String achievementJson = redisCacheTemplate.opsForValue().get(title);
-            Achievement achievement = objectMapper.readValue(achievementJson, Achievement.class);
+            AchievementCacheDto achievementCacheDto = objectMapper.readValue(achievementJson, AchievementCacheDto.class);
+            Achievement achievement = achievementCacheMapper.toEntity(achievementCacheDto);
             return Optional.of(achievement);
         } catch (JsonProcessingException e) {
             return Optional.empty();

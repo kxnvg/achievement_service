@@ -1,6 +1,12 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.dto.AchievementDto;
 import faang.school.achievement.dto.AchievementEventDto;
+import faang.school.achievement.dto.AchievementProgressDto;
+import faang.school.achievement.dto.UserAchievementDto;
+import faang.school.achievement.mapper.AchievementMapper;
+import faang.school.achievement.mapper.AchievementProgressMapper;
+import faang.school.achievement.mapper.UserAchievementMapper;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.UserAchievement;
@@ -10,9 +16,12 @@ import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +32,37 @@ public class AchievementService {
     private final AchievementProgressRepository progressRepository;
     private final AchievementRepository achievementRepository;
     private final UserAchievementRepository userAchievementRepository;
+    private final AchievementProgressMapper achievementProgressMapper;
+    private final AchievementMapper achievementMapper;
+    private final UserAchievementMapper userAchievementMapper;
 
+    public AchievementDto getAchievementByTitle(String title) {
+        Achievement achievement = getAchievement(title);
+        return achievementMapper.toAchievementDto(achievement);
+    }
+
+    public List<AchievementDto> getAllAchievements(Pageable pageable) {
+        Page<Achievement> page = achievementRepository.findAll(pageable);
+        return page.getContent()
+                .stream()
+                .map(achievementMapper::toAchievementDto)
+                .toList();
+    }
+
+    public List<UserAchievementDto> getUserAchievements(long userId) {
+        List<UserAchievement> achievements = userAchievementRepository.findByUserId(userId);
+        return userAchievementMapper.toDtoList(achievements);
+    }
+
+    public List<AchievementProgressDto> getAchievementsProgressByUserId(long userId) {
+        List<AchievementProgress> achievementProgresses = progressRepository.findByUserId(userId);
+        return achievementProgressMapper.toDtoList(achievementProgresses);
+    }
+
+    public AchievementProgressDto getAchievementProgressByUserId(long achievementId, long userId) {
+        AchievementProgress achievementProgress = getUserProgressByAchievementAndUserId(achievementId, userId);
+        return achievementProgressMapper.toDto(achievementProgress);
+    }
     public boolean hasAchievement(long authorId, long achievementId) {
         return userAchievementRepository.existsByUserIdAndAchievementId(authorId, achievementId);
     }
