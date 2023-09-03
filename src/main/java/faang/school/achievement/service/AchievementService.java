@@ -1,5 +1,6 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.AchievementDto;
 import faang.school.achievement.dto.AchievementEventDto;
 import faang.school.achievement.dto.AchievementProgressDto;
@@ -14,6 +15,7 @@ import faang.school.achievement.publisher.AchievementPublisher;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,7 @@ public class AchievementService {
     private final AchievementProgressMapper achievementProgressMapper;
     private final AchievementMapper achievementMapper;
     private final UserAchievementMapper userAchievementMapper;
+    private final AchievementCache achievementCache;
 
     public AchievementDto getAchievementByTitle(String title) {
         Achievement achievement = getAchievement(title);
@@ -92,5 +95,21 @@ public class AchievementService {
         achievementPublisher.publish(new AchievementEventDto(authorId, cuttentAchievement.getTitle(), LocalDateTime.now()));
         log.info("Achievement:{} for authorId:{} saved successfully", cuttentAchievement.getTitle(), authorId);
         return userAchievement;
+    }
+
+    public AchievementProgress getUserProgressByAchievementAndUserId(long achievementId, long userId) {
+        return progressRepository.findByUserIdAndAchievementId(userId, achievementId)
+                .orElseGet(() -> createAndGetAchievementProgress(achievementId, userId));
+    }
+
+    public Achievement getAchievement(String title) {
+        return achievementCache.get(title)
+                .or(() -> achievementRepository.findByTitle(title))
+                .orElseThrow(() -> new EntityNotFoundException(String.format("There is no achievement named: %s", title)));
+    }
+
+    public AchievementProgress createAndGetAchievementProgress(long achievementId, long userId) {
+        progressRepository.createProgressIfNecessary(userId, achievementId);
+        return progressRepository.findByUserIdAndAchievementId(userId, achievementId).get();
     }
 }
