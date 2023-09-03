@@ -8,14 +8,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class AchievementEventDto {
-
-    private Long userId;
+    private long achievementId;
+    private long receiverId;
     private String achievementTitle;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventTime;
+    private LocalDateTime achievedAt;
 }
