@@ -17,7 +17,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync(proxyTargetClass = true)
 @EnableCaching(proxyTargetClass = true)
 @EnableRetry
-@EnableCaching
 public class AchievementServiceApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder(AchievementServiceApp.class)
