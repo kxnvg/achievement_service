@@ -1,23 +1,25 @@
 package faang.school.achievement.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "achievement")
-public class Achievement {
+@Table(name="achievement")
+public class Achievement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -34,9 +36,11 @@ public class Achievement {
     private Rarity rarity;
 
     @OneToMany(mappedBy = "achievement", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<UserAchievement> userAchievements;
 
     @OneToMany(mappedBy = "achievement", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<AchievementProgress> progresses;
 
     @Column(name = "points", nullable = false)

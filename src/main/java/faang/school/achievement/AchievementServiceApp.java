@@ -14,9 +14,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SpringBootApplication
 @EnableFeignClients("faang.school.achievement.client")
-@EnableAsync
+@EnableAsync(proxyTargetClass = true)
+@EnableCaching(proxyTargetClass = true)
 @EnableRetry
-@EnableCaching
 public class AchievementServiceApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder(AchievementServiceApp.class)

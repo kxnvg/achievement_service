@@ -6,6 +6,7 @@ import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
+import faang.school.achievement.util.exception.AchievementNotCreatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(MockitoExtension.class)
-public class AchievementServiceTest {
+class AchievementServiceTest {
     @Mock
     private AchievementRepository achievementRepository;
     @Mock
@@ -30,6 +33,23 @@ public class AchievementServiceTest {
     private AchievementService achievementService;
     private Achievement achievement;
     private AchievementProgress achievementProgress;
+
+    @Test
+    void getAchievementByTitle_AchievementNotCreated_ShouldThrowException() {
+        Mockito.when(achievementRepository.findByTitle(Mockito.anyString())).thenReturn(Optional.empty());
+
+        AchievementNotCreatedException e = assertThrows(AchievementNotCreatedException.class,
+                () -> achievementService.getAchievementByTitle("test"));
+        assertEquals("Achievement with title test not found", e.getMessage());
+    }
+
+    @Test
+    void getAchievementByTitle_AchievementCreated_ShouldNotThrowException() {
+        Mockito.when(achievementRepository.findByTitle(Mockito.anyString()))
+                .thenReturn(Optional.of(Achievement.builder().id(1L).title("test").build()));
+
+        assertDoesNotThrow(() -> achievementService.getAchievementByTitle("test"));
+    }
 
     @Test
     void AchievementAlreadyExistsTest() {

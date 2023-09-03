@@ -7,9 +7,11 @@ import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
+import faang.school.achievement.util.exception.AchievementNotCreatedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,14 @@ public class AchievementService {
     private final AchievementProgressRepository achievementProgressRepository;
     private final AchievementPublisher achievementPublisher;
 
+    @Cacheable(cacheNames = "achievements_by_title", key = "#title")
+    public Achievement getAchievementByTitle(String title) {
+        return achievementRepository.findByTitle(title).orElseThrow(() ->
+                new AchievementNotCreatedException(String.format("Achievement with title %s not found", title)));
+    }
+
     @Transactional
+    @CachePut(cacheNames = "achievements_progress", key = "#userId")
     public void updateAchievementProgress(long userId, Achievement achievement) {
         if (userAchievementRepository.existsByUserIdAndAchievementId(userId, achievement.getId())) return;
 
