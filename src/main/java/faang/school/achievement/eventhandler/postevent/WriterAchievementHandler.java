@@ -21,7 +21,6 @@ public class WriterAchievementHandler implements EventHandler<PostEvent> {
     @Value("${achievements.writer_achievement.name}")
     private String ACHIEVEMENT_NAME;
 
-    @SneakyThrows
     @Override
     @Async(value = "writerAchievementExecutor")
     public void handle(PostEvent event) {
