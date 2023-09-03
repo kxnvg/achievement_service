@@ -2,7 +2,7 @@ package faang.school.achievement.service.handler.followHandler;
 
 import faang.school.achievement.dto.follow.FollowEventDto;
 import faang.school.achievement.repository.cache.AchievementInMemCache;
-import faang.school.achievement.service.handler.AchievementService;
+import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.handler.EventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

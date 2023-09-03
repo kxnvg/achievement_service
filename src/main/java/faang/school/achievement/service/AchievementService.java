@@ -1,28 +1,28 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.dto.achievement.AchievementEvent;
+import faang.school.achievement.messaging.AchievementPublisher;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import faang.school.achievement.util.exception.AchievementNotCreatedException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class AchievementService {
-
     private final AchievementRepository achievementRepository;
     private final UserAchievementRepository userAchievementRepository;
     private final AchievementProgressRepository achievementProgressRepository;
+    private final AchievementPublisher achievementPublisher;
 
     @Cacheable(cacheNames = "achievements_by_title", key = "#title")
     public Achievement getAchievementByTitle(String title) {
@@ -42,6 +42,7 @@ public class AchievementService {
         if (progress.getCurrentPoints() >= achievement.getPoints()) {
             UserAchievement userAchievement = UserAchievement.builder().userId(userId).achievement(achievement).build();
             userAchievementRepository.save(userAchievement);
+            achievementPublisher.publish(new AchievementEvent(userId, achievement.getTitle(),achievement.getDescription()));
             log.info("User with id: " + userId + " has received achievement: " + achievement.getTitle());
         }
     }

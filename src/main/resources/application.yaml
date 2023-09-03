@@ -22,9 +22,14 @@ spring:
       port: 6379
       host: localhost
       channels:
-        achievement: achievement_channel
+        achievement_topic:
+          name: achievement_topic
         follower_channel:
           name: follower_channel
+        invitation_channel:
+          name: invitation_channel
+        mentorship_event_topic:
+          name: mentorship_event_topic
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -61,3 +66,4 @@ achievements:
   writer_achievement:
     name: "Писатель"
     target: 100
+  sensey_achievement: "Сенсей"
