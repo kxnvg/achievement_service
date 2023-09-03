@@ -127,39 +127,6 @@ public class AchievementServiceTest {
     }
 
     @Test
-    void toDtoTest() {
-        UserAchievementDto result = userAchievementMapper.toDto(firstUserAchievement);
-
-        assertEquals(firstUserAchievementDto, result);
-    }
-
-    @Test
-    void toDtoList() {
-        List<UserAchievementDto> expected = List.of(firstUserAchievementDto, secondUserAchievementDto);
-
-        List<UserAchievementDto> result = userAchievementMapper.toDtoList(List.of(firstUserAchievement, secondUserAchievement));
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void toEntity() {
-        UserAchievement result = userAchievementMapper.toEntity(firstUserAchievementDto);
-
-        assertEquals(firstUserAchievement, result);
-    }
-
-    @Test
-    void toEntityList() {
-        List<UserAchievement> expected = List.of(firstUserAchievement, secondUserAchievement);
-
-        List<UserAchievement> result = userAchievementMapper.toEntityList(List.of(firstUserAchievementDto, secondUserAchievementDto));
-
-        assertEquals(expected, result);
-    }
-}
-
-    @Test
     void getAchievementByTitleTest() {
         when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(controllerAchievement));
 
