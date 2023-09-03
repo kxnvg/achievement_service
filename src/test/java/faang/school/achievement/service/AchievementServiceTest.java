@@ -18,6 +18,7 @@ import faang.school.achievement.publisher.AchievementPublisher;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -218,5 +219,46 @@ public class AchievementServiceTest {
 
         assertEquals(1000L, actualProgress);
         verify(progressRepository).save(achievementProgress);
+    }
+
+    @Test
+    void getAchievementTest() {
+        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.empty());
+        when(achievementRepository.findByTitle(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(achievement));
+
+        Achievement result = achievementService.getAchievement(ACHIEVEMENT_TITTLE);
+
+        assertEquals(achievement, result);
+    }
+
+    @Test
+    void getAchievementThrowException() {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> achievementService.getAchievement(ACHIEVEMENT_TITTLE));
+
+        assertEquals("There is no achievement named: Opinion leader", exception.getMessage());
+    }
+
+    @Test
+    void getUserProgressByAchievementAndUserIdTest() {
+        doReturn(Optional.empty()).doReturn(Optional.of(achievementProgress))
+                .when(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        AchievementProgress result = achievementService.getUserProgressByAchievementAndUserId(ACHIEVEMENT_ID, AUTHOR_ID);
+
+        assertEquals(achievementProgress, result);
+
+        verify(progressRepository, times(2)).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
+    @Test
+    void createAndGetAchievementProgressTest() {
+        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
+                .thenReturn(Optional.of(achievementProgress));
+
+        AchievementProgress result = achievementService.createAndGetAchievementProgress(ACHIEVEMENT_ID, AUTHOR_ID);
+
+        assertEquals(achievementProgress, result);
     }
 }
