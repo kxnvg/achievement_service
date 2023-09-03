@@ -14,5 +14,5 @@ public interface AchievementMapper {
     AchievementDto toAchievementDto(Achievement achievement);
 
     @Named("toAchievementEntity")
-    Achievement toAchievementEntity (AchievementDto achievementDto);
+    Achievement toAchievementEntity(AchievementDto achievementDto);
 }

@@ -2,6 +2,7 @@ package faang.school.achievement.service;
 
 import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.AchievementDto;
+import faang.school.achievement.dto.AchievementEventDto;
 import faang.school.achievement.dto.AchievementProgressDto;
 import faang.school.achievement.dto.UserAchievementDto;
 import faang.school.achievement.mapper.AchievementMapper;
@@ -35,8 +36,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AchievementServiceTest {
@@ -198,7 +204,6 @@ public class AchievementServiceTest {
         assertEquals(controllerAchievementProgressDto, result);
     }
 
-
     @Test
     void testHasAchievement() {
         achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
@@ -206,19 +211,47 @@ public class AchievementServiceTest {
     }
 
     @Test
-    void testCreateProgressIfNecessary() {
-        achievementService.createProgressIfNecessary(ACHIEVEMENT_ID, AUTHOR_ID);
-        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
-    }
-
-    @Test
-    void testGetProgress() {
+    void testGetProgressFirstScenario() {
         when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
                 .thenReturn(Optional.ofNullable(achievementProgress));
         long actualProgress = achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID);
 
         assertEquals(1000L, actualProgress);
         verify(progressRepository).save(achievementProgress);
+    }
+
+    @Test
+    void testGetProgressSecondScenario() {
+        doReturn(Optional.empty()).doReturn(Optional.ofNullable(achievementProgress))
+                .when(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        verify(progressRepository, times(2)).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
+    @Test
+    void checkAndCreateAchievementProgressTest() {
+        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
+                .thenReturn(Optional.empty());
+
+        achievementService.checkAndCreateAchievementProgress(AUTHOR_ID, ACHIEVEMENT_ID);
+
+        verify(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+    }
+
+    @Test
+    void giveAchievementTest() {
+        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.empty());
+        when(achievementRepository.findByTitle(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(achievement));
+
+        achievementService.giveAchievement(1, ACHIEVEMENT_TITTLE);
+
+        verify(userAchievementRepository).save(any(UserAchievement.class));
+        verify(achievementPublisher)
+                .publish(any(AchievementEventDto.class));
     }
 
     @Test

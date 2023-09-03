@@ -68,6 +68,7 @@ public class AchievementService {
         AchievementProgress achievementProgress = getUserProgressByAchievementAndUserId(achievementId, userId);
         return achievementProgressMapper.toDto(achievementProgress);
     }
+
     public boolean hasAchievement(long authorId, long achievementId) {
         return userAchievementRepository.existsByUserIdAndAchievementId(authorId, achievementId);
     }
