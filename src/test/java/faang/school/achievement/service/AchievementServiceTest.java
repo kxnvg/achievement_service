@@ -53,14 +53,14 @@ public class AchievementServiceTest {
 
     @Test
     void testHasAchievement() {
-        achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
+        achievementService.hasAchievement(AUTHOR_ID, AUTHOR_ID);
         verify(userAchievementRepository).existsByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
     }
 
     @Test
     void testCreateProgressIfNecessary() {
-        achievementService.createProgressIfNecessary(ACHIEVEMENT_ID, AUTHOR_ID);
-        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
+        achievementService.createProgressIfNecessary(3, AUTHOR_ID);
+        verify(progressRepository).createProgressIfNecessary(ACHIEVEMENT_ID, ACHIEVEMENT_ID);
     }
 
     @Test
