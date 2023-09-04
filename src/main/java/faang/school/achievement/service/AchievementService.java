@@ -1,5 +1,6 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.AchievementDto;
 import faang.school.achievement.dto.AchievementFilterDto;
 import faang.school.achievement.dto.AchievementProgressDto;
@@ -32,15 +33,17 @@ public class AchievementService {
     private final UserAchievementMapper userAchievementMapper;
     private final AchievementProgressMapper achievementProgressMapper;
     private final List<AchievementFilter> filters;
+    private final AchievementCache achievementCache;
 
     public List<AchievementDto> getAllAchievements() {
-        return toStream(achievementRepository.findAll())
+        return achievementCache.getAll()
+                .stream()
                 .map(achievementMapper::toDto)
                 .toList();
     }
 
     public List<AchievementDto> getAllAchievements(AchievementFilterDto filterDto) {
-        Stream<Achievement> achievementStream = toStream(achievementRepository.findAll());
+        Stream<Achievement> achievementStream = achievementCache.getAll().stream();
         return filters.stream().filter(filter -> filter.isApplicable(filterDto))
                 .flatMap(filter -> filter.apply(achievementStream, filterDto))
                 .map(achievementMapper::toDto)

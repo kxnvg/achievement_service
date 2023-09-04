@@ -1,5 +1,6 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.AchievementDto;
 import faang.school.achievement.dto.AchievementProgressDto;
 import faang.school.achievement.dto.UserAchievementDto;
@@ -19,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,9 @@ public class AchievementServiceTest {
     @Mock
     private AchievementProgressMapper achievementProgressMapper;
 
+    @Mock
+    private AchievementCache cache;
+
     @InjectMocks
     private AchievementService achievementService;
 
@@ -63,7 +68,7 @@ public class AchievementServiceTest {
                 .title("title2")
                 .build();
 
-        List<Achievement> achievementList = List.of(achievement1, achievement2);
+        Collection<Achievement> achievementList = List.of(achievement1, achievement2);
 
         AchievementDto dto1 = AchievementDto.builder()
                 .id(1L)
@@ -76,7 +81,7 @@ public class AchievementServiceTest {
 
         List<AchievementDto> achievementDtoList = List.of(dto1, dto2);
 
-        when(achievementRepository.findAll())
+        when(cache.getAll())
                 .thenReturn(achievementList);
         when(achievementMapper.toDto(achievement1)).thenReturn(dto1);
         when(achievementMapper.toDto(achievement2)).thenReturn(dto2);
