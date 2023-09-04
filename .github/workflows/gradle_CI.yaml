@@ -14,10 +14,10 @@ jobs:
     services:
       postgres:
         image: postgres:13.3
-        environment:
-          - POSTGRES_USER=user
-          - POSTGRES_PASSWORD=password
-          - POSTGRES_DB=postgres
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -33,7 +33,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: 17
           distribution: 'temurin'
 
       - name: Build with Gradle
