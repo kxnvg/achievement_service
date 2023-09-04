@@ -2,7 +2,6 @@ package faang.school.achievement.handler;
 
 import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.GoalSetEventDto;
-import faang.school.achievement.dto.TaskEventDto;
 import faang.school.achievement.service.AchievementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -16,7 +15,7 @@ public class CollectorHandler extends AbstractEventHandler implements EventHandl
     }
 
     @Override
-    public void handleAsync(GoalSetEventDto goalSetEventDto) {
-        handle(goalSetEventDto.getUserId(), "Collector");
+    public void handle(GoalSetEventDto goalSetEventDto) {
+        handleAsync(goalSetEventDto.getUserId(), "Collector");
     }
 }

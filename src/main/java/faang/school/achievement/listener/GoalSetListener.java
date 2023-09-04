@@ -18,6 +18,6 @@ public class GoalSetListener extends AbstractEventListener<GoalSetEventDto> impl
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        handleEvent(getMessage(message), GoalSetEventDto.class);
+        handleEvent(getMessageBody(message), GoalSetEventDto.class);
     }
 }

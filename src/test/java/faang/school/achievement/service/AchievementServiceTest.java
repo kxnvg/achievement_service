@@ -1,6 +1,5 @@
 package faang.school.achievement.service;
 
-<<<<<<< HEAD
 import faang.school.achievement.config.context.UserContext;
 import faang.school.achievement.dto.achievement.DtoAchievement;
 import faang.school.achievement.dto.achievement.DtoAchievementProgress;
@@ -18,42 +17,28 @@ import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import org.junit.jupiter.api.Assertions;
-=======
-import faang.school.achievement.model.Achievement;
-import faang.school.achievement.model.AchievementProgress;
-import faang.school.achievement.model.UserAchievement;
-import faang.school.achievement.repository.AchievementProgressRepository;
-import faang.school.achievement.repository.UserAchievementRepository;
->>>>>>> basilisk-master
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-<<<<<<< HEAD
 import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-=======
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
->>>>>>> basilisk-master
 
 @ExtendWith(MockitoExtension.class)
 class AchievementServiceTest {
     @Mock
-<<<<<<< HEAD
     private UserContext userContext;
     @Mock
     private AchievementRepository achievementRepository;
@@ -133,14 +118,7 @@ class AchievementServiceTest {
         achievement3.setDescription("bears");
         achievement3.setRarity(Rarity.RARE);
         value = List.of(achievement1, achievement2, achievement3);
-=======
-    private UserAchievementRepository userAchievementRepository;
-
-    @Mock
-    private AchievementProgressRepository achievementProgressRepository;
-
-    @InjectMocks
-    private AchievementService achievementService;
+    }
 
     @Test
     public void testHasAchievement() {
@@ -191,6 +169,5 @@ class AchievementServiceTest {
         AchievementProgress result = achievementService.getAchievementProgress(userId, achievementId);
 
         assertNull(result);
->>>>>>> basilisk-master
     }
 }

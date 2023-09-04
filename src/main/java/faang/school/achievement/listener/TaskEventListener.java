@@ -17,6 +17,6 @@ public class TaskEventListener extends AbstractEventListener<TaskEventDto> imple
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        handleEvent(getMessage(message), TaskEventDto.class);
+        handleEvent(getMessageBody(message), TaskEventDto.class);
     }
 }

@@ -17,7 +17,7 @@ public abstract class AbstractEventHandler{
     private final AchievementService achievementService;
     private final AsyncTaskExecutor asyncTaskExecutor;
 
-    public void handle(Long userId, String achievementTitle) {
+    public void handleAsync(Long userId, String achievementTitle) {
         asyncTaskExecutor.execute(() -> {
             Achievement achievement = achievementCache.get(achievementTitle);
             long achievementId = achievement.getId();

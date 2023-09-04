@@ -14,7 +14,7 @@ public class MrProductivityAchievementHandler extends AbstractEventHandler imple
     }
 
     @Override
-    public void handleAsync(TaskEventDto value) {
-        handle(value.getUserId(), "MrProductivity");
+    public void handle(TaskEventDto value) {
+        handleAsync(value.getUserId(), "MrProductivity");
     }
 }
