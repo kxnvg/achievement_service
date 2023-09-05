@@ -66,7 +66,7 @@ class AchievementServiceTest {
 
     @Test
     void hasAchievement_shouldInvokeRepositoryExistsByUserIdAndAchievementIdMethod() {
-        achievementService.hasAchievement(1L, 1L);
+        achievementService.userHasAchievement(1L, 1L);
         verify(userAchievementRepository).existsByUserIdAndAchievementId(1L, 1L);
     }
 

@@ -19,7 +19,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
         Achievement achievement = achievementCache.get(achievementTitle);
         long achievementId = achievement.getId();
 
-        if (achievementService.hasAchievement(userId, achievementId)) {
+        if (achievementService.userHasAchievement(userId, achievementId)) {
             log.info("User: {} already has achievement {}", userId, achievement.getTitle());
             return;
         }
@@ -30,7 +30,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
 
         if (progress.getCurrentPoints() >= achievement.getPoints()) {
             achievementService.giveAchievement(userId, achievement);
-            log.info("User: {} has achieved achievement {}", userId, achievement.getTitle());
+            log.info("User: {} has achieved achievement: {}", userId, achievement.getTitle());
         }
     }
 }

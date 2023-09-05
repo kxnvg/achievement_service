@@ -58,7 +58,7 @@ class SkillAcquiredEventHandlerTest {
                 .build();
 
         when(achievementCache.get("Skill-Master")).thenReturn(achievement);
-        when(achievementService.hasAchievement(1L, 1L)).thenReturn(false);
+        when(achievementService.userHasAchievement(1L, 1L)).thenReturn(false);
         when(achievementService.getProgress(1L, 1L)).thenReturn(progress);
     }
 
@@ -75,10 +75,10 @@ class SkillAcquiredEventHandlerTest {
 
     @Test
     void handle_shouldStopExecuting() {
-        when(achievementService.hasAchievement(1L, 1L)).thenReturn(true);
+        when(achievementService.userHasAchievement(1L, 1L)).thenReturn(true);
 
         skillAcquiredEventHandler.handle(skillAcquiredEventDto);
-        verify(achievementService).hasAchievement(1L, 1L);
+        verify(achievementService).userHasAchievement(1L, 1L);
         verifyNoMoreInteractions(achievementService);
     }
 
