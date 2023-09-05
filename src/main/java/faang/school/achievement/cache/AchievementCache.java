@@ -6,7 +6,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -26,4 +28,9 @@ public class AchievementCache {
     public Achievement get(String title) {
         return achievements.get(title);
     }
+
+    public Collection<Achievement> getAll() {
+        return achievements.values();
+    }
+
 }
