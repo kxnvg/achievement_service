@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public abstract class GoalHandler implements EventHandler<GoalSetEventDto>{
+public abstract class GoalHandler implements EventHandler<GoalSetEventDto> {
     private final AchievementCache achievementCache;
     private final AchievementService achievementService;
     private final AsyncTaskExecutor asyncTaskExecutor;
+
     protected void handle(GoalSetEventDto goalSetEventDto, String achievementTitle) {
         asyncTaskExecutor.execute(() -> {
             Achievement achievement = achievementCache.get(achievementTitle);
