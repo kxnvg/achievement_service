@@ -19,7 +19,7 @@ public class SenseiAchievementEventHandler extends AbstractAchievementHandler<Me
 
     @Override
     public void handle(MentorshipStartEventDto event) {
-
+        handleAchievement(achievementTitle, event.getMentorId());
     }
 
     @Override

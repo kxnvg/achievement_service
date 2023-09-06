@@ -1,7 +1,7 @@
 package faang.school.achievement.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.SkillAcquiredEventDto;
+import faang.school.achievement.dto.MentorshipStartEventDto;
 import faang.school.achievement.handler.EventHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,43 +16,42 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class SkillEventListenerTest {
+class MentorshipStartEventListenerTest {
     @InjectMocks
-    private SkillEventListener skillEventListener;
+    private MentorshipStartEventListener mentorshipStartEventListener;
     @Mock
     private ObjectMapper objectMapper;
     @Mock
-    private List<EventHandler<SkillAcquiredEventDto>> handlers;
-    private SkillAcquiredEventDto skillAcquiredEventDto;
+    private List<EventHandler<MentorshipStartEventDto>> handlers;
+    private MentorshipStartEventDto mentorshipStartEventDto;
     private Message message;
 
     @BeforeEach
     void setUp() throws IOException {
-        skillAcquiredEventDto = mock(SkillAcquiredEventDto.class);
+        mentorshipStartEventDto = mock(MentorshipStartEventDto.class);
 
         message = mock(Message.class);
         byte[] body = new byte[0];
 
         when(message.getBody()).thenReturn(body);
-        when(objectMapper.readValue(message.getBody(), SkillAcquiredEventDto.class))
-                .thenReturn(skillAcquiredEventDto);
+        when(objectMapper.readValue(message.getBody(), MentorshipStartEventDto.class))
+                .thenReturn(mentorshipStartEventDto);
     }
 
     @Test
     void onMessage_shouldInvokeObjectMapperReadValueMethod() throws IOException {
-        skillEventListener.onMessage(message, new byte[0]);
-        verify(objectMapper).readValue(message.getBody(), SkillAcquiredEventDto.class);
+        mentorshipStartEventListener.onMessage(message, new byte[0]);
+        verify(objectMapper).readValue(message.getBody(), MentorshipStartEventDto.class);
     }
 
     @Test
     void onMessage_shouldInvokeHandleEventMethod() {
-        skillEventListener.onMessage(message, new byte[0]);
-        handlers.forEach(handler -> verify(handler).handle(skillAcquiredEventDto));
+        mentorshipStartEventListener.onMessage(message, new byte[0]);
+        handlers.forEach(handler -> verify(handler).handle(mentorshipStartEventDto));
     }
 }

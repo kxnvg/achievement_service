@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 @Component
 public class MentorshipStartEventListener extends AbstractListener<MentorshipStartEventDto> {
-    @Value("${spring.data.redis.channels.mentorship_channel}")
+    @Value("${spring.achievements.mentorship.title}")
     private String mentorshipChannel;
 
     public MentorshipStartEventListener(ObjectMapper objectMapper, List<EventHandler<MentorshipStartEventDto>> eventHandlers) {
