@@ -2,12 +2,9 @@ package faang.school.achievement.service;
 
 import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.AchievementDto;
-import faang.school.achievement.dto.AchievementProgressDto;
 import faang.school.achievement.dto.UserAchievementDto;
 import faang.school.achievement.mapper.AchievementMapper;
 import faang.school.achievement.mapper.AchievementMapperImpl;
-import faang.school.achievement.mapper.AchievementProgressMapper;
-import faang.school.achievement.mapper.AchievementProgressMapperImpl;
 import faang.school.achievement.mapper.UserAchievementMapper;
 import faang.school.achievement.mapper.UserAchievementMapperImpl;
 import faang.school.achievement.model.Achievement;
@@ -35,8 +32,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AchievementServiceTest {
@@ -52,19 +51,13 @@ public class AchievementServiceTest {
     @Spy
     private AchievementMapper achievementMapper = new AchievementMapperImpl();
     @Spy
-    private AchievementProgressMapper achievementProgressMapper = new AchievementProgressMapperImpl(achievementMapper);
-    @Spy
     private UserAchievementMapper userAchievementMapper = new UserAchievementMapperImpl(achievementMapper);
     @Mock
     private AchievementCache achievementCache;
     @InjectMocks
     private AchievementService achievementService;
 
-
     private AchievementProgress achievementProgress;
-    private AchievementProgress controllerAchievementProgress;
-    private AchievementProgressDto controllerAchievementProgressDto;
-    private Achievement achievement;
     private Achievement controllerAchievement;
     private Achievement secondAchievement;
     private AchievementDto achievementDto;
@@ -80,10 +73,6 @@ public class AchievementServiceTest {
         achievementProgress = AchievementProgress.builder()
                 .userId(AUTHOR_ID)
                 .currentPoints(CURRENT_POINTS)
-                .build();
-        achievement = Achievement.builder()
-                .id(ACHIEVEMENT_ID)
-                .title(ACHIEVEMENT_TITTLE)
                 .build();
         controllerAchievement = Achievement.builder()
                 .id(ACHIEVEMENT_ID)
@@ -113,18 +102,6 @@ public class AchievementServiceTest {
                 .rarity(Rarity.EPIC)
                 .points(1000)
                 .build();
-        controllerAchievementProgress = AchievementProgress.builder()
-                .id(1)
-                .achievement(controllerAchievement)
-                .userId(2)
-                .currentPoints(100)
-                .build();
-        controllerAchievementProgressDto = AchievementProgressDto.builder()
-                .id(1)
-                .achievementDto(achievementDto)
-                .userId(2)
-                .currentPoints(100)
-                .build();
     }
 
     @Test
@@ -134,6 +111,14 @@ public class AchievementServiceTest {
         AchievementDto result = achievementService.getAchievementByTitle(ACHIEVEMENT_TITTLE);
 
         assertEquals(achievementDto, result);
+    }
+
+    @Test
+    void getAchievementByTitleThrowExceptionTest() {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> achievementService.getAchievementByTitle(ACHIEVEMENT_TITTLE));
+
+        assertEquals("There is no achievement named: Opinion leader", exception.getMessage());
     }
 
     @Test
@@ -147,9 +132,9 @@ public class AchievementServiceTest {
 
         when(achievementRepository.findAll(pageable)).thenReturn(achievementPage);
 
-        List<AchievementDto> result = achievementService.getAllAchievements(pageable);
+        Page<AchievementDto> result = achievementService.getAllAchievements(pageable);
 
-        assertEquals(expected, result);
+        assertEquals(new PageImpl<>(expected), result);
     }
 
     @Test
@@ -178,28 +163,6 @@ public class AchievementServiceTest {
     }
 
     @Test
-    void getAchievementsProgressByUserIdTest() {
-        List<AchievementProgress> achievementProgresses = List.of(controllerAchievementProgress);
-
-        when(progressRepository.findByUserId(AUTHOR_ID)).thenReturn(achievementProgresses);
-
-        List<AchievementProgressDto> result = achievementService.getAchievementsProgressByUserId(AUTHOR_ID);
-
-        assertEquals(List.of(controllerAchievementProgressDto), result);
-    }
-
-    @Test
-    void getAchievementProgressByUserIdTest() {
-        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
-                .thenReturn(Optional.of(controllerAchievementProgress));
-
-        AchievementProgressDto result = achievementService.getAchievementProgressByUserId(ACHIEVEMENT_ID, AUTHOR_ID);
-
-        assertEquals(controllerAchievementProgressDto, result);
-    }
-
-
-    @Test
     void testHasAchievement() {
         achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
         verify(userAchievementRepository).existsByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
@@ -219,46 +182,5 @@ public class AchievementServiceTest {
 
         assertEquals(1000L, actualProgress);
         verify(progressRepository).save(achievementProgress);
-    }
-
-    @Test
-    void getAchievementTest() {
-        when(achievementCache.get(ACHIEVEMENT_TITTLE)).thenReturn(Optional.empty());
-        when(achievementRepository.findByTitle(ACHIEVEMENT_TITTLE)).thenReturn(Optional.of(achievement));
-
-        Achievement result = achievementService.getAchievement(ACHIEVEMENT_TITTLE);
-
-        assertEquals(achievement, result);
-    }
-
-    @Test
-    void getAchievementThrowException() {
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> achievementService.getAchievement(ACHIEVEMENT_TITTLE));
-
-        assertEquals("There is no achievement named: Opinion leader", exception.getMessage());
-    }
-
-    @Test
-    void getUserProgressByAchievementAndUserIdTest() {
-        doReturn(Optional.empty()).doReturn(Optional.of(achievementProgress))
-                .when(progressRepository).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
-
-        AchievementProgress result = achievementService.getUserProgressByAchievementAndUserId(ACHIEVEMENT_ID, AUTHOR_ID);
-
-        assertEquals(achievementProgress, result);
-
-        verify(progressRepository, times(2)).findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID);
-        verify(progressRepository).createProgressIfNecessary(AUTHOR_ID, ACHIEVEMENT_ID);
-    }
-
-    @Test
-    void createAndGetAchievementProgressTest() {
-        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
-                .thenReturn(Optional.of(achievementProgress));
-
-        AchievementProgress result = achievementService.createAndGetAchievementProgress(ACHIEVEMENT_ID, AUTHOR_ID);
-
-        assertEquals(achievementProgress, result);
     }
 }
