@@ -8,6 +8,7 @@ import faang.school.achievement.model.Rarity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,8 +30,13 @@ class AchievementProgressMapperTest {
     private AchievementProgressDto firstDto;
     private AchievementProgressDto secondDto;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
     @BeforeEach
     void setUp() {
+        createdAt = LocalDateTime.now().minusMonths(1);
+        updatedAt = LocalDateTime.now();
         firstAchievement = Achievement.builder()
                 .id(1)
                 .title("first title")
@@ -43,6 +49,8 @@ class AchievementProgressMapperTest {
                 .achievement(firstAchievement)
                 .userId(1)
                 .currentPoints(35)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .build();
         secondAchievement = Achievement.builder()
                 .id(2)
@@ -56,6 +64,8 @@ class AchievementProgressMapperTest {
                 .achievement(secondAchievement)
                 .userId(2)
                 .currentPoints(55)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .build();
         firstAchievementDto = AchievementDto.builder()
                 .id(1)
@@ -69,6 +79,8 @@ class AchievementProgressMapperTest {
                 .achievementDto(firstAchievementDto)
                 .userId(1)
                 .currentPoints(35)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .build();
         secondAchievementDto = AchievementDto.builder()
                 .id(2)
@@ -82,6 +94,8 @@ class AchievementProgressMapperTest {
                 .achievementDto(secondAchievementDto)
                 .userId(2)
                 .currentPoints(55)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .build();
     }
 

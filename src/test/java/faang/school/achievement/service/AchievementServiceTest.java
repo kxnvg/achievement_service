@@ -58,14 +58,11 @@ public class AchievementServiceTest {
     @Spy
     private AchievementMapper achievementMapper = new AchievementMapperImpl();
     @Spy
-    private AchievementProgressMapper achievementProgressMapper = new AchievementProgressMapperImpl(achievementMapper);
-    @Spy
     private UserAchievementMapper userAchievementMapper = new UserAchievementMapperImpl(achievementMapper);
     @Mock
     private AchievementCache achievementCache;
     @InjectMocks
     private AchievementService achievementService;
-
 
     private AchievementProgress achievementProgress;
     private AchievementProgress controllerAchievementProgress;
@@ -143,6 +140,14 @@ public class AchievementServiceTest {
     }
 
     @Test
+    void getAchievementByTitleThrowExceptionTest() {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> achievementService.getAchievementByTitle(ACHIEVEMENT_TITTLE));
+
+        assertEquals("There is no achievement named: Opinion leader", exception.getMessage());
+    }
+
+    @Test
     void getAllAchievementsTest() {
         Pageable pageable = PageRequest.of(0, 2);
 
@@ -153,9 +158,9 @@ public class AchievementServiceTest {
 
         when(achievementRepository.findAll(pageable)).thenReturn(achievementPage);
 
-        List<AchievementDto> result = achievementService.getAllAchievements(pageable);
+        Page<AchievementDto> result = achievementService.getAllAchievements(pageable);
 
-        assertEquals(expected, result);
+        assertEquals(new PageImpl<>(expected), result);
     }
 
     @Test
@@ -181,27 +186,6 @@ public class AchievementServiceTest {
         List<UserAchievementDto> result = achievementService.getUserAchievements(AUTHOR_ID);
 
         assertEquals(List.of(userAchievementDto), result);
-    }
-
-    @Test
-    void getAchievementsProgressByUserIdTest() {
-        List<AchievementProgress> achievementProgresses = List.of(controllerAchievementProgress);
-
-        when(progressRepository.findByUserId(AUTHOR_ID)).thenReturn(achievementProgresses);
-
-        List<AchievementProgressDto> result = achievementService.getAchievementsProgressByUserId(AUTHOR_ID);
-
-        assertEquals(List.of(controllerAchievementProgressDto), result);
-    }
-
-    @Test
-    void getAchievementProgressByUserIdTest() {
-        when(progressRepository.findByUserIdAndAchievementId(AUTHOR_ID, ACHIEVEMENT_ID))
-                .thenReturn(Optional.of(controllerAchievementProgress));
-
-        AchievementProgressDto result = achievementService.getAchievementProgressByUserId(ACHIEVEMENT_ID, AUTHOR_ID);
-
-        assertEquals(controllerAchievementProgressDto, result);
     }
 
     @Test

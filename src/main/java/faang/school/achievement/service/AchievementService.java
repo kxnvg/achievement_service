@@ -19,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,6 @@ public class AchievementService {
     private final AchievementProgressRepository progressRepository;
     private final AchievementRepository achievementRepository;
     private final UserAchievementRepository userAchievementRepository;
-    private final AchievementProgressMapper achievementProgressMapper;
     private final AchievementMapper achievementMapper;
     private final UserAchievementMapper userAchievementMapper;
     private final AchievementCache achievementCache;
@@ -46,27 +46,18 @@ public class AchievementService {
         return achievementMapper.toAchievementDto(achievement);
     }
 
-    public List<AchievementDto> getAllAchievements(Pageable pageable) {
+    public Page<AchievementDto> getAllAchievements(Pageable pageable) {
         Page<Achievement> page = achievementRepository.findAll(pageable);
-        return page.getContent()
+        List<AchievementDto> achievementDtos = page.getContent()
                 .stream()
                 .map(achievementMapper::toAchievementDto)
                 .toList();
+        return new PageImpl<>(achievementDtos);
     }
 
     public List<UserAchievementDto> getUserAchievements(long userId) {
         List<UserAchievement> achievements = userAchievementRepository.findByUserId(userId);
         return userAchievementMapper.toDtoList(achievements);
-    }
-
-    public List<AchievementProgressDto> getAchievementsProgressByUserId(long userId) {
-        List<AchievementProgress> achievementProgresses = progressRepository.findByUserId(userId);
-        return achievementProgressMapper.toDtoList(achievementProgresses);
-    }
-
-    public AchievementProgressDto getAchievementProgressByUserId(long achievementId, long userId) {
-        AchievementProgress achievementProgress = getUserProgressByAchievementAndUserId(achievementId, userId);
-        return achievementProgressMapper.toDto(achievementProgress);
     }
 
     public boolean hasAchievement(long authorId, long achievementId) {
@@ -108,19 +99,18 @@ public class AchievementService {
         return userAchievement;
     }
 
-    public Achievement getAchievement(String title) {
+    private Achievement getAchievement(String title) {
         return achievementCache.get(title)
                 .or(() -> achievementRepository.findByTitle(title))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("There is no achievement named: %s", title)));
     }
-
-    public AchievementProgress getUserProgressByAchievementAndUserId(long achievementId, long userId) {
-        return progressRepository.findByUserIdAndAchievementId(userId, achievementId)
-                .orElseGet(() -> createAndGetAchievementProgress(achievementId, userId));
-    }
-
-    public AchievementProgress createAndGetAchievementProgress(long achievementId, long userId) {
-        progressRepository.createProgressIfNecessary(userId, achievementId);
-        return progressRepository.findByUserIdAndAchievementId(userId, achievementId).get();
-    }
 }
+//    public AchievementProgress getUserProgressByAchievementAndUserId(long achievementId, long userId) {
+//        return progressRepository.findByUserIdAndAchievementId(userId, achievementId)
+//                .orElseGet(() -> createAndGetAchievementProgress(achievementId, userId));
+//    }
+//
+//    public AchievementProgress createAndGetAchievementProgress(long achievementId, long userId) {
+//        progressRepository.createProgressIfNecessary(userId, achievementId);
+//        return progressRepository.findByUserIdAndAchievementId(userId, achievementId).get();
+//    }
