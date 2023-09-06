@@ -5,13 +5,12 @@ import faang.school.achievement.dto.InviteSentEventDto;
 import faang.school.achievement.hundler.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class InviteEventListener extends AbstractEventListener<InviteSentEventDto> implements MessageListener {
+public class InviteEventListener extends AbstractEventListener<InviteSentEventDto> {
     private final List<EventHandler> eventHandlers;
 
     @Autowired

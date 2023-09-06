@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.achievement.exception.DeserializeJSONException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public abstract class AbstractEventListener<T> {
+public abstract class AbstractEventListener<T> implements MessageListener {
 
     private final ObjectMapper objectMapper;
 
