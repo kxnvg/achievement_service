@@ -12,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AchievementService {
 
+    private final AchievementCache achievementCache;
     private final AchievementRepository achievementRepository;
 
     @Transactional
@@ -19,7 +20,7 @@ public class AchievementService {
         return achievementRepository.save(achievement);
     }
 
-    public Optional<Achievement> getByTitle(String title) {
-        return achievementRepository.findByTitle(title);
+    public Achievement getAchievement(String title) {
+        return achievementCache.getAchievement(title);
     }
 }
