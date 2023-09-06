@@ -18,8 +18,10 @@ import faang.school.achievement.repository.UserAchievementRepository;
 import faang.school.achievement.service.filter.AchievementFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -71,7 +73,40 @@ public class AchievementService {
                 .orElseThrow(() -> new DataValidationException("Achievement by ID: " + achievementId + " not found"));
     }
 
-    private Stream<Achievement> toStream(Iterable<Achievement> achievementIterable){
+    private Stream<Achievement> toStream(Iterable<Achievement> achievementIterable) {
         return StreamSupport.stream(achievementIterable.spliterator(), false);
     }
+
+    public boolean hasAchievement(long userId, long achievementId) {
+        return userAchievementRepository.existsByUserIdAndAchievementId(userId, achievementId);
+    }
+
+    @Transactional
+    public void giveAchievement(UserAchievement userAchievement) {
+        userAchievementRepository.save(userAchievement);
+    }
+
+    @Transactional
+    public Achievement createAchievement(Achievement achievement) {
+        return achievementRepository.save(achievement);
+    }
+
+    public Optional<Achievement> getAchievementByTitle(String title) {
+        return achievementRepository.findByTitle(title);
+    }
+
+    public Optional<AchievementProgress> getAchievementProgress(long userId, long achievementId) {
+        return achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId);
+    }
+
+    @Transactional
+    public AchievementProgress createAchievementProgressIfNecessary(AchievementProgress achievementProgress) {
+        return achievementProgressRepository.save(achievementProgress);
+    }
+
+    @Transactional
+    public AchievementProgress updateAchievementProgress(AchievementProgress achievementProgress) {
+        return achievementProgressRepository.save(achievementProgress);
+    }
+
 }

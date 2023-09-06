@@ -24,6 +24,8 @@ spring:
       channel:
         achievement: achievement_channel
         follower: follower_channel
+        goal_channel:
+          name: goal_channel
 
 server:
   port: 8085
@@ -35,3 +37,11 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+
+achievements:
+  goal:
+    collector:
+      title: Собиратор
+      description: Собрать 100 целей
+      points: 100
