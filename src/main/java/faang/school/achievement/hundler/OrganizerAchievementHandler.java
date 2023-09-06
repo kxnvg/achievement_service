@@ -14,10 +14,8 @@ public class OrganizerAchievementHandler extends AbstractOrganizerAchievementHan
     public OrganizerAchievementHandler(AchievementService achievementService,
                                        UserAchievementService userAchievementService,
                                        AchievementProgressService achievementProgressService,
-                                       @Value("${invite.title}") String title,
-                                       @Value("${invite.description}") String description,
-                                       @Value("${invite.points}") long points) {
+                                       @Value("${invite.title}") String title) {
 
-        super(achievementService, userAchievementService, achievementProgressService, title, description, points);
+        super(achievementService, userAchievementService, achievementProgressService, title);
     }
 }
