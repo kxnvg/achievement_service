@@ -1,7 +1,6 @@
 package faang.school.achievement.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.ProjectEventDto;
 import faang.school.achievement.exception.DeserializeJSONException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
