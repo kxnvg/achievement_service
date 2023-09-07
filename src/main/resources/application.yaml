@@ -24,7 +24,14 @@ spring:
       channels:
         achievement: achievement_channel
         follower: follower_channel
-        mentorship: /mentorship
+        post: post_channel
+
+async:
+  thread-pool:
+    settings:
+      core-pool-size: 4
+      max-pool-size: 8
+      queue-capacity: 100
 
 server:
   port: 8085
@@ -36,3 +43,13 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+achievement-service:
+  follower-handler:
+    thread-pool:
+      corePoolSize: 1
+      maximumPoolSize: 10
+      keepAliveTime: 0
+  achievement:
+    followers:
+      name: subscribers
