@@ -21,7 +21,6 @@ public class PostEventListener extends AbstractListener<PostEventDto> {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         PostEventDto event = readValue(message.getBody(), PostEventDto.class);
-        System.out.println(event);
         handleEvent(event, achievementTitle);
     }
 }
