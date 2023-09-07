@@ -44,21 +44,14 @@ public class OpinionLeaderAchievementHandlerTest {
     @Test
     void testHandle() {
         when(achievementService.getAchievement(ACHIEVEMENT_TITTLE)).thenReturn(achievement);
-        when(achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(true);
-        when(achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(ACHIEVEMENT_POINTS);
-
-        achievementHandler.handle(postDto);
-        verify(achievementService).giveAchievement(AUTHOR_ID, ACHIEVEMENT_TITTLE);
-    }
-
-    @Test
-    void testHandleWithCreateProgress() {
-        when(achievementService.getAchievement(ACHIEVEMENT_TITTLE)).thenReturn(achievement);
         when(achievementService.hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(false);
         when(achievementService.getProgress(AUTHOR_ID, ACHIEVEMENT_ID)).thenReturn(ACHIEVEMENT_POINTS);
 
         achievementHandler.handle(postDto);
-        verify(achievementService).giveAchievement(AUTHOR_ID, ACHIEVEMENT_TITTLE);
-        verify(achievementService).checkAndCreateAchievementProgress(ACHIEVEMENT_ID, ACHIEVEMENT_ID);
+
+        verify(achievementService).getAchievement(ACHIEVEMENT_TITTLE);
+        verify(achievementService).hasAchievement(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(achievementService).getProgress(AUTHOR_ID, ACHIEVEMENT_ID);
+        verify(achievementService).giveAchievement(achievement,AUTHOR_ID);
     }
 }

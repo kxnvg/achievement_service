@@ -1,7 +1,7 @@
 package faang.school.achievement.listener;
 
 import faang.school.achievement.dto.FollowerEventDto;
-import faang.school.achievement.handler.FollowerEventHandler;
+import faang.school.achievement.handler.AbstractEventHandler;
 import faang.school.achievement.handler.FollowersAchievementHandler;
 import faang.school.achievement.mapper.JsonObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class FollowerEventListenerTest {
     @BeforeEach
     void setUp() {
         followerHandler.setFollowersAchievementName("subscribers");
-        List<FollowerEventHandler> eventHandlerList = List.of(followerHandler);
+        List<? extends AbstractEventHandler<FollowerEventDto>> eventHandlerList = List.of(followerHandler);
         followerEventListener = new FollowerEventListener(jsonObjectMapper, eventHandlerList);
     }
 

@@ -2,6 +2,7 @@ package faang.school.achievement.service;
 
 
 import faang.school.achievement.dto.AchievementProgressDto;
+import faang.school.achievement.exception.AchievementProgressCreationException;
 import faang.school.achievement.mapper.AchievementProgressMapper;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.repository.AchievementProgressRepository;
@@ -20,7 +21,7 @@ public class AchievementProgressService {
     private final AchievementProgressRepository progressRepository;
 
     public AchievementProgressDto getAchievementProgressByUserId(long achievementId, long userId) {
-        AchievementProgress achievementProgress = getUserProgressByAchievementAndUserId(achievementId, userId);
+        AchievementProgress achievementProgress = getUserProgressByAchievementAndUserId(userId, achievementId);
         return achievementProgressMapper.toDto(achievementProgress);
     }
 
@@ -29,14 +30,14 @@ public class AchievementProgressService {
         return achievementProgressMapper.toDtoList(achievementProgresses);
     }
 
-    private AchievementProgress getUserProgressByAchievementAndUserId(long achievementId, long userId) {
+    public AchievementProgress getUserProgressByAchievementAndUserId(long userId, long achievementId) {
         return progressRepository.findByUserIdAndAchievementId(userId, achievementId)
-                .orElseGet(() -> createAndGetAchievementProgress(achievementId, userId));
+                .orElseGet(() -> createAndGetAchievementProgress(userId, achievementId));
     }
 
-    private AchievementProgress createAndGetAchievementProgress(long achievementId, long userId) {
+    private AchievementProgress createAndGetAchievementProgress(long userId, long achievementId) {
         progressRepository.createProgressIfNecessary(userId, achievementId);
-        log.info("Created new progress for achievementId: {} and userId: {}", achievementId, userId);
-        return progressRepository.findByUserIdAndAchievementId(userId, achievementId).get();
+        return progressRepository.findByUserIdAndAchievementId(userId, achievementId)
+                .orElseThrow(() -> new AchievementProgressCreationException(String.format("Can't create achievement progress with userId: %d, achievementId: %d", userId, achievementId)));
     }
 }

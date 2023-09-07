@@ -69,8 +69,7 @@ class FollowersAchievementHandlerTest {
 
         verify(achievementService).getAchievement(ACHIEVEMENT_NAME);
         verify(achievementService).hasAchievement(1, 1);
-        verify(achievementService).checkAndCreateAchievementProgress(1, 1);
         verify(achievementService).getProgress(1, 1);
-        verify(achievementService).giveAchievement(1, ACHIEVEMENT_NAME);
+        verify(achievementService).giveAchievement(achievement,1);
     }
 }

@@ -3,10 +3,8 @@ package faang.school.achievement.service;
 import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.AchievementDto;
 import faang.school.achievement.dto.AchievementEventDto;
-import faang.school.achievement.dto.AchievementProgressDto;
 import faang.school.achievement.dto.UserAchievementDto;
 import faang.school.achievement.mapper.AchievementMapper;
-import faang.school.achievement.mapper.AchievementProgressMapper;
 import faang.school.achievement.mapper.UserAchievementMapper;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +37,7 @@ public class AchievementService {
     private final AchievementMapper achievementMapper;
     private final UserAchievementMapper userAchievementMapper;
     private final AchievementCache achievementCache;
+    private final AchievementProgressService achievementProgressService;
 
     public AchievementDto getAchievementByTitle(String title) {
         Achievement achievement = getAchievement(title);
@@ -65,52 +63,35 @@ public class AchievementService {
     }
 
     public long getProgress(long authorId, long achievementId) {
-        AchievementProgress progress = getUserProgressByAchievementAndUserId(achievementId, authorId);
+        AchievementProgress progress = achievementProgressService.getUserProgressByAchievementAndUserId(authorId, achievementId);
         progress.increment();
         log.info("Achievement progress for authorId:{} has incremented successfully", authorId);
         progressRepository.save(progress);
         return progress.getCurrentPoints();
     }
 
-    public void checkAndCreateAchievementProgress(long userId, long achievementId) {
-        Optional<AchievementProgress> userProgress = progressRepository.findByUserIdAndAchievementId(userId, achievementId);
-        if (userProgress.isEmpty()) {
-            progressRepository.createProgressIfNecessary(userId, achievementId);
-        }
-    }
-
     @Transactional
-    public UserAchievement giveAchievement(long authorId, String achievementTitle) {
-        Achievement currentAchievement = getAchievement(achievementTitle);
+    public UserAchievement giveAchievement(Achievement achievement, long authorId) {
         UserAchievement userAchievement = UserAchievement.builder()
                 .userId(authorId)
-                .achievement(currentAchievement)
+                .achievement(achievement)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
         userAchievementRepository.save(userAchievement);
 
-        long id = currentAchievement.getId();
-        String title = currentAchievement.getTitle();
+        long id = achievement.getId();
+        String title = achievement.getTitle();
 
         achievementPublisher.publish(new AchievementEventDto(id, authorId, title, LocalDateTime.now()));
-        log.info("Achievement:{} for authorId:{} saved successfully", currentAchievement.getTitle(), authorId);
+        log.info("Achievement:{} for authorId:{} saved successfully", achievement.getTitle(), authorId);
         return userAchievement;
     }
 
-    private Achievement getAchievement(String title) {
+    public Achievement getAchievement(String title) {
         return achievementCache.get(title)
                 .or(() -> achievementRepository.findByTitle(title))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("There is no achievement named: %s", title)));
     }
 }
-//    public AchievementProgress getUserProgressByAchievementAndUserId(long achievementId, long userId) {
-//        return progressRepository.findByUserIdAndAchievementId(userId, achievementId)
-//                .orElseGet(() -> createAndGetAchievementProgress(achievementId, userId));
-//    }
-//
-//    public AchievementProgress createAndGetAchievementProgress(long achievementId, long userId) {
-//        progressRepository.createProgressIfNecessary(userId, achievementId);
-//        return progressRepository.findByUserIdAndAchievementId(userId, achievementId).get();
-//    }

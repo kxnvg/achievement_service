@@ -1,7 +1,7 @@
 package faang.school.achievement.listener;
 
 import faang.school.achievement.dto.FollowerEventDto;
-import faang.school.achievement.handler.FollowerEventHandler;
+import faang.school.achievement.handler.AbstractEventHandler;
 import faang.school.achievement.mapper.JsonObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.List;
 public class FollowerEventListener implements MessageListener {
 
     private final JsonObjectMapper jsonObjectMapper;
-    private final List<FollowerEventHandler> list;
+    private final List<? extends AbstractEventHandler<FollowerEventDto>> list;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
