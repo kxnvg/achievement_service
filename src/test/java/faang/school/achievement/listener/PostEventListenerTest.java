@@ -1,7 +1,7 @@
 package faang.school.achievement.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.SkillAcquiredEventDto;
+import faang.school.achievement.dto.PostEventDto;
 import faang.school.achievement.handler.EventHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,43 +16,45 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class SkillEventListenerTest {
+class PostEventListenerTest {
+
     @InjectMocks
-    private SkillEventListener skillEventListener;
+    private PostEventListener postEventListener;
     @Mock
     private ObjectMapper objectMapper;
+
     @Mock
-    private List<EventHandler<SkillAcquiredEventDto>> handlers;
-    private SkillAcquiredEventDto skillAcquiredEventDto;
+    private List<EventHandler<PostEventDto>> eventHandlers;
+
+    private PostEventDto postEventDto;
     private Message message;
+
 
     @BeforeEach
     void setUp() throws IOException {
-        skillAcquiredEventDto = mock(SkillAcquiredEventDto.class);
+        postEventDto = mock(PostEventDto.class);
 
         message = mock(Message.class);
         byte[] body = new byte[0];
 
         when(message.getBody()).thenReturn(body);
-        when(objectMapper.readValue(message.getBody(), SkillAcquiredEventDto.class))
-                .thenReturn(skillAcquiredEventDto);
+        when(objectMapper.readValue(message.getBody(), PostEventDto.class))
+                .thenReturn(postEventDto);
     }
 
     @Test
     void onMessage_shouldInvokeObjectMapperReadValueMethod() throws IOException {
-        skillEventListener.onMessage(message, new byte[0]);
-        verify(objectMapper).readValue(message.getBody(), SkillAcquiredEventDto.class);
+        postEventListener.onMessage(message, new byte[0]);
+        verify(objectMapper).readValue(message.getBody(), PostEventDto.class);
     }
 
     @Test
     void onMessage_shouldInvokeHandleEventMethod() {
-        skillEventListener.onMessage(message, new byte[0]);
-        handlers.forEach(handler -> verify(handler).handle(skillAcquiredEventDto));
+        postEventListener.onMessage(message, new byte[0]);
+        eventHandlers.forEach(handler -> verify(handler).handle(postEventDto));
     }
 }
