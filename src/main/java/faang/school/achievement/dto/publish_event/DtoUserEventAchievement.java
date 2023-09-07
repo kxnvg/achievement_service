@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DtoUserEventAchievement implements DtoEvent {
+public class DtoUserEventAchievement {
     private long userId;
     private DtoAchievement achievement;
 }
