@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Setter
-public class FollowersAchievementHandler extends AbstractEventHandler<FollowerEventDto> {
+public class FollowersAchievementHandler extends AbstractAchievementHandler<FollowerEventDto> {
 
     @Value("${achievement-service.achievement.followers.name}")
     private String followersAchievementName;

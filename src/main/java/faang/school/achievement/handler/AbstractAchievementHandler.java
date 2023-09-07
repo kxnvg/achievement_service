@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public abstract class AbstractEventHandler<T> implements EventHandler<T> {
+public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
 
     private final AchievementService achievementService;
 

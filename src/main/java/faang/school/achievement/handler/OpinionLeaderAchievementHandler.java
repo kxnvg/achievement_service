@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableAsync
-public class OpinionLeaderAchievementHandler extends AbstractEventHandler<EventPostDto> {
+public class OpinionLeaderAchievementHandler extends AbstractAchievementHandler<EventPostDto> {
 
     private final String ACHIEVEMENT_TITTLE = "Opinion leader";
 
