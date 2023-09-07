@@ -27,25 +27,20 @@ class NiceGuyAchievementHandlerTest {
     private AchievementProgressService achievementProgressService;
 
     private final String titleAchievement = "Просто душка";
-    private final String descriptionAchievement = "Получить 10 рекомендаций от других пользователей";
-    private final long pointsAchievement = 10;
 
     private Achievement achievement;
     private RecommendationEventDto recommendationEventDto;
     private AchievementProgress achievementProgress;
     @InjectMocks
     private NiceGuyAchievementHandler niceGuyAchievementHandler =
-            new NiceGuyAchievementHandler(achievementService, userAchievementService, achievementProgressService,
-                    titleAchievement, descriptionAchievement, pointsAchievement);
+            new NiceGuyAchievementHandler(achievementService, userAchievementService, achievementProgressService, titleAchievement);
 
     @BeforeEach
     public void init() {
         achievement = Achievement.builder()
                 .id(1L)
                 .title(titleAchievement)
-                .description(descriptionAchievement)
                 .rarity(Rarity.RARE)
-                .points(pointsAchievement)
                 .build();
 
         recommendationEventDto = RecommendationEventDto.builder()
@@ -65,7 +60,7 @@ class NiceGuyAchievementHandlerTest {
 
     @Test
     public void testHandler() {
-        Mockito.when(achievementService.getByTitle(titleAchievement)).thenReturn(Optional.of(achievement));
+        Mockito.when(achievementService.getAchievement(titleAchievement)).thenReturn(achievement);
 
         Mockito.when(userAchievementService.hasAchievement(recommendationEventDto.getAuthorId(), achievement.getId())).thenReturn(false);
 
@@ -85,24 +80,14 @@ class NiceGuyAchievementHandlerTest {
 
     @Test
     public void testHandlerToCreateAchievement() {
-        var achievement1 = Achievement.builder()
-                .id(0L)
-                .title(titleAchievement)
-                .description(descriptionAchievement)
-                .rarity(null)
-                .points(pointsAchievement)
-                .build();
-
         var achievementProgress1 = AchievementProgress.builder()
                 .id(0L)
                 .achievement(achievement)
                 .userId(recommendationEventDto.getAuthorId())
                 .currentPoints(0)
-                .version(1L)
                 .build();
 
-        Mockito.when(achievementService.getByTitle(titleAchievement)).thenReturn(Optional.empty());
-        Mockito.when(achievementService.createAchievement(achievement1)).thenReturn(achievement);
+        Mockito.when(achievementService.getAchievement(titleAchievement)).thenReturn(achievement);
         Mockito.when(userAchievementService.hasAchievement(achievement.getId(), recommendationEventDto.getAuthorId())).thenReturn(false);
         Mockito.when(achievementProgressService.getProgress(recommendationEventDto.getAuthorId(), achievement.getId()))
                 .thenReturn(Optional.empty());

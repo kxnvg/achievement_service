@@ -21,17 +21,12 @@ public class AbstractNiceGuyAchievementHandler implements EventHandler<Recommend
     private UserAchievementService userAchievementService;
     private AchievementProgressService achievementProgressService;
     private String title;
-    private String description;
-    private long points;
     private final Lock lock = new ReentrantLock();
 
     @Override
     @Async
     public void handle(RecommendationEventDto event) {
-        Achievement achievement = achievementService.getByTitle(title).orElseGet(() -> {
-            Achievement achievement1 = Achievement.builder().title(title).description(description).points(points).build();
-            return achievementService.createAchievement(achievement1);
-        });
+        Achievement achievement = achievementService.getAchievement(title);
 
         boolean exists = userAchievementService.hasAchievement(achievement.getId(), event.getAuthorId());
 
@@ -68,7 +63,6 @@ public class AbstractNiceGuyAchievementHandler implements EventHandler<Recommend
                     .achievement(achievement)
                     .userId(event.getAuthorId())
                     .currentPoints(0)
-                    .version(1)
                     .build();
 
             return achievementProgressService.createProgressIfNecessary(achievementProgress);

@@ -15,9 +15,7 @@ public class NiceGuyAchievementHandler extends AbstractNiceGuyAchievementHandler
     public NiceGuyAchievementHandler(AchievementService achievementService,
                                      UserAchievementService userAchievementService,
                                      AchievementProgressService achievementProgressService,
-                                     @Value("${recommendation.title}") String title,
-                                     @Value("${recommendation.description}") String description,
-                                     @Value("${recommendation.points}") long points) {
-        super(achievementService, userAchievementService, achievementProgressService, title, description, points);
+                                     @Value("${recommendation.title}") String title) {
+        super(achievementService, userAchievementService, achievementProgressService, title);
     }
 }

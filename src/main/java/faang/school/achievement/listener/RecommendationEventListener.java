@@ -5,13 +5,12 @@ import faang.school.achievement.dto.RecommendationEventDto;
 import faang.school.achievement.handler.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto> implements MessageListener {
+public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto> {
     private final List<EventHandler> eventHandlers;
 
     @Autowired
