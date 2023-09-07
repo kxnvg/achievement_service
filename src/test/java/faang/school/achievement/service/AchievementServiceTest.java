@@ -165,9 +165,9 @@ public class AchievementServiceTest {
 
         when(userAchievementRepository.findByUserId(AUTHOR_ID)).thenReturn(List.of(userAchievement));
 
-        List<UserAchievementDto> result = achievementService.getUserAchievements(AUTHOR_ID);
+        Page<UserAchievementDto> result = achievementService.getUserAchievements(AUTHOR_ID);
 
-        assertEquals(List.of(userAchievementDto), result);
+        assertEquals(new PageImpl<>(List.of(userAchievementDto)), result);
     }
 
     @Test

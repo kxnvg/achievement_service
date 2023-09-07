@@ -18,8 +18,8 @@ public class ThreadPoolConfig {
     @Value("${achievement-service.follower-handler.thread-pool.keepAliveTime}")
     private int keepAliveTime;
 
-    @Bean
-    public ThreadPoolExecutor followerHandlerThreadPoolExecutor() {
+    @Bean("followerEventThreadPoolExecutor")
+    public ThreadPoolExecutor followerEventThreadPoolExecutor() {
         return new ThreadPoolExecutor(
                 corePoolSize,
                 maximumPoolSize,

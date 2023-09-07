@@ -8,6 +8,8 @@ import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +27,10 @@ public class AchievementProgressService {
         return achievementProgressMapper.toDto(achievementProgress);
     }
 
-    public List<AchievementProgressDto> getAchievementsProgressByUserId(long userId) {
+    public Page<AchievementProgressDto> getAchievementsProgressByUserId(long userId) {
         List<AchievementProgress> achievementProgresses = progressRepository.findByUserId(userId);
-        return achievementProgressMapper.toDtoList(achievementProgresses);
+        List<AchievementProgressDto> progressDtos = achievementProgressMapper.toDtoList(achievementProgresses);
+        return new PageImpl<>(progressDtos);
     }
 
     public AchievementProgress getUserProgressByAchievementAndUserId(long userId, long achievementId) {

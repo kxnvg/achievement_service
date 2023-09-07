@@ -1,9 +1,8 @@
 package faang.school.achievement.handler;
 
 import faang.school.achievement.dto.FollowerEventDto;
-import faang.school.achievement.model.Achievement;
-import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.service.AchievementService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,19 +10,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FollowersAchievementHandlerTest {
     @Mock
     private AchievementService achievementService;
+    @Mock
+    private ThreadPoolExecutor testThreadPoolExecutor;
 
     private FollowersAchievementHandler followersAchievementHandler;
-
-    private Achievement achievement;
 
     private LocalDateTime currentTime;
 
@@ -33,21 +32,8 @@ class FollowersAchievementHandlerTest {
 
     @BeforeEach
     void setUp() {
-        followersAchievementHandler = new FollowersAchievementHandler(achievementService);
+        followersAchievementHandler = new FollowersAchievementHandler(achievementService, testThreadPoolExecutor);
         followersAchievementHandler.setFollowersAchievementName(ACHIEVEMENT_NAME);
-        UserAchievement firstUserAchievement = UserAchievement.builder()
-                .id(1)
-                .userId(1)
-                .build();
-        UserAchievement secondUserAchievement = UserAchievement.builder()
-                .id(2)
-                .userId(2)
-                .build();
-        achievement = Achievement.builder()
-                .id(1)
-                .points(100)
-                .userAchievements(List.of(firstUserAchievement, secondUserAchievement))
-                .build();
         currentTime = LocalDateTime.now();
         followerEventDto = FollowerEventDto.builder()
                 .followerId(2)
@@ -58,18 +44,8 @@ class FollowersAchievementHandlerTest {
 
     @Test
     void handleTest() {
-        when(achievementService.getAchievement(ACHIEVEMENT_NAME))
-                .thenReturn(achievement);
-        when(achievementService.hasAchievement(1, 1))
-                .thenReturn(false);
-        when(achievementService.getProgress(1, 1))
-                .thenReturn(100L);
-
         followersAchievementHandler.handle(followerEventDto);
 
-        verify(achievementService).getAchievement(ACHIEVEMENT_NAME);
-        verify(achievementService).hasAchievement(1, 1);
-        verify(achievementService).getProgress(1, 1);
-        verify(achievementService).giveAchievement(achievement,1);
+        verify(testThreadPoolExecutor).execute(any(Runnable.class));
     }
 }

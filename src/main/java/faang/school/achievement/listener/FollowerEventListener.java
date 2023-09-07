@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
@@ -18,11 +18,11 @@ import java.util.List;
 public class FollowerEventListener implements MessageListener {
 
     private final JsonObjectMapper jsonObjectMapper;
-    private final List<? extends AbstractAchievementHandler<FollowerEventDto>> list;
+    private final List<AbstractAchievementHandler<FollowerEventDto>> list;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        log.info("Event has been received from {} topic", Arrays.toString(message.getChannel()));
+        log.info("Event has been received from {} topic", new String(message.getChannel(), StandardCharsets.UTF_8));
 
         FollowerEventDto dto = jsonObjectMapper.readValue(message.getBody(), FollowerEventDto.class);
         list.forEach(handler -> handler.handle(dto));

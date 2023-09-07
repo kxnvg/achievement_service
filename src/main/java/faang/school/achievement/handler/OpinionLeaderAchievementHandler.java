@@ -2,25 +2,28 @@ package faang.school.achievement.handler;
 
 import faang.school.achievement.dto.EventPostDto;
 import faang.school.achievement.service.AchievementService;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 @Component
-@EnableAsync
 public class OpinionLeaderAchievementHandler extends AbstractAchievementHandler<EventPostDto> {
 
+    private final ThreadPoolTaskExecutor postEventThreadPoolExecutor;
     private final String ACHIEVEMENT_TITTLE = "Opinion leader";
 
-    public OpinionLeaderAchievementHandler(AchievementService achievementService) {
+    @Autowired
+    public OpinionLeaderAchievementHandler(AchievementService achievementService, ThreadPoolTaskExecutor postEventThreadPoolExecutor) {
         super(achievementService);
+        this.postEventThreadPoolExecutor = postEventThreadPoolExecutor;
     }
 
-    @Async("threadPoolForAchievementHandler")
     @Override
     public void handle(EventPostDto postDto) {
-        long userId = getIfOfPostAuthor(postDto);
-        handleAchievement(userId, ACHIEVEMENT_TITTLE);
+        postEventThreadPoolExecutor.execute(() -> {
+            long userId = getIfOfPostAuthor(postDto);
+            handleAchievement(userId, ACHIEVEMENT_TITTLE);
+        });
     }
 
     private long getIfOfPostAuthor(EventPostDto postDto) {

@@ -17,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -111,8 +113,8 @@ class AchievementProgressServiceTest {
 
         when(progressRepository.findByUserId(AUTHOR_ID)).thenReturn(achievementProgresses);
 
-        List<AchievementProgressDto> result = achievementProgressService.getAchievementsProgressByUserId(AUTHOR_ID);
+        Page<AchievementProgressDto> result = achievementProgressService.getAchievementsProgressByUserId(AUTHOR_ID);
 
-        assertEquals(List.of(controllerAchievementProgressDto), result);
+        assertEquals(new PageImpl<>(List.of(controllerAchievementProgressDto)), result);
     }
 }

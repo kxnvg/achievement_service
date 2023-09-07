@@ -33,7 +33,7 @@ class FollowerEventListenerTest {
     @BeforeEach
     void setUp() {
         followerHandler.setFollowersAchievementName("subscribers");
-        List<? extends AbstractAchievementHandler<FollowerEventDto>> eventHandlerList = List.of(followerHandler);
+        List<AbstractAchievementHandler<FollowerEventDto>> eventHandlerList = List.of(followerHandler);
         followerEventListener = new FollowerEventListener(jsonObjectMapper, eventHandlerList);
     }
 

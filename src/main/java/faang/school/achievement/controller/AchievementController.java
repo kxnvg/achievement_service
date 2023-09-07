@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/achievements")
@@ -34,7 +32,7 @@ public class AchievementController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<UserAchievementDto> getUserAchievements(@PathVariable long userId) {
+    public Page<UserAchievementDto> getUserAchievements(@PathVariable long userId) {
         return achievementService.getUserAchievements(userId);
     }
 }

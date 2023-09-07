@@ -53,15 +53,17 @@ public class AchievementService {
         return new PageImpl<>(achievementDtos);
     }
 
-    public List<UserAchievementDto> getUserAchievements(long userId) {
+    public Page<UserAchievementDto> getUserAchievements(long userId) {
         List<UserAchievement> achievements = userAchievementRepository.findByUserId(userId);
-        return userAchievementMapper.toDtoList(achievements);
+        List<UserAchievementDto> userAchievementDto = userAchievementMapper.toDtoList(achievements);
+        return new PageImpl<>(userAchievementDto);
     }
 
     public boolean hasAchievement(long authorId, long achievementId) {
         return userAchievementRepository.existsByUserIdAndAchievementId(authorId, achievementId);
     }
 
+    @Transactional
     public long getProgress(long authorId, long achievementId) {
         AchievementProgress progress = achievementProgressService.getUserProgressByAchievementAndUserId(authorId, achievementId);
         progress.increment();

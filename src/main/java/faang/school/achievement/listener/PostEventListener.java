@@ -18,7 +18,7 @@ import java.util.List;
 public class PostEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
-    private final List<? extends AbstractAchievementHandler<EventPostDto>> handlers;
+    private final List<AbstractAchievementHandler<EventPostDto>> handlers;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
