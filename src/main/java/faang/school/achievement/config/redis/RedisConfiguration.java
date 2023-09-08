@@ -1,6 +1,7 @@
 package faang.school.achievement.config.redis;
 
 import faang.school.achievement.listener.GoalSetListener;
+import faang.school.achievement.listener.MentorshipEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfiguration {
+    @Value("${spring.data.redis.channels.mentorship_channel}")
+    private String mentorshipEvent;
+    private final MentorshipEventListener mentorshipEventListener;
     private final GoalSetListener goalSetListener;
     @Value("${spring.data.redis.channels.goal_set_channel.name}")
     private String goalSetChannel;
@@ -44,6 +48,7 @@ public class RedisConfiguration {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(goalSetListener, new ChannelTopic(goalSetChannel));
+        container.addMessageListener(mentorshipEventListener, new ChannelTopic(mentorshipEvent));
         return container;
     }
 }

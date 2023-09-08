@@ -28,6 +28,7 @@ spring:
           name: follower_channel
         goal_set_channel:
           name: goal_set_channel
+        mentorship_channel: mentorship_channel
 
   async:
     min_pool_size: 5
