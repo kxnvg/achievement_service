@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public abstract class AbstractEventHandler{
+public abstract class AbstractEventHandler {
     private final AchievementCache achievementCache;
     private final AchievementService achievementService;
     private final AsyncTaskExecutor asyncTaskExecutor;
