@@ -2,6 +2,7 @@ package faang.school.achievement.config.redis;
 
 import faang.school.achievement.listener.GoalSetListener;
 import faang.school.achievement.listener.MentorshipEventListener;
+import faang.school.achievement.listener.TaskEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +22,11 @@ public class RedisConfiguration {
     private String mentorshipEvent;
     private final MentorshipEventListener mentorshipEventListener;
     private final GoalSetListener goalSetListener;
+    private final TaskEventListener taskEventListener;
     @Value("${spring.data.redis.channels.goal_set_channel.name}")
     private String goalSetChannel;
+    @Value("${spring.data.redis.channels.task_channel.name}")
+    private String taskChannel;
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -49,6 +53,7 @@ public class RedisConfiguration {
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(goalSetListener, new ChannelTopic(goalSetChannel));
         container.addMessageListener(mentorshipEventListener, new ChannelTopic(mentorshipEvent));
+        container.addMessageListener(taskEventListener, new ChannelTopic(taskChannel));
         return container;
     }
 }

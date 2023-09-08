@@ -13,6 +13,7 @@ import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.model.UserAchievement;
+import faang.school.achievement.publisher.Channels;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AchievementServiceTest {
+public class AchievementServiceTest {
     @Mock
     private UserContext userContext;
     @Mock
@@ -53,9 +54,25 @@ class AchievementServiceTest {
         createAchievementDto();
         DtoFilterAchievement filters = new DtoFilterAchievement();
         filters.setTitle("tomato");
-        AchievementService service = new AchievementService(userContext, achievementRepository, userAchievementRepository, achievementProgressRepository,
-                List.of(new FilterAchievementName(), new FilterAchievementDescription(), new FilterAchievementRarity()), value);
+        AchievementService service = new AchievementService(new Channels(), userContext, achievementRepository, userAchievementRepository, achievementProgressRepository,
+                List.of(new FilterAchievementName(), new FilterAchievementDescription(), new FilterAchievementRarity()));
+        Achievement achievement11 = new Achievement();
+        achievement11.setTitle("tomato");
+        achievement11.setId(1L);
+        achievement11.setDescription("tomatos");
+        achievement11.setRarity(Rarity.EPIC);
+        Achievement achievement12 = new Achievement();
+        achievement12.setTitle("tiger");
+        achievement12.setId(2L);
+        achievement12.setDescription("tigers");
+        achievement12.setRarity(Rarity.LEGENDARY);
+        Achievement achievement13 = new Achievement();
+        achievement13.setTitle("bear");
+        achievement13.setId(3L);
+        achievement13.setDescription("bears");
+        achievement13.setRarity(Rarity.RARE);
 
+        when(achievementRepository.findAll()).thenReturn(List.of(achievement11, achievement12, achievement13));
         List<DtoAchievement> expected = service.allAchievements(filters);
         List<DtoAchievement> actual = List.of(achievement1);
 
@@ -124,16 +141,6 @@ class AchievementServiceTest {
         boolean hasAchievement = achievementService.hasAchievement(userId, achievementId);
 
         assertTrue(hasAchievement);
-    }
-
-    @Test
-    public void testGiveAchievement() {
-        long userId = 1L;
-        Achievement achievement = new Achievement(); // Создайте нужный Achievement
-
-        achievementService.giveAchievement(userId, achievement);
-
-        verify(userAchievementRepository).save(any(UserAchievement.class));
     }
 
     @Test

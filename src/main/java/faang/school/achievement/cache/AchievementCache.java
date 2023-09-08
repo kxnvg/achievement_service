@@ -24,7 +24,11 @@ public class AchievementCache {
 
     @PostConstruct
     private void initAchievements() {
-        achievements = achievementRepository.findAll().stream()
-                .collect(Collectors.toUnmodifiableMap(Achievement::getTitle, Function.identity()));
+        Achievement achievement = new Achievement();
+        achievement.setId(1);
+        achievement.setTitle("MrProductivity");
+        achievements = Map.of("MrProductivity", achievement);
+//        achievements = achievementRepository.findAll().stream()
+//                .collect(Collectors.toUnmodifiableMap(Achievement::getTitle, Function.identity()));
     }
 }
