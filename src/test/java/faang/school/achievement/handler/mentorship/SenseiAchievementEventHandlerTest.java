@@ -38,8 +38,8 @@ class SenseiAchievementEventHandlerTest {
         ReflectionTestUtils.setField(senseiAchievementEventHandler, "achievementTitle", "Achievement-Sensei");
 
         mentorshipStartEventDto = MentorshipStartEventDto.builder()
-                .menteeId(1L)
-                .mentorId(2L)
+                .authorId(1L)
+                .receiverId(2L)
                 .build();
 
         achievement = Achievement.builder()

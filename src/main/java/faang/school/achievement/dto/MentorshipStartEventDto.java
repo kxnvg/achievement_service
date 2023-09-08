@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MentorshipStartEventDto {
-    private Long menteeId;
-    private Long mentorId;
+    private Long authorId;
+    private Long receiverId;
 }

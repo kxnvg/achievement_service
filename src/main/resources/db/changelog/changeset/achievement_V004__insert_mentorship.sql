@@ -1,2 +1,2 @@
 INSERT INTO achievement (title, description, rarity, points)
-VALUES ('Skill-Master', 'User with three skills', 1, 3);
+VALUES ('Achievement-Sensei', 'User with two mentees', 1, 2);

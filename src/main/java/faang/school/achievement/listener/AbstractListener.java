@@ -27,7 +27,7 @@ public abstract class AbstractListener<T> implements MessageListener {
 
     protected void handleEvent(T event, String achievementTitle) {
         handlers.stream()
-                .filter(handler -> handler.getAchievementTitle().equals(achievementTitle))
+                .filter(handler -> handler.getAchievementTitle().equalsIgnoreCase(achievementTitle))
                 .forEach(handler -> handler.handle(event));
     }
 }
