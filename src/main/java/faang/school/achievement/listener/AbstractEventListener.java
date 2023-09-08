@@ -17,7 +17,7 @@ public class AbstractEventListener<T> {
     private final List<EventHandler<T>> handlers;
     private final ObjectMapper objectMapper;
 
-    public String getMessage(Message message) {
+    public String getMessageBody(Message message) {
         String channel = new String(message.getChannel());
         String messageBody = new String(message.getBody());
         log.info("Received message from channel '{}': {}", channel, messageBody);
@@ -27,7 +27,7 @@ public class AbstractEventListener<T> {
     public void handleEvent(String messageBody, Class<T> type) {
         handlers.forEach(handler -> {
             try {
-                handler.handleAsync(objectMapper.readValue(messageBody, type));
+                handler.handle(objectMapper.readValue(messageBody, type));
             } catch (JsonProcessingException e) {
                 log.error("Error processing JSON for {}", type.getName(), e);
             }
