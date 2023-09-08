@@ -1,13 +1,13 @@
 package faang.school.achievement.publisher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.AchievementDto;
+import faang.school.achievement.dto.UserAchievementEventDto;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AchievementEventPublisher extends AbstractEventPublisher<AchievementDto> {
+public class AchievementEventPublisher extends AbstractEventPublisher<UserAchievementEventDto> {
     private final ChannelTopic achievementTopic;
 
     public AchievementEventPublisher(RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper, ChannelTopic achievementTopic) {
@@ -15,7 +15,7 @@ public class AchievementEventPublisher extends AbstractEventPublisher<Achievemen
         this.achievementTopic = achievementTopic;
     }
 
-    public void publish(AchievementDto achievement) {
+    public void publish(UserAchievementEventDto achievement) {
         publishInTopic(achievementTopic, achievement);
     }
 }
