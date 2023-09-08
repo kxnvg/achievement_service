@@ -1,7 +1,6 @@
 package faang.school.achievement.handler;
 
 import faang.school.achievement.cache.AchievementCache;
-import faang.school.achievement.dto.GoalSetEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.service.AchievementService;
@@ -13,15 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public abstract class GoalHandler implements EventHandler<GoalSetEventDto> {
+public abstract class AbstractEventHandler {
     private final AchievementCache achievementCache;
     private final AchievementService achievementService;
     private final AsyncTaskExecutor asyncTaskExecutor;
 
-    protected void handle(GoalSetEventDto goalSetEventDto, String achievementTitle) {
+    public void handleAsync(Long userId, String achievementTitle) {
         asyncTaskExecutor.execute(() -> {
             Achievement achievement = achievementCache.get(achievementTitle);
-            long userId = goalSetEventDto.getUserId();
             long achievementId = achievement.getId();
 
             if (achievementService.hasAchievement(userId, achievementId)) {
@@ -41,4 +39,3 @@ public abstract class GoalHandler implements EventHandler<GoalSetEventDto> {
         });
     }
 }
-

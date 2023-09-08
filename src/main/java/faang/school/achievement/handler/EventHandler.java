@@ -4,5 +4,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface EventHandler<T> {
-    void handleAsync(T value);
+    void handle(T value);
 }
