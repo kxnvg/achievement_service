@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecursionAchievementEventHandler extends AbstractAchievementHandler<AchievementEventDto> {
 
-    @Value("${spring.achievements.achievement.title}")
+    @Value("${spring.achievements.achievement.recursion.title}")
     private String achievementTitle;
 
     public RecursionAchievementEventHandler(AchievementCache achievementCache, AchievementService achievementService) {

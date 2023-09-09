@@ -39,7 +39,8 @@ spring:
     mentorship:
       title: Achievement-Sensei
     achievement:
-      title: Recursion
+      recursion:
+        title: Recursion
 
 server:
   port: 8085

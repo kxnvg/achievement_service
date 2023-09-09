@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class AchievementEventListener extends AbstractListener<AchievementEventDto> {
 
-    @Value("${spring.achievements.achievement.title}")
+    @Value("${spring.achievements.achievement.recursion.title}")
     private String achievementTitle;
 
     public AchievementEventListener(ObjectMapper objectMapper, List<EventHandler<AchievementEventDto>> handlers) {
