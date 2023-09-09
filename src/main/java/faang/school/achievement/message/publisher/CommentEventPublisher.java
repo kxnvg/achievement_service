@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentEventPublisher implements MessagePublisher<ExpertAchievementDto> {
-    @Value("${spring.data.redis.channels.achievement_channel.name}")
-    private final String channelTopic;
+    @Value("${spring.data.redis.channel.achievement}")
+    private String channelTopic;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
     @Override
