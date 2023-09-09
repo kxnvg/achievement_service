@@ -5,6 +5,7 @@ import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.model.UserAchievement;
+import faang.school.achievement.publisher.AchievementEventPublisher;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,8 @@ class AchievementServiceTest {
     private UserAchievementRepository userAchievementRepository;
     @Mock
     private AchievementProgressRepository achievementProgressRepository;
+    @Mock
+    private AchievementEventPublisher achievementEventPublisher;
     private Achievement achievement;
     private AchievementProgress progress;
 

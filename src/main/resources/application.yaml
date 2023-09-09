@@ -38,6 +38,8 @@ spring:
       title: Skill-Master
     mentorship:
       title: Achievement-Sensei
+    achievement:
+      title: Recursion
 
 server:
   port: 8085

@@ -1,9 +1,11 @@
 package faang.school.achievement.service;
 
+import faang.school.achievement.dto.AchievementEventDto;
 import faang.school.achievement.exception.EntityNotFoundException;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.UserAchievement;
+import faang.school.achievement.publisher.AchievementEventPublisher;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AchievementService {
     private final UserAchievementRepository userAchievementRepository;
     private final AchievementProgressRepository achievementProgressRepository;
+    private final AchievementEventPublisher achievementEventPublisher;
 
     @Transactional(readOnly = true)
     public boolean userHasAchievement(long userId, long achievementId) {
@@ -49,5 +52,15 @@ public class AchievementService {
                 .build();
 
         userAchievementRepository.save(userAchievement);
+        publishAchievementEvent(userAchievement);
+    }
+
+    private void publishAchievementEvent(UserAchievement achievement) {
+        AchievementEventDto event = AchievementEventDto.builder()
+                .achievementId(achievement.getId())
+                .authorId(achievement.getUserId())
+                .build();
+
+        achievementEventPublisher.publish(event);
     }
 }

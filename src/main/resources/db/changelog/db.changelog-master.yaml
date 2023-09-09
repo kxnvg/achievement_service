@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changeset/achievement_V002__insert_achievements.sql
   - include:
       file: db/changelog/changeset/achievement_V004__insert_mentorship.sql
+  - include:
+      file: db/changelog/changeset/achievement_V005__insert_achievement.sql
