@@ -32,6 +32,9 @@ spring:
     queue_capacity: 50
     thread_name_prefix: AsyncTaskThread
 
+  config:
+    import: classpath:resource_achievement/achievement.yaml
+
 
 server:
   port: 8085

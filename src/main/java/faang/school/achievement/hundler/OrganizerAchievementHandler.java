@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrganizerAchievementHandler extends AbstractOrganizerAchievementHandler {
+public class OrganizerAchievementHandler extends AbstractHandler {
 
     @Autowired
     public OrganizerAchievementHandler(AchievementService achievementService,

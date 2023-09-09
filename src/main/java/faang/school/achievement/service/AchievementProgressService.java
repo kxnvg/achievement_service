@@ -19,7 +19,7 @@ public class AchievementProgressService {
     }
 
     @Transactional
-    public AchievementProgress createProgressIfNecessary(AchievementProgress achievementProgress) {
+    public AchievementProgress createProgress(AchievementProgress achievementProgress) {
         return achievementProgressRepository.save(achievementProgress);
     }
 

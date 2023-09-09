@@ -23,8 +23,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.invite}")
     private String inviteEventChannelName;
 
-    private final InviteEventListener inviteEventListener;
-
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -32,7 +30,7 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer redisContainer(InviteEventListener inviteEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(inviteEventListener, topicInviteEvent());

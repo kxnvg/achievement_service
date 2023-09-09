@@ -59,7 +59,6 @@ class OrganizerAchievementHandlerTest {
                 .achievement(achievementSaved)
                 .userId(inviteSentEventDto.getAuthorId())
                 .currentPoints(99)
-                .version(1L)
                 .build();
 
         achievementProgressNotSaved = AchievementProgress.builder()
@@ -67,7 +66,6 @@ class OrganizerAchievementHandlerTest {
                 .achievement(achievementSaved)
                 .userId(inviteSentEventDto.getAuthorId())
                 .currentPoints(0)
-                .version(1L)
                 .build();
     }
 
@@ -80,10 +78,8 @@ class OrganizerAchievementHandlerTest {
                 .thenReturn(Optional.of(achievementProgressSaved));
         achievementProgressSaved.increment();
         Mockito.when(achievementProgressService.updateProgress(achievementProgressSaved)).thenReturn(achievementProgressSaved);
-        Mockito.when(userAchievementService.hasAchievement(achievementSaved.getId(), inviteSentEventDto.getAuthorId()))
-                        .thenReturn(false);
 
-        organizerAchievementHandler.handle(inviteSentEventDto);
+        organizerAchievementHandler.handle(inviteSentEventDto.getAuthorId());
 
         Mockito.verify(userAchievementService, Mockito.times(1))
                 .hasAchievement(achievementSaved.getId(), inviteSentEventDto.getAuthorId());
@@ -96,14 +92,12 @@ class OrganizerAchievementHandlerTest {
                 .thenReturn(false);
         Mockito.when(achievementProgressService.getProgress(inviteSentEventDto.getAuthorId(), achievementSaved.getId()))
                 .thenReturn(Optional.empty());
-        Mockito.when(achievementProgressService.createProgressIfNecessary(achievementProgressNotSaved))
+        Mockito.when(achievementProgressService.createProgress(achievementProgressNotSaved))
                 .thenReturn(achievementProgressSaved);
         achievementProgressSaved.increment();
         Mockito.when(achievementProgressService.updateProgress(achievementProgressSaved)).thenReturn(achievementProgressSaved);
-        Mockito.when(userAchievementService.hasAchievement(achievementSaved.getId(), inviteSentEventDto.getAuthorId()))
-                .thenReturn(false);
 
-        organizerAchievementHandler.handle(inviteSentEventDto);
+        organizerAchievementHandler.handle(inviteSentEventDto.getAuthorId());
 
         Mockito.verify(userAchievementService, Mockito.times(1))
                 .hasAchievement(achievementSaved.getId(), inviteSentEventDto.getAuthorId());

@@ -22,6 +22,6 @@ public class InviteEventListener extends AbstractEventListener<InviteSentEventDt
     @Override
     public void onMessage(Message message, byte[] pattern) {
         InviteSentEventDto inviteSentEventDto = convertJsonToString(message, InviteSentEventDto.class);
-        eventHandlers.forEach(handler -> handler.handle(inviteSentEventDto));
+        eventHandlers.forEach(handler -> handler.handle(inviteSentEventDto.getAuthorId()));
     }
 }
