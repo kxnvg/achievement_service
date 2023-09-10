@@ -2,6 +2,6 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/achievement_V001__initial.sql
   - include:
-      file: db/changelog/changeset/achievement_V002__insert_achievements.sql
+      file: db/changelog/changeset/achievement_V002__insert_skill_achievement.sql
   - include:
-      file: db/changelog/changeset/achievement_V004__insert_mentorship.sql
+      file: db/changelog/changeset/achievement_V004__insert_mentorship_achievement.sql
