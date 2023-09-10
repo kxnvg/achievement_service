@@ -8,11 +8,8 @@ import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.UserAchievementService;
 import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
-
-import java.util.Optional;
 
 @AllArgsConstructor
 public abstract class AbstractHandler implements EventHandler {
@@ -31,30 +28,12 @@ public abstract class AbstractHandler implements EventHandler {
         boolean existsAchievement = userAchievementService.hasAchievement(achievement.getId(), userId);
 
         if (!existsAchievement) {
-            AchievementProgress achievementProgress = getAchievementProgress(userId, achievement);
+            AchievementProgress achievementProgress = achievementProgressService.getProgress(userId, achievement.getId());
             achievementProgress.setUpdatedAt(null);
             achievementProgress.increment();
             achievementProgress = achievementProgressService.updateProgress(achievementProgress);
 
             giveAchievement(userId, achievement, achievementProgress);
-        }
-    }
-
-    @Retryable(retryFor = DataIntegrityViolationException.class)
-    private AchievementProgress getAchievementProgress(Long userId, Achievement achievement) {
-        Optional<AchievementProgress> progress =
-                achievementProgressService.getProgress(userId, achievement.getId());
-
-        if (progress.isEmpty()) {
-            AchievementProgress achievementProgress = AchievementProgress.builder()
-                    .achievement(achievement)
-                    .userId(userId)
-                    .currentPoints(0)
-                    .build();
-
-            return achievementProgressService.createProgress(achievementProgress);
-        } else {
-            return progress.get();
         }
     }
 
