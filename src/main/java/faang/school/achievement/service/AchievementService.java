@@ -66,6 +66,10 @@ public class AchievementService {
                 .toList();
     }
 
+    public boolean hasAchievement(Long userId, Long achievementId) {
+        return userAchievementRepository.existsByUserIdAndAchievementId(userId, achievementId);
+    }
+
     private Achievement findAchievementById(Long achievementId) {
         return achievementRepository.findById(achievementId)
                 .orElseThrow(() -> new DataValidationException("Achievement by ID: " + achievementId + " not found"));
