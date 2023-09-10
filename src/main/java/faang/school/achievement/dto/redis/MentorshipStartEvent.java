@@ -1,4 +1,4 @@
-package faang.school.achievement.dto;
+package faang.school.achievement.dto.redis;
 
 import faang.school.achievement.messaging.EventType;
 import lombok.AllArgsConstructor;
