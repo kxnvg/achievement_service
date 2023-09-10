@@ -71,7 +71,7 @@ public class AchievementService {
                 .orElseThrow(() -> new DataValidationException("Achievement by ID: " + achievementId + " not found"));
     }
 
-    private Stream<Achievement> toStream(Iterable<Achievement> achievementIterable){
+    private Stream<Achievement> toStream(Iterable<Achievement> achievementIterable) {
         return StreamSupport.stream(achievementIterable.spliterator(), false);
     }
 }
