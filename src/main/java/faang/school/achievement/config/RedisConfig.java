@@ -4,7 +4,6 @@ import faang.school.achievement.listener.PostEventListener;
 import faang.school.achievement.listener.SkillEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,8 +51,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(@Qualifier("skillAdapter") MessageListenerAdapter skillAdapter,
-                                                        @Qualifier("postAdapter") MessageListenerAdapter postAdapter) {
+    public RedisMessageListenerContainer redisContainer( MessageListenerAdapter skillAdapter,
+                                                         MessageListenerAdapter postAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(skillAdapter, skillTopic());

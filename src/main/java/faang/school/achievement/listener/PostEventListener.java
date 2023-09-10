@@ -11,12 +11,13 @@ import java.util.List;
 
 @Component
 public class PostEventListener extends AbstractListener<PostEventDto> {
-    public PostEventListener(ObjectMapper objectMapper, List<EventHandler<PostEventDto>> eventHandlers) {
-        super(objectMapper, eventHandlers);
-    }
 
     @Value("${spring.achievements.post.title}")
     private String achievementTitle;
+
+    public PostEventListener(ObjectMapper objectMapper, List<EventHandler<PostEventDto>> eventHandlers) {
+        super(objectMapper, eventHandlers);
+    }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
