@@ -21,9 +21,20 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        achievement: achievement_channel
-        follower: follower_channel
+      channels:
+        achievement: achievement-channel
+        follower: follower-channel
+        invite: invitation-channel
+
+  async_config:
+    core_pool_size: 5
+    max_pool_size: 10
+    queue_capacity: 50
+    thread_name_prefix: AsyncTaskThread
+
+  config:
+    import: classpath:resource_achievement/achievement.yaml
+
 
 server:
   port: 8085
