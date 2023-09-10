@@ -15,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 @ExtendWith(MockitoExtension.class)
 class NiceGuyAchievementHandlerTest {
     @Mock
@@ -65,7 +63,7 @@ class NiceGuyAchievementHandlerTest {
         Mockito.when(userAchievementService.hasAchievement(recommendationEventDto.getAuthorId(), achievement.getId())).thenReturn(false);
 
         Mockito.when(achievementProgressService.getProgress(recommendationEventDto.getAuthorId(), achievement.getId()))
-                .thenReturn(Optional.of(achievementProgress));
+                .thenReturn(achievementProgress);
 
         achievementProgress.increment();
 
@@ -76,31 +74,5 @@ class NiceGuyAchievementHandlerTest {
 
         Mockito.verify(userAchievementService, Mockito.times(1))
                 .hasAchievement(recommendationEventDto.getAuthorId(), achievement.getId());
-    }
-
-    @Test
-    public void testHandlerToCreateAchievement() {
-        var achievementProgress1 = AchievementProgress.builder()
-                .id(0L)
-                .achievement(achievement)
-                .userId(recommendationEventDto.getAuthorId())
-                .currentPoints(0)
-                .build();
-
-        Mockito.when(achievementService.getAchievement(titleAchievement)).thenReturn(achievement);
-        Mockito.when(userAchievementService.hasAchievement(achievement.getId(), recommendationEventDto.getAuthorId())).thenReturn(false);
-        Mockito.when(achievementProgressService.getProgress(recommendationEventDto.getAuthorId(), achievement.getId()))
-                .thenReturn(Optional.empty());
-        Mockito.when(achievementProgressService.createProgressIfNecessary(achievementProgress1)).thenReturn(achievementProgress);
-
-        achievementProgress.increment();
-
-        Mockito.when(achievementProgressService.updateProgress(achievementProgress)).thenReturn(achievementProgress);
-        Mockito.when(userAchievementService.hasAchievement(achievement.getId(), recommendationEventDto.getAuthorId())).thenReturn(false);
-
-        niceGuyAchievementHandler.handle(recommendationEventDto);
-
-        Mockito.verify(userAchievementService, Mockito.times(1))
-                .hasAchievement(achievement.getId(), recommendationEventDto.getAuthorId());
     }
 }

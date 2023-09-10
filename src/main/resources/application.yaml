@@ -26,6 +26,10 @@ spring:
         follower: follower_channel
         recommendation: recommendation_channel
 
+
+config:
+  import: classpath:achievement/achievement.yaml
+
 server:
   port: 8085
 
