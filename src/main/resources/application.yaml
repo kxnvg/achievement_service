@@ -26,6 +26,7 @@ spring:
         follower: follower-channel
         skill: skill-acquired-channel
         post: post-channel
+        mentorship_channel: mentorship-accepted-channel
 
   async:
     corePoolSize: 8
@@ -38,6 +39,8 @@ spring:
       title: Skill-Master
     post:
       title: Writer
+    mentorship:
+      title: Achievement-Sensei
 
 server:
   port: 8085
