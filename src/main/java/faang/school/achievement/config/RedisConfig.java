@@ -38,17 +38,17 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+    public MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
         return new MessageListenerAdapter(commentEventListener);
     }
 
     @Bean
-    ChannelTopic commentChannel() {
+    public ChannelTopic commentChannel() {
         return new ChannelTopic(commentChannelName);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentListener) {
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(commentListener, commentChannel());
