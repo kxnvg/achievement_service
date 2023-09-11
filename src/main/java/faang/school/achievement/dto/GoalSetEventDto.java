@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoalSetEventDto {
+public class GoalSetEventDto implements EventDto {
     private Long userId;
     private Long goalId;
 }

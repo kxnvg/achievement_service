@@ -17,6 +17,7 @@ import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import faang.school.achievement.service.filter.AchievementFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,18 +82,8 @@ public class AchievementService {
         return userAchievementRepository.existsByUserIdAndAchievementId(userId, achievementId);
     }
 
-    @Transactional
-    public void giveAchievement(UserAchievement userAchievement) {
-        userAchievementRepository.save(userAchievement);
-    }
-
-    @Transactional
-    public Achievement createAchievement(Achievement achievement) {
-        return achievementRepository.save(achievement);
-    }
-
-    public Optional<Achievement> getAchievementByTitle(String title) {
-        return achievementRepository.findByTitle(title);
+    public Achievement getAchievementByTitle(String title) {
+        return achievementCache.get(title);
     }
 
     public Optional<AchievementProgress> getAchievementProgress(long userId, long achievementId) {
@@ -109,4 +100,12 @@ public class AchievementService {
         return achievementProgressRepository.save(achievementProgress);
     }
 
+    @Transactional
+    public void giveAchievement(UserAchievement userAchievement) {
+        try {
+            userAchievementRepository.save(userAchievement);
+        } catch (OptimisticLockingFailureException e) {
+            throw new OptimisticLockingFailureException("Error of optimistic locking when issuing achievements");
+        }
+    }
 }

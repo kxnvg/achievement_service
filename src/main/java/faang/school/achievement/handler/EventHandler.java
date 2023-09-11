@@ -1,5 +1,7 @@
 package faang.school.achievement.handler;
 
-public interface EventHandler<T> {
+import faang.school.achievement.dto.EventDto;
+
+public interface EventHandler<T extends EventDto>{
     void handle(T event);
 }
