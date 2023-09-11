@@ -25,10 +25,18 @@ spring:
         achievement: achievement_channel
         follower: follower_channel
         recommendation: recommendation_channel
+        invite: invitation-channel
 
 
 config:
   import: classpath:achievement/achievement.yaml
+  import: classpath:resource_achievement/achievement.yaml
+  
+  async_config:
+    core_pool_size: 5
+    max_pool_size: 10
+    queue_capacity: 50
+    thread_name_prefix: AsyncTaskThread
 
 server:
   port: 8085

@@ -10,6 +10,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T> implements MessageListener {
+
     private final ObjectMapper objectMapper;
 
     protected T convertJsonToString(Message message, Class<T> type) {

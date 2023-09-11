@@ -2,6 +2,7 @@ package faang.school.achievement.config;
 
 
 import faang.school.achievement.listener.RecommendationEventListener;
+import faang.school.achievement.listener.InviteEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.recommendation}")
     private String recommendationChannel;
+  
+    @Value("${spring.data.redis.channels.invite}")
+    private String inviteEventChannelName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -34,10 +38,11 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(RecommendationEventListener recommendationEventListener) {
+    RedisMessageListenerContainer redisContainer(RecommendationEventListener recommendationEventListener, InviteEventListener inviteEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventListener, topicRecommendation());
+        container.addMessageListener(inviteEventListener, topicInviteEvent());
         return container;
     }
 
@@ -45,4 +50,10 @@ public class RedisConfig {
     ChannelTopic topicRecommendation() {
         return new ChannelTopic(recommendationChannel);
     }
+  
+   @Bean
+    ChannelTopic topicInviteEvent() {
+        return new ChannelTopic(inviteEventChannelName);
+    }
+ 
 }
