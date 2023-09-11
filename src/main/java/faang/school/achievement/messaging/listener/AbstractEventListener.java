@@ -1,7 +1,6 @@
 package faang.school.achievement.messaging.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.handler.EventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -14,7 +13,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T> {
     protected final ObjectMapper objectMapper;
-    protected final EventHandler<T> eventHandler;
 
     protected T eventMapper(Message message, Class<T> eventType) {
         try {
@@ -24,6 +22,4 @@ public abstract class AbstractEventListener<T> {
             throw new RuntimeException(e);
         }
     }
-
-
 }
