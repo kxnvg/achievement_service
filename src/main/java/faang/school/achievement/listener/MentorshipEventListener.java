@@ -1,26 +1,23 @@
 package faang.school.achievement.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.DtoMentorshipStartEvent;
-import lombok.RequiredArgsConstructor;
+import faang.school.achievement.dto.MentorshipStartEventDto;
+import faang.school.achievement.handler.EventHandler;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.util.List;
 
 @Component
-@RequiredArgsConstructor
-public class MentorshipEventListener implements MessageListener {
-    private final ObjectMapper objectMapper;
-    private DtoMentorshipStartEvent mentorshipStartEvent;
+public class MentorshipEventListener extends AbstractEventListener<MentorshipStartEventDto> implements MessageListener {
+
+    public MentorshipEventListener(List<EventHandler<MentorshipStartEventDto>> eventHandlers, ObjectMapper objectMapper) {
+        super(eventHandlers, objectMapper);
+    }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        try {
-            mentorshipStartEvent = objectMapper.readValue(message.getBody(), DtoMentorshipStartEvent.class);
-        } catch (IOException ignored) {
-        }
-
+        handleEvent(getMessageBody(message), MentorshipStartEventDto.class);
     }
 }
