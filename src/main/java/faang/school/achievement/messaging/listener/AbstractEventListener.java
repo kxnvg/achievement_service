@@ -11,7 +11,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AbstractEventListener<T> {
+public abstract class AbstractEventListener<T> {
     protected final ObjectMapper objectMapper;
 
     protected T eventMapper(Message message, Class<T> eventType) {
