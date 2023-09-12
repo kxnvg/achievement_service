@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class AbstractEventListenerTest {
     @InjectMocks
-    AbstractEventListener<CommentEvent> abstractEventListener;
+    CommentEventListener commentEventListener;
     @Mock
     Message message;
     @Mock
@@ -25,7 +25,7 @@ class AbstractEventListenerTest {
 
     @Test
     public void testEventMapper() throws IOException {
-        abstractEventListener.eventMapper(message, CommentEvent.class);
+        commentEventListener.eventMapper(message, CommentEvent.class);
 
         verify(objectMapper, times(1)).readValue(message.getBody(), CommentEvent.class);
     }
