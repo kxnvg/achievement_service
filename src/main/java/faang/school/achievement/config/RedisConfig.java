@@ -13,6 +13,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -38,11 +39,21 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(RecommendationEventListener recommendationEventListener, InviteEventListener inviteEventListener) {
+    public MessageListenerAdapter recommendationEventAdapter (RecommendationEventListener recommendationEventListener) {
+        return new MessageListenerAdapter(recommendationEventListener, "onMessage");
+    }
+
+    @Bean
+    public MessageListenerAdapter inviteEventAdapter(InviteEventListener inviteEventListener) {
+        return new MessageListenerAdapter(inviteEventListener, "onMessage");
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter, MessageListenerAdapter inviteEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(recommendationEventListener, topicRecommendation());
-        container.addMessageListener(inviteEventListener, topicInviteEvent());
+        container.addMessageListener(recommendationEventAdapter, topicRecommendation());
+        container.addMessageListener(inviteEventAdapter, topicInviteEvent());
         return container;
     }
 
