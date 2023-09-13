@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public abstract class CommentEventHandler<T> {
-    protected long GOAL;
+    protected long goal;
     protected String achievementTitle;
     protected final AchievementService achievementService;
     protected final CommentEventPublisher commentEventPublisher;
@@ -26,7 +26,7 @@ public abstract class CommentEventHandler<T> {
 
     public void addPoint(Long userId){
         Long currentPoints = achievementService.addPoint(userId, getAchievement().getId());
-        if(currentPoints >= GOAL){
+        if(currentPoints >= goal){
             achievementService.addAchievementForUser(userId, getAchievement());
             publishAchievement(userId);
         }

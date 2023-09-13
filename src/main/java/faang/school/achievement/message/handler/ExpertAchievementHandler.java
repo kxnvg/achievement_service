@@ -17,7 +17,7 @@ public class ExpertAchievementHandler extends CommentEventHandler<ExpertAchievem
     public ExpertAchievementHandler(AchievementService achievementService, CommentEventPublisher commentEventPublisher,
                                     @Value("${achievement.title.expert}") String achievementTitle) {
         super(achievementService, commentEventPublisher);
-        GOAL = achievementService.getGoalForAchievement(achievementTitle);
+        goal = achievementService.getGoalForAchievement(achievementTitle);
         this.achievementTitle = achievementTitle;
     }
 

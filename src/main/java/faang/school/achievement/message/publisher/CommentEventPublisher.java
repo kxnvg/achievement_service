@@ -15,6 +15,7 @@ public class CommentEventPublisher implements MessagePublisher<ExpertAchievement
     private String channelTopic;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
+
     @Override
     public void publish(ExpertAchievementDto message) {
         String json;
