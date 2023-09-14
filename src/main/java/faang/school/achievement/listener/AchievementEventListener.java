@@ -12,16 +12,17 @@ import java.util.List;
 @Component
 public class AchievementEventListener extends AbstractListener<AchievementEventDto> {
 
-    @Value("${spring.achievements.achievement.recursion.title}")
-    private String achievementTitle;
-
-    public AchievementEventListener(ObjectMapper objectMapper, List<EventHandler<AchievementEventDto>> handlers) {
-        super(objectMapper, handlers);
+    public AchievementEventListener(
+            ObjectMapper objectMapper,
+            List<EventHandler<AchievementEventDto>> handlers,
+            @Value("${spring.achievements.achievement.recursion.title}") String achievementTitle
+    ) {
+        super(objectMapper, handlers, achievementTitle);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         AchievementEventDto event = readValue(message.getBody(), AchievementEventDto.class);
-        handleEvent(event, achievementTitle);
+        handleEvent(event);
     }
 }

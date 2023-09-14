@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class AbstractListener<T> implements MessageListener {
     private final ObjectMapper objectMapper;
     private final List<EventHandler<T>> handlers;
+    private final String title;
 
     protected T readValue(byte[] json, Class<T> type) {
         try {
@@ -25,9 +26,9 @@ public abstract class AbstractListener<T> implements MessageListener {
         }
     }
 
-    protected void handleEvent(T event, String achievementTitle) {
+    protected void handleEvent(T event) {
         handlers.stream()
-                .filter(handler -> handler.getAchievementTitle().equalsIgnoreCase(achievementTitle))
+                .filter(handler -> handler.getAchievementTitle().equalsIgnoreCase(title))
                 .forEach(handler -> handler.handle(event));
     }
 }

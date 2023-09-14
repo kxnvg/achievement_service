@@ -12,16 +12,16 @@ import java.util.List;
 @Component
 public class SkillEventListener extends AbstractListener<SkillAcquiredEventDto> {
 
-    @Value("${spring.achievements.skill.title}")
-    private String achievementTitle;
-
-    public SkillEventListener(ObjectMapper objectMapper, List<EventHandler<SkillAcquiredEventDto>> handlers) {
-        super(objectMapper, handlers);
+    public SkillEventListener(
+            ObjectMapper objectMapper,
+            List<EventHandler<SkillAcquiredEventDto>> handlers,
+            @Value("${spring.achievements.skill.title}") String achievementTitle) {
+        super(objectMapper, handlers, achievementTitle);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         SkillAcquiredEventDto event = readValue(message.getBody(), SkillAcquiredEventDto.class);
-        handleEvent(event, achievementTitle);
+        handleEvent(event);
     }
 }
