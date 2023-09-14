@@ -1,6 +1,5 @@
 package faang.school.achievement.config.redis;
 
-import faang.school.achievement.listener.RecommendationListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +8,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -17,14 +15,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    private final RecommendationListener recommendationListener;
-
-    @Value("${spring.data.redis.channels.recommendation_chanel.name}")
-    private String recommendationChannel;
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
+    @Value("${spring.data.redis.channels.recommendation_chanel.name}")
+    private String recommendationChannel;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -45,7 +41,6 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(recommendationListener, new ChannelTopic(recommendationChannel));
 
         return container;
     }
