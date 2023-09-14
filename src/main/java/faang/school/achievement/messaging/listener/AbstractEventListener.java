@@ -17,7 +17,7 @@ public abstract class AbstractEventListener<T> {
     protected final ObjectMapper objectMapper;
     protected final List<EventHandler<T>> eventHandlers;
 
-    protected T eventMapper(Message message, Class<T> eventType) {
+    protected T mapEvent(Message message, Class<T> eventType) {
         try {
             return objectMapper.readValue(message.getBody(), eventType);
         } catch (IOException e) {
