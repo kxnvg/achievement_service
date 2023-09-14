@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class AchievementEventDto {
     private Long authorId;
     private Long achievementId;
+    private String title;
 }

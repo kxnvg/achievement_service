@@ -59,6 +59,7 @@ public class AchievementService {
         AchievementEventDto event = AchievementEventDto.builder()
                 .achievementId(achievement.getId())
                 .authorId(achievement.getUserId())
+                .title(achievement.getAchievement().getTitle())
                 .build();
 
         achievementEventPublisher.publish(event);
