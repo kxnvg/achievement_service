@@ -19,6 +19,6 @@ public class MentorshipStartListener extends AbstractEventListener<MentorshipSta
     @Override
     public void onMessage(Message message, byte[] pattern) {
         MentorshipStartEvent event = eventMapper(message, MentorshipStartEvent.class);
-        eventHandler.handle(event);
+        eventHandler.handle(event.getMentorId());
     }
 }
