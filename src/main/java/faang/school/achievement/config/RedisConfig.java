@@ -16,12 +16,12 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
-    private final String host;
+    private String host;
     @Value("${spring.data.redis.port}")
-    private final int port;
+    private int port;
 
     @Value("${spring.data.redis.channel.mentorship}")
-    private final String mentorshipChannelName;
+    private String mentorshipChannelName;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {

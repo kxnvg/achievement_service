@@ -8,13 +8,14 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T> {
     protected final ObjectMapper objectMapper;
-    protected final EventHandler<T> eventHandler;
+    protected final List<EventHandler<T>> eventHandlers;
 
     protected T eventMapper(Message message, Class<T> eventType) {
         try {
