@@ -1,5 +1,6 @@
 package faang.school.achievement.config.redis;
 
+import faang.school.achievement.listener.RecommendationListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    private final RecommendationListner recommendationListner;
+    private final RecommendationListener recommendationListener;
 
     @Value("${spring.data.redis.channels.recommendation_chanel.name}")
     private String recommendationChannel;
@@ -44,7 +45,7 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(recommendationListner, new ChannelTopic(recommendationChannel));
+        container.addMessageListener(recommendationListener, new ChannelTopic(recommendationChannel));
 
         return container;
     }
