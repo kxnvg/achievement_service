@@ -9,20 +9,22 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 @Component
 @Slf4j
 public class MentorshipStartEventListener extends AbstractListener<MentorshipStartEventDto> {
-    @Value("${spring.achievements.mentorship.title}")
-    private String mentorshipChannel;
 
-    public MentorshipStartEventListener(ObjectMapper objectMapper, List<EventHandler<MentorshipStartEventDto>> eventHandlers) {
-        super(objectMapper, eventHandlers);
+    public MentorshipStartEventListener(
+            ObjectMapper objectMapper,
+            List<EventHandler<MentorshipStartEventDto>> eventHandlers,
+            @Value("${spring.achievements.mentorship.title}") String mentorshipChannel) {
+        super(objectMapper, eventHandlers, mentorshipChannel);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         MentorshipStartEventDto event = readValue(message.getBody(), MentorshipStartEventDto.class);
         log.info("Mentorship start event: {}", event);
-        handleEvent(event, mentorshipChannel);
+        handleEvent(event);
     }
 }
