@@ -17,12 +17,15 @@ import faang.school.achievement.repository.AchievementRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import faang.school.achievement.service.filter.AchievementFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AchievementService {
@@ -64,6 +67,27 @@ public class AchievementService {
         return achievementProgresses.stream()
                 .map(achievementProgressMapper::toDto)
                 .toList();
+    }
+
+    public void saveAchievement(UserAchievement userAchievement) {
+        userAchievementRepository.save(userAchievement);
+    }
+
+    public boolean hasAchievement(Long userId, Long achievementId) {
+        return userAchievementRepository.existsByUserIdAndAchievementId(userId, achievementId);
+    }
+
+    public void createProgressIfNecessary(Long userId, Long achievementId) {
+        achievementProgressRepository.createProgressIfNecessary(userId, achievementId);
+    }
+
+    public AchievementProgress getAchievementProgress(Long userId, Long achievementId) {
+        Optional<AchievementProgress> achievementProgress =
+                achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId);
+        return achievementProgress.orElseThrow(() -> {
+            log.error("Achievement progress by id = {} user = {} does not exist", userId, achievementId);
+            throw new DataValidationException("Achievement progress not found");
+        });
     }
 
     private Achievement findAchievementById(Long achievementId) {

@@ -1,5 +1,6 @@
 package faang.school.achievement.dto.redis;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import faang.school.achievement.messaging.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MentorshipStartEvent implements Serializable {
     private Long mentorId;
     private Long menteeId;
