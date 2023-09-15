@@ -1,6 +1,7 @@
 package faang.school.achievement.config;
 
 import faang.school.achievement.messaging.listener.MentorshipStartListener;
+import faang.school.achievement.messaging.listener.CommentEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.mentorship}")
     private String mentorshipChannelName;
+    @Value("${spring.data.redis.channel.comment_events_channel.name}")
+    private String commentChannelName;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -42,15 +45,27 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     public ChannelTopic mentorshipChannel() {
         return new ChannelTopic(mentorshipChannelName);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipListener) {
+    public ChannelTopic commentChannel() {
+        return new ChannelTopic(commentChannelName);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipListener,
+                                                        MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipListener, mentorshipChannel());
+        container.addMessageListener(commentListener, commentChannel());
         return container;
     }
 }
