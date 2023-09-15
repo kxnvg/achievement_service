@@ -2,6 +2,7 @@ package faang.school.achievement.config;
 
 import faang.school.achievement.listener.AchievementEventListener;
 import faang.school.achievement.listener.MentorshipStartEventListener;
+import faang.school.achievement.listener.PostEventListener;
 import faang.school.achievement.listener.SkillEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class RedisConfig {
     private String skillChannel;
     @Value("${spring.data.redis.channels.mentorship_channel}")
     private String mentorshipChannel;
+    @Value("${spring.data.redis.channels.post}")
+    private String postChannel;
     @Value("${spring.data.redis.channels.achievement}")
     private String achievementChannel;
 
@@ -50,6 +53,10 @@ public class RedisConfig {
         return new MessageListenerAdapter(mentorshipEventListener);
     }
 
+    @Bean(name = "postAdapter")
+    public MessageListenerAdapter postAdapter(PostEventListener postEventListener) {
+        return new MessageListenerAdapter(postEventListener);
+    }
     @Bean(name = "achievementAdapter")
     public MessageListenerAdapter achievementAdapter(AchievementEventListener achievementEventListener) {
         return new MessageListenerAdapter(achievementEventListener);
@@ -66,6 +73,12 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic postTopic() {
+        return new ChannelTopic(postChannel);
+    }
+
+
+    @Bean
     public ChannelTopic achievementTopic() {
         return new ChannelTopic(achievementChannel);
     }
@@ -73,11 +86,14 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(@Qualifier("skillAdapter") MessageListenerAdapter skillAdapter,
                                                         @Qualifier("mentorshipAdapter") MessageListenerAdapter mentorshipAdapter,
+                                                        @Qualifier("postAdapter") MessageListenerAdapter postAdapter) {
+                                                        @Qualifier("mentorshipAdapter") MessageListenerAdapter mentorshipAdapter,
                                                         @Qualifier("achievementAdapter") MessageListenerAdapter achievementAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(skillAdapter, skillTopic());
         container.addMessageListener(mentorshipAdapter, mentorshipTopic());
+        container.addMessageListener(postAdapter, postTopic());
         container.addMessageListener(achievementAdapter, achievementTopic());
         return container;
     }
