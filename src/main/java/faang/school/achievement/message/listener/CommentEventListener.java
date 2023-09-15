@@ -28,6 +28,8 @@ public class CommentEventListener implements MessageListener {
         Long authorId = commentDto.getAuthorId();
         commentEventHandlers.stream().peek(handler -> handler.createProgressIfNecessary(authorId))
                 .filter(handler -> !handler.isCompleted(authorId))
-                .forEach(handler -> handler.addPoint(authorId));
+                .peek(handler -> handler.addPoint(authorId))
+                .filter(handler -> handler.gotUserAchievement(authorId))
+                .forEach(handler -> handler.addAchievementForUser(authorId));
     }
 }

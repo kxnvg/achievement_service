@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Service
 @Async
@@ -22,7 +23,7 @@ public class ExpertAchievementHandler extends CommentEventHandler<ExpertAchievem
     }
 
     protected void publishAchievement(Long userId){
-        ExpertAchievementDto expertAchievementDto = new ExpertAchievementDto(userId, achievementTitle, LocalDateTime.now());
+        ExpertAchievementDto expertAchievementDto = new ExpertAchievementDto(userId, achievementTitle, ZonedDateTime.now());
         commentEventPublisher.publish(expertAchievementDto);
     }
 }

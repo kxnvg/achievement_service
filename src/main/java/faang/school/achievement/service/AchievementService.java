@@ -32,34 +32,42 @@ public class AchievementService {
     public Long addPoint(Long userId, Long achievementId) {
         AchievementProgress achievementProgress =
                 achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId)
-                .orElseThrow(() -> new EntityNotFoundException("Wrong user ID or achievement"));
+                        .orElseThrow(() -> new EntityNotFoundException("Wrong user ID or achievement"));
         achievementProgress.increment();
         achievementProgressRepository.save(achievementProgress);
         return achievementProgress.getCurrentPoints();
     }
 
     @Transactional(readOnly = true)
-    public boolean checkHasUserAchievement(Long userId, Long achievementId){
+    public boolean checkHasUserAchievement(Long userId, Long achievementId) {
         return userAchievementRepository.existsByUserIdAndAchievementId(userId, achievementId);
     }
 
     @Transactional(readOnly = true)
-    public Long getGoalForAchievement(String achievementTitle){
+    public Long getGoalForAchievement(String achievementTitle) {
         return getAchievement(achievementTitle).getPoints();
     }
 
     @Transactional(readOnly = true)
-    public Achievement getAchievement(String achievementTitle){
+    public Achievement getAchievement(String achievementTitle) {
         return achievementCache.getAchievement(achievementTitle);
     }
 
     @Transactional
-    public UserAchievement addAchievementForUser(Long userId, Achievement achievement){
+    public UserAchievement addAchievementForUser(Long userId, Achievement achievement) {
         return userAchievementRepository.save(UserAchievement.builder().achievement(achievement).userId(userId).build());
     }
 
     @Transactional
-    public void createProgress(Long userId, Long achievementId){
+    public void createProgress(Long userId, Long achievementId) {
         achievementProgressRepository.createProgressIfNecessary(userId, achievementId);
     }
+
+    @Transactional(readOnly = true)
+    public Long getProgress(Long userId, Long achievementId) {
+        return achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId)
+                .orElseThrow(() -> new EntityNotFoundException("Wrong user ID or achievement"))
+                .getCurrentPoints();
+    }
+
 }

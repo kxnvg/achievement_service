@@ -26,10 +26,16 @@ public abstract class CommentEventHandler<T> {
 
     public void addPoint(Long userId){
         Long currentPoints = achievementService.addPoint(userId, getAchievement().getId());
-        if(currentPoints >= goal){
-            achievementService.addAchievementForUser(userId, getAchievement());
-            publishAchievement(userId);
-        }
+    }
+
+    public Boolean gotUserAchievement(Long userId){
+        Long currentPoints = achievementService.getProgress(userId, getAchievement().getId());
+        return currentPoints >= goal;
+    }
+
+    public void addAchievementForUser(Long userId){
+        achievementService.addAchievementForUser(userId, getAchievement());
+        publishAchievement(userId);
     }
 
     protected Achievement getAchievement(){
