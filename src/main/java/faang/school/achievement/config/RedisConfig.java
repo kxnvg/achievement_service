@@ -86,8 +86,7 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(@Qualifier("skillAdapter") MessageListenerAdapter skillAdapter,
                                                         @Qualifier("mentorshipAdapter") MessageListenerAdapter mentorshipAdapter,
-                                                        @Qualifier("postAdapter") MessageListenerAdapter postAdapter) {
-                                                        @Qualifier("mentorshipAdapter") MessageListenerAdapter mentorshipAdapter,
+                                                        @Qualifier("postAdapter") MessageListenerAdapter postAdapter,
                                                         @Qualifier("achievementAdapter") MessageListenerAdapter achievementAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
