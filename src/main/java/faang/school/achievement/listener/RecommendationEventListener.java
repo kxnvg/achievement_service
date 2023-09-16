@@ -22,6 +22,6 @@ public class RecommendationEventListener extends AbstractEventListener<Recommend
     @Override
     public void onMessage(@NotNull Message message, byte[] pattern) {
         RecommendationEventDto recommendationEventDto = deserializeJsonToEvent(message, RecommendationEventDto.class);
-
+        handlers.forEach(handler -> handler.handle(recommendationEventDto));
     }
 }

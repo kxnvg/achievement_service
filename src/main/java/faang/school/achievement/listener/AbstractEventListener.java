@@ -16,8 +16,7 @@ import java.util.List;
 public abstract class AbstractEventListener<T> implements MessageListener {
 
     private final ObjectMapper objectMapper;
-    private final List<EventHandler<T>> handlers;
-    private String title;
+    protected final List<EventHandler<T>> handlers;
 
     protected T deserializeJsonToEvent(Message message, Class<T> type) {
         T event;
