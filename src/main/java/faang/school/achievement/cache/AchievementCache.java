@@ -5,12 +5,14 @@ import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AchievementCache {
@@ -19,6 +21,7 @@ public class AchievementCache {
 
     public Achievement getAchievement(String achievementName) {
         return achievementMap.computeIfAbsent(achievementName, key -> {
+            log.error("Achievement not found in cache for title: {}", achievementName);
             throw new AchievementNotFoundException(achievementName);
         });
     }

@@ -24,6 +24,7 @@ public class AchievementProgressService {
 
     @Transactional
     public AchievementProgress ensureUserAchievementProgress(Long userId, Achievement achievement) {
+        log.info("Ensuring achievement progress for User: {} and Achievement: {}", userId, achievement.getTitle());
         Long achievementId = achievement.getId();
 
         if (!userHasProgress(userId, achievementId)) {
@@ -35,6 +36,7 @@ public class AchievementProgressService {
             save(progress);
         }
 
+        log.info("Achievement progress ensured for User: {} and Achievement: {}", userId, achievement.getTitle());
         return findByUserIdAndAchievementId(userId, achievementId);
     }
 

@@ -20,7 +20,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
     private final UserAchievementService userAchievementService;
     private final String title;
 
-    @Async
+    @Async("taskExecutor")
     @Retryable(retryFor = OptimisticLockException.class)
     public void handleAchievement(Long userId) {
         Achievement achievement = achievementService.getAchievementFromCache(title);
@@ -30,6 +30,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
         }
 
         AchievementProgress progress = achievementProgressService.ensureUserAchievementProgress(userId, achievement);
+        log.debug("Incrementing achievement progress for User: {}", userId);
         achievementProgressService.incrementProgress(progress);
 
         if (progress.getCurrentPoints() >= achievement.getPoints()) {
