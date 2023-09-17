@@ -1,6 +1,6 @@
 package faang.school.achievement.config.redis;
 
-import faang.school.achievement.listener.RecommendationEventListener;
+import faang.school.achievement.messaging.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

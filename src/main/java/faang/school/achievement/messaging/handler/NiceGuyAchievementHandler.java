@@ -1,4 +1,4 @@
-package faang.school.achievement.handler;
+package faang.school.achievement.messaging.handler;
 
 import faang.school.achievement.dto.RecommendationEventDto;
 import faang.school.achievement.service.AchievementProgressService;

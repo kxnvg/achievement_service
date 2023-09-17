@@ -1,4 +1,4 @@
-package faang.school.achievement.handler;
+package faang.school.achievement.messaging.handler;
 
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
@@ -30,6 +30,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
         }
 
         AchievementProgress progress = achievementProgressService.ensureUserAchievementProgress(userId, achievement);
+
         log.debug("Incrementing achievement progress for User: {}", userId);
         achievementProgressService.incrementProgress(progress);
 
