@@ -20,10 +20,14 @@ public class AchievementCache {
     private static Map<String, Achievement> achievementMap;
 
     public Achievement getAchievement(String achievementName) {
-        return achievementMap.computeIfAbsent(achievementName, key -> {
+        Achievement achievement = achievementMap.get(achievementName);
+
+        if (achievement == null) {
             log.error("Achievement not found in cache for title: {}", achievementName);
             throw new AchievementNotFoundException(achievementName);
-        });
+        }
+
+        return achievement;
     }
 
     @PostConstruct
