@@ -41,7 +41,7 @@ public class MentorshipStartListenerTest {
                 .thenReturn(mockEvent);
         mentorshipStartListener.onMessage(message, null);
 
-        Mockito.doNothing().when(eventHandlers.get(0)).handle(mockEvent.getMentorId());
+        Mockito.verify(eventHandlers.get(0)).handle(mockEvent.getMentorId());
         Mockito.verify(objectMapper).readValue(message.getBody(), MentorshipStartEvent.class);
     }
 }

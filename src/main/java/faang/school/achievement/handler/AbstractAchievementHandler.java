@@ -35,9 +35,9 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
         }
     }
 
-    private void hasComplete(Achievement achievement, AchievementProgress achievementProgress, Long mentorId) {
+    private void hasComplete(Achievement achievement, AchievementProgress achievementProgress, Long userId) {
         if (achievement.getPoints() <= achievementProgress.getCurrentPoints()) {
-            achievementService.saveAchievement(getUserAchievement(achievement, mentorId));
+            achievementService.saveAchievement(getUserAchievement(achievement, userId));
         }
     }
 
