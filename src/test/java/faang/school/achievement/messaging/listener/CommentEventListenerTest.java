@@ -12,11 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
-import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,15 +35,13 @@ class CommentEventListenerTest {
     }
 
     @Test
-    public void testOnMessage() throws IOException {
-        CommentEvent mockEvent = CommentEvent.builder().authorId(1L).build();
+    public void testOnMessage() {
+        CommentEvent event = CommentEvent.builder().authorId(1L).build();
 
-        when(objectMapper.readValue(message.getBody(), CommentEvent.class))
-                .thenReturn(mockEvent);
+        when(commentEventListener.mapEvent(message, CommentEvent.class)).thenReturn(event);
 
         commentEventListener.onMessage(message, null);
 
-        doNothing().when(eventHandlers.get(0)).handle(mockEvent.getAuthorId());
-        verify(objectMapper, Mockito.times(1)).readValue(message.getBody(), CommentEvent.class);
+        verify(eventHandlers.get(0)).handle(event.getAuthorId());
     }
 }
