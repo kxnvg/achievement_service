@@ -34,14 +34,14 @@ public class MentorshipStartListenerTest {
 
     @Test
     public void testOnMessage() throws IOException {
-        MentorshipStartEvent event = new MentorshipStartEvent();
-        event.setMentorId(0L);
+        MentorshipStartEvent mockEvent = new MentorshipStartEvent();
+        mockEvent.setMentorId(0L);
 
         Mockito.when(objectMapper.readValue(message.getBody(), MentorshipStartEvent.class))
-                .thenReturn(event);
+                .thenReturn(mockEvent);
         mentorshipStartListener.onMessage(message, null);
 
-        Mockito.doNothing().when(eventHandlers.get(0)).handle(event.getMentorId());
+        Mockito.doNothing().when(eventHandlers.get(0)).handle(mockEvent.getMentorId());
         Mockito.verify(objectMapper).readValue(message.getBody(), MentorshipStartEvent.class);
     }
 }
