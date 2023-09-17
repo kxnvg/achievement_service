@@ -6,7 +6,10 @@ import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.service.AchievementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -15,6 +18,8 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
     private final AchievementService achievementService;
 
     @Async("taskExecutor")
+    @Transactional
+    @Retryable(retryFor = OptimisticLockingFailureException.class)
     protected void handleAchievement(String achievementTitle, long userId) {
         Achievement achievement = achievementCache.get(achievementTitle);
         long achievementId = achievement.getId();
