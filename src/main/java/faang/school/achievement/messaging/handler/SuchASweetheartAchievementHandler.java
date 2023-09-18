@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NiceGuyAchievementHandler extends AbstractAchievementHandler<RecommendationEventDto> {
+public class SuchASweetheartAchievementHandler extends AbstractAchievementHandler<RecommendationEventDto> {
 
-    public NiceGuyAchievementHandler(AchievementService achievementService,
-                                     AchievementProgressService achievementProgressService,
-                                     UserAchievementService userAchievementService,
-                                     @Value("${niceGuy.title}") String title) {
+    public SuchASweetheartAchievementHandler(AchievementService achievementService,
+                                             AchievementProgressService achievementProgressService,
+                                             UserAchievementService userAchievementService,
+                                             @Value("${niceGuy.title}") String title) {
         super(achievementService, achievementProgressService, userAchievementService, title);
     }
 

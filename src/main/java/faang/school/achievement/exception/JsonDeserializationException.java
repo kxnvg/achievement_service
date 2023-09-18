@@ -3,11 +3,9 @@ package faang.school.achievement.exception;
 import java.text.MessageFormat;
 
 public class JsonDeserializationException extends RuntimeException {
-    private final String errorMessage;
 
     public JsonDeserializationException(String message, Throwable cause) {
         super(message, cause);
-        this.errorMessage = message;
     }
 
     public JsonDeserializationException(Throwable cause) {
@@ -16,6 +14,6 @@ public class JsonDeserializationException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return MessageFormat.format("{0} Reason: {1}", errorMessage, getCause().getMessage());
+        return MessageFormat.format("{0} Reason: {1}", super.getMessage(), getCause().getMessage());
     }
 }

@@ -1,7 +1,7 @@
 package faang.school.achievement.cache;
 
 import faang.school.achievement.config.TestContainerConfig;
-import faang.school.achievement.exception.AchievementNotFoundException;
+import faang.school.achievement.exception.AchievementNotInCacheException;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.repository.AchievementRepository;
@@ -39,7 +39,7 @@ public class AchievementCacheTest {
 
     @Test
     public void testGetNonExistingAchievement() {
-        assertThrows(AchievementNotFoundException.class, () -> {
+        assertThrows(AchievementNotInCacheException.class, () -> {
             achievementCache.getAchievement("non existing achievement");
         });
     }

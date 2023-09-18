@@ -24,19 +24,20 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
     @Retryable(retryFor = OptimisticLockException.class)
     public void handleAchievement(Long userId) {
         Achievement achievement = achievementService.getAchievementFromCache(title);
+        long achievementId = achievement.getId();
 
-        if (userAchievementService.userHasAchievement(userId, achievement.getId())) {
+        if (userAchievementService.userHasAchievement(userId, achievementId)) {
+            log.info("User: {} already has the achievement: {}", userId, title);
             return;
         }
 
-        AchievementProgress progress = achievementProgressService.ensureUserAchievementProgress(userId, achievement);
-
-        log.debug("Incrementing achievement progress for User: {}", userId);
+        achievementProgressService.createProgressIfNotExist(userId, achievementId);
+        AchievementProgress progress = achievementProgressService.getByUserIdAndAchievementId(userId, achievementId);
         achievementProgressService.incrementProgress(progress);
 
-        if (progress.getCurrentPoints() >= achievement.getPoints()) {
-            userAchievementService.giveUserAchievement(userId, achievement);
-            log.info("User: {} has achieved achievement: {}", userId, achievement.getTitle());
+        if (progress.getCurrentPoints() == achievement.getPoints()) {
+            userAchievementService.createUserAchievementIfNecessary(userId, achievementId);
+            log.info("User: {} has achieved achievement: {}", userId, title);
         }
     }
 }

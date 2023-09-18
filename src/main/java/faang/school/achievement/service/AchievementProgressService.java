@@ -1,7 +1,6 @@
 package faang.school.achievement.service;
 
 import faang.school.achievement.exception.EntityNotFoundException;
-import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.repository.AchievementProgressRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,41 +22,25 @@ public class AchievementProgressService {
     }
 
     @Transactional
-    public AchievementProgress ensureUserAchievementProgress(Long userId, Achievement achievement) {
-        log.info("Ensuring achievement progress for User: {} and Achievement: {}", userId, achievement.getTitle());
-        Long achievementId = achievement.getId();
-
-        if (!userHasProgress(userId, achievementId)) {
-            AchievementProgress progress = AchievementProgress.builder()
-                    .userId(userId)
-                    .achievement(achievement)
-                    .build();
-
-            save(progress);
-        }
-
-        log.info("Achievement progress ensured for User: {} and Achievement: {}", userId, achievement.getTitle());
-        return findByUserIdAndAchievementId(userId, achievementId);
+    public void createProgressIfNotExist(long userId, long achievementId) {
+        achievementProgressRepository.createProgressIfNecessary(userId, achievementId);
     }
 
     @Transactional(readOnly = true)
-    public AchievementProgress findByUserIdAndAchievementId(Long userId, Long achievementId) {
+    public AchievementProgress getByUserIdAndAchievementId(long userId, long achievementId) {
         return achievementProgressRepository.findByUserIdAndAchievementId(userId, achievementId)
                 .orElseThrow(() -> {
                     String value = MessageFormat.format("UserId {0} and AchievementId {1}", userId, achievementId);
-                    log.error("Achievement progress with '{}' not found.", value);
+                    log.error("Achievement progress with {} not found.", value);
                     return new EntityNotFoundException("Achievement progress", value);
                 });
-    }
-
-    @Transactional(readOnly = true)
-    public boolean userHasProgress(Long userId, Long achievementId) {
-        return achievementProgressRepository.existsByUserIdAndAchievementId(userId, achievementId);
     }
 
     @Transactional
     public void incrementProgress(AchievementProgress achievementProgress) {
         achievementProgress.increment();
         achievementProgressRepository.save(achievementProgress);
+        log.info("Progress for the achievement {} has been incremented. Current progress is {}",
+                achievementProgress.getAchievement().getTitle(), achievementProgress.getCurrentPoints());
     }
 }

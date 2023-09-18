@@ -1,6 +1,7 @@
 package faang.school.achievement.service;
 
 import faang.school.achievement.cache.AchievementCache;
+import faang.school.achievement.exception.AchievementNotInCacheException;
 import faang.school.achievement.exception.EntityNotFoundException;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.repository.AchievementRepository;
@@ -27,6 +28,10 @@ public class AchievementService {
 
     @Transactional(readOnly = true)
     public Achievement getAchievementFromCache(String title) {
-        return achievementCache.getAchievement(title);
+        try {
+            return achievementCache.getAchievement(title);
+        } catch (AchievementNotInCacheException e) {
+            return getAchievementByTitle(title);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package faang.school.achievement.service;
 
-import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.UserAchievement;
 import faang.school.achievement.repository.UserAchievementRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +19,8 @@ public class UserAchievementService {
     }
 
     @Transactional
-    public void giveUserAchievement(Long userId, Achievement achievement) {
-        UserAchievement userAchievement = UserAchievement.builder()
-                .userId(userId)
-                .achievement(achievement)
-                .build();
-
-        save(userAchievement);
+    public void createUserAchievementIfNecessary(long userId, long achievementId) {
+        userAchievementRepository.createUserAchievementIfNecessary(userId, achievementId);
     }
 
     @Transactional(readOnly = true)
