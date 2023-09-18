@@ -3,6 +3,7 @@ package faang.school.achievement.controller;
 import faang.school.achievement.dto.achievement.DtoAchievement;
 import faang.school.achievement.dto.achievement.DtoAchievementProgress;
 import faang.school.achievement.dto.achievement.DtoFilterAchievement;
+import faang.school.achievement.model.Achievement;
 import faang.school.achievement.service.AchievementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
