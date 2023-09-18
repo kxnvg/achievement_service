@@ -25,7 +25,7 @@ class AbstractEventListenerTest {
 
     @Test
     public void testEventMapper() throws IOException {
-        commentEventListener.eventMapper(message, CommentEvent.class);
+        commentEventListener.mapEvent(message, CommentEvent.class);
 
         verify(objectMapper, times(1)).readValue(message.getBody(), CommentEvent.class);
     }
