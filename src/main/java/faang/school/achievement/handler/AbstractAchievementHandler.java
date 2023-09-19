@@ -1,6 +1,7 @@
 package faang.school.achievement.handler;
 
 import faang.school.achievement.cache.AchievementCache;
+import faang.school.achievement.messaging.publisher.AchievementEventPublisher;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.UserAchievement;
@@ -18,6 +19,8 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
     protected final AchievementProgressRepository achievementProgressRepository;
     protected final AchievementService achievementService;
     protected final AchievementCache achievementCache;
+
+    private final AchievementEventPublisher achievementEventPublisher;
     private final String achievementName;
 
     @Async
@@ -37,7 +40,9 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
 
     private void hasComplete(Achievement achievement, AchievementProgress achievementProgress, Long userId) {
         if (achievement.getPoints() <= achievementProgress.getCurrentPoints()) {
-            achievementService.saveAchievement(getUserAchievement(achievement, userId));
+            UserAchievement userAchievement = getUserAchievement(achievement, userId);
+            achievementService.saveAchievement(userAchievement);
+            achievementEventPublisher.publish(userAchievement);
         }
     }
 
