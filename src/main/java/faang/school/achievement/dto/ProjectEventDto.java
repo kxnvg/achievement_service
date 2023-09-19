@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectEventDto {
-    private Long userId;
+    private String name;
+    private Long ownerId;
     private Long projectId;
 }

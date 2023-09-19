@@ -1,8 +1,18 @@
 package faang.school.achievement.service;
 
-public class UserAchievementService {
+import faang.school.achievement.model.UserAchievement;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-    public void hasAchievement() {
+@Service
+@RequiredArgsConstructor
+public class UserAchievementService {
+    private final UserAchievementService userAchievementService;
+    public boolean hasAchievement(Long userId,Long achievementId) {
+        return userAchievementService.hasAchievement(userId, achievementId);
+    }
+
+    public void giveAchievement(UserAchievement userAchievement) {
 
     }
 }
