@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.Async;
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
-
     private final AchievementService achievementService;
     private final AchievementProgressService achievementProgressService;
     private final UserAchievementService userAchievementService;
@@ -37,7 +36,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
 
         if (progress.getCurrentPoints() == achievement.getPoints()) {
             userAchievementService.createUserAchievementIfNecessary(userId, achievementId);
-            log.info("User: {} has achieved achievement: {}", userId, title);
+            log.info("User: {} has earned the achievement: {}", userId, title);
         }
     }
 }
