@@ -1,6 +1,7 @@
-package faang.school.achievement.messaging.handler;
+package faang.school.achievement.handler;
 
 import faang.school.achievement.dto.RecommendationEventDto;
+import faang.school.achievement.handler.SuchASweetheartAchievementHandler;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.Rarity;
