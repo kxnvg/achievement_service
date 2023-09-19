@@ -12,6 +12,7 @@ import java.util.List;
 
 @Component
 public class CommentEventListener extends AbstractEventListener<CommentEvent> implements MessageListener {
+
     @Autowired
     public CommentEventListener(ObjectMapper objectMapper, List<EventHandler<CommentEvent>> eventHandlers) {
         super(objectMapper, eventHandlers);
@@ -20,5 +21,8 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> im
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEvent event = mapEvent(message, CommentEvent.class);
+        for (EventHandler<CommentEvent> eventHandler : eventHandlers){
+            eventHandler.handle(event.getAuthorId());
+        }
     }
 }
