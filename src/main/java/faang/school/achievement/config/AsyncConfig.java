@@ -13,16 +13,16 @@ import java.util.concurrent.Executor;
 @EnableAsync
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
-    @Value("${spring.async_config.core-size}")
+    @Value("${spring.async.core-size}")
     private int corePoolSize;
 
-    @Value("${spring.async_config.max-size}")
+    @Value("${spring.async.max-size}")
     private int maxPoolSize;
 
-    @Value("${spring.async_config.queue-capacity}")
+    @Value("${spring.async.queue-capacity}")
     private int queueCapacity;
 
-    @Value("${spring.async_config.thread_name_prefix}")
+    @Value("${spring.async.thread-name-prefix}")
     private String threadNamePrefix;
 
     @Override

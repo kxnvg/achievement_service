@@ -5,6 +5,7 @@ import faang.school.achievement.exception.AchievementNotInCacheException;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.repository.AchievementRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class AchievementCacheTest {
     public void testGetExistingAchievement() {
         Achievement cachedAchievement = achievementCache.getAchievement("test");
 
-        assertNotNull(cachedAchievement);
-        assertEquals(expectedAchievement.getTitle(), cachedAchievement.getTitle());
+        Assertions.assertNotNull(cachedAchievement);
+        Assertions.assertEquals(expectedAchievement.getTitle(), cachedAchievement.getTitle());
     }
 
     @Test

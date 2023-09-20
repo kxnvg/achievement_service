@@ -1,10 +1,10 @@
 package faang.school.achievement.handler;
 
 import faang.school.achievement.dto.ProjectEventDto;
-import faang.school.achievement.dto.RecommendationEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
 import faang.school.achievement.model.Rarity;
+import faang.school.achievement.publisher.AchievementEventPublisher;
 import faang.school.achievement.service.AchievementProgressService;
 import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.UserAchievementService;
@@ -25,6 +25,8 @@ class BusinessmanAchievementHandlerTest {
     private UserAchievementService userAchievementService;
     @Mock
     private AchievementProgressService achievementProgressService;
+    @Mock
+    private AchievementEventPublisher achievementEventPublisher;
     @InjectMocks
     private BusinessmanAchievementHandler businessmanAchievementHandler;
 
@@ -38,8 +40,8 @@ class BusinessmanAchievementHandlerTest {
 
     @BeforeEach
     void setUp() {
-        businessmanAchievementHandler = new BusinessmanAchievementHandler(achievementService, achievementProgressService, userAchievementService,
-                title);
+        businessmanAchievementHandler = new BusinessmanAchievementHandler(achievementService,
+                achievementProgressService, userAchievementService, title, achievementEventPublisher);
 
         achievement = Achievement.builder()
                 .id(1L)

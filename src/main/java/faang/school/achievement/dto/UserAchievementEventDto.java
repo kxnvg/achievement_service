@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserAchievementEventDto {
     private String achievementName;
-    private long userId;
+    private Long userId;
 }
