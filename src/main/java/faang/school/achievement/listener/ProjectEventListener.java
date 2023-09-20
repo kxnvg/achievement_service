@@ -19,7 +19,7 @@ public class ProjectEventListener extends AbstractEventListener<ProjectEventDto>
 
     @Override
     public void onMessage(@NonNull Message message, byte[] pattern) {
-        ProjectEventDto projectEventDto = convertJsonToString(message, ProjectEventDto.class);
-        eventHandlers.forEach(handler -> handler.handle(projectEventDto));
+        ProjectEventDto projectEventDto = deserializeJsonToEvent(message, ProjectEventDto.class);
+        handlers.forEach(handler -> handler.handle(projectEventDto));
     }
 }
