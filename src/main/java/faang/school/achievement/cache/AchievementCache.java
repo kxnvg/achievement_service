@@ -6,22 +6,20 @@ import faang.school.achievement.repository.AchievementRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Component
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class AchievementCache {
     private final AchievementRepository achievementRepository;
     private static Map<String, Achievement> achievementMap;
 
-    public Achievement getAchievement(String achievementName){
+    public Achievement getAchievement(String achievementName) {
         Achievement achievement = achievementMap.get(achievementName);
 
         if (achievement == null) {
@@ -34,7 +32,7 @@ public class AchievementCache {
     }
 
     @PostConstruct
-    private void init(){
+    private void init() {
         achievementMap = achievementRepository.findAll().stream()
                 .collect(Collectors.toUnmodifiableMap(Achievement::getTitle, Function.identity()));
     }
