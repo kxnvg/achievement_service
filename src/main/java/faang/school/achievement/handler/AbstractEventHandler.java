@@ -20,35 +20,35 @@ public abstract class AbstractEventHandler<T> implements EventHandler<T> {
     private UserAchievementService userAchievementService;
     private AchievementProgressService achievementProgressService;
     private String title;
-
-    @Async
-    @Retryable(retryFor = OptimisticLockException.class)
-    public void handle(Long userId) {
-        Achievement achievement = achievementService.getAchievement(title);
-
-        boolean existsAchievement = userAchievementService.hasAchievement(userId, achievement.getId());
-
-        if (!existsAchievement) {
-            AchievementProgress achievementProgress = achievementProgressService.getProgress(userId, achievement.getId());
-            achievementProgress.setUpdatedAt(null);
-            achievementProgress.increment();
-            achievementProgress = achievementProgressService.updateProgress(achievementProgress);
-
-            giveAchievement(userId, achievement, achievementProgress);
-        }
-    }
-
-    private void giveAchievement(Long userId, Achievement achievement, AchievementProgress progress) {
-        if (progress.getCurrentPoints() == achievement.getPoints()) {
-
-            UserAchievement userAchievement = UserAchievement.builder()
-                    .achievement(achievement)
-                    .userId(userId)
-                    .build();
-
-            userAchievementService.giveAchievement(userAchievement);
-        }
-    }
+//
+//    @Async
+//    @Retryable(retryFor = OptimisticLockException.class)
+//    public void handle(Long userId) {
+//        Achievement achievement = achievementService.getAchievement(title);
+//
+//        boolean existsAchievement = userAchievementService.hasAchievement(userId, achievement.getId());
+//
+//        if (!existsAchievement) {
+//            AchievementProgress achievementProgress = achievementProgressService.getProgress(userId, achievement.getId());
+//            achievementProgress.setUpdatedAt(null);
+//            achievementProgress.increment();
+//            achievementProgress = achievementProgressService.updateProgress(achievementProgress);
+//
+//            giveAchievement(userId, achievement, achievementProgress);
+//        }
+//    }
+//
+//    private void giveAchievement(Long userId, Achievement achievement, AchievementProgress progress) {
+//        if (progress.getCurrentPoints() == achievement.getPoints()) {
+//
+//            UserAchievement userAchievement = UserAchievement.builder()
+//                    .achievement(achievement)
+//                    .userId(userId)
+//                    .build();
+//
+//            userAchievementService.giveAchievement(userAchievement);
+//        }
+//    }
 
 
     @Async("taskExecutor")
