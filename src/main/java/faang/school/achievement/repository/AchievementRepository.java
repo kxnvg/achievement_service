@@ -2,12 +2,12 @@ package faang.school.achievement.repository;
 
 import faang.school.achievement.model.Achievement;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface AchievementRepository extends JpaRepository<Achievement, Long> {
-    @Query
-    public Achievement findAchievementByTitle(String title);
+
+    Optional<Achievement> getAchievementByTitle(String title);
 }
