@@ -2,7 +2,7 @@ package faang.school.achievement.messaging.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.UserAchievementDto;
+import faang.school.achievement.dto.redis.UserAchievementEvent;
 import faang.school.achievement.mapper.UserAchievementMapper;
 import faang.school.achievement.model.UserAchievement;
 import org.junit.jupiter.api.Test;
@@ -27,10 +27,10 @@ public class AchievementEventPublisherTest {
     @Test
     public void testPublish() throws JsonProcessingException {
         UserAchievement userAchievement = UserAchievement.builder().build();
-        UserAchievementDto messageMock = userAchievementMapper.toDto(userAchievement);
+        UserAchievementEvent messageMock = userAchievementMapper.toEvent(userAchievement);
         String json = objectMapper.writeValueAsString(messageMock);
 
-        Mockito.when(userAchievementMapper.toDto(Mockito.any())).thenReturn(messageMock);
+        Mockito.when(userAchievementMapper.toEvent(Mockito.any())).thenReturn(messageMock);
         Mockito.when(objectMapper.writeValueAsString(messageMock)).thenReturn(json);
 
         achievementEventPublisher.publish(userAchievement);
