@@ -30,6 +30,8 @@ spring:
           name: goal_set_channel
         task_channel:
           name: task_channel
+        profile_pic_channel:
+          name: profile_pic_channel
 
   async:
     min_pool_size: 5
