@@ -2,7 +2,7 @@ package faang.school.achievement.messaging.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.dto.UserAchievementDto;
+import faang.school.achievement.dto.redis.UserAchievementEvent;
 import faang.school.achievement.mapper.UserAchievementMapper;
 import faang.school.achievement.model.UserAchievement;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class AchievementEventPublisher {
 
 
     public void publish(UserAchievement userAchievement) {
-        UserAchievementDto message = userAchievementMapper.toDto(userAchievement);
+        UserAchievementEvent message = userAchievementMapper.toEvent(userAchievement);
         redisTemplate.convertAndSend(achievementChannelName, message);
         try {
             String json = objectMapper.writeValueAsString(message);

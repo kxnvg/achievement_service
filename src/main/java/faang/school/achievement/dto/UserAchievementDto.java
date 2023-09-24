@@ -1,6 +1,5 @@
 package faang.school.achievement.dto;
 
-import faang.school.achievement.model.Achievement;
 import lombok.Builder;
 import lombok.Data;
 

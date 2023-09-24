@@ -1,6 +1,7 @@
 package faang.school.achievement.mapper;
 
 import faang.school.achievement.dto.UserAchievementDto;
+import faang.school.achievement.dto.redis.UserAchievementEvent;
 import faang.school.achievement.model.UserAchievement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,4 +14,8 @@ public interface UserAchievementMapper {
 
     @Mapping(source = "achievementId", target = "achievement.id")
     UserAchievement toEntity(UserAchievementDto userAchievementDto);
+
+    @Mapping(source = "achievement.id", target = "achievementId")
+    @Mapping(source = "achievement.title", target = "achievementTitle")
+    UserAchievementEvent toEvent(UserAchievement userAchievement);
 }
