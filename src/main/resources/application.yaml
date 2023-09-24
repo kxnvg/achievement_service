@@ -33,6 +33,8 @@ spring:
           name: task_channel
         invite_channel:
           name: invite_channel
+        profile_pic_channel:
+          name: profile_pic_channel
 
   async:
     min_pool_size: 5

@@ -2,6 +2,7 @@ package faang.school.achievement.config.redis;
 
 import faang.school.achievement.listener.GoalSetListener;
 import faang.school.achievement.listener.InviteEventListener;
+import faang.school.achievement.listener.ProfilePicListener;
 import faang.school.achievement.listener.TaskEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,12 +22,15 @@ public class RedisConfiguration {
     private final GoalSetListener goalSetListener;
     private final TaskEventListener taskEventListener;
     private final InviteEventListener inviteEventListener;
+    private final ProfilePicListener profilePicListener;
     @Value("${spring.data.redis.channels.goal_set_channel.name}")
     private String goalSetChannel;
     @Value("${spring.data.redis.channels.task_channel.name}")
     private String taskChannel;
     @Value("${spring.data.redis.channels.invite_channel.name}")
     private String inviteChannel;
+    @Value("${spring.data.redis.channels.profile_pic_channel.name}")
+    private String profilePicChannel;
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -54,6 +58,7 @@ public class RedisConfiguration {
         container.addMessageListener(goalSetListener, new ChannelTopic(goalSetChannel));
         container.addMessageListener(taskEventListener, new ChannelTopic(taskChannel));
         container.addMessageListener(inviteEventListener, new ChannelTopic(inviteChannel));
+        container.addMessageListener(profilePicListener, new ChannelTopic(profilePicChannel));
         return container;
     }
 }
