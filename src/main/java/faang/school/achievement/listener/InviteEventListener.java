@@ -11,10 +11,10 @@ import java.util.List;
 
 @Component
 public class InviteEventListener extends AbstractEventListener<InviteSentEventDto> {
-    private final List<EventHandler> eventHandlers;
+    private final List<EventHandler<InviteSentEventDto>> eventHandlers;
 
     @Autowired
-    public InviteEventListener(ObjectMapper objectMapper, List<EventHandler> eventHandlers) {
+    public InviteEventListener(ObjectMapper objectMapper, List<EventHandler<InviteSentEventDto>> eventHandlers) {
         super(objectMapper);
         this.eventHandlers = eventHandlers;
     }

@@ -12,7 +12,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 
 @AllArgsConstructor
-public abstract class AbstractHandler implements EventHandler {
+public abstract class AbstractHandler<T> implements EventHandler<T> {
 
     private AchievementService achievementService;
     private UserAchievementService userAchievementService;
