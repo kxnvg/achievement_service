@@ -1,5 +1,6 @@
 package faang.school.achievement.config.redis;
 
+import faang.school.achievement.listener.ProjectEventListener;
 import faang.school.achievement.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.recommendation_chanel.name}")
     private String recommendationChannel;
 
+    @Value("${spring.data.redis.channel.projectTopic}")
+    private String projectChannelName;
+
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -32,20 +36,22 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
-                                                                       MessageListenerAdapter recommendationEventAdapter) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter recommendationEventAdapter,
+                                                                       MessageListenerAdapter projectListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(redisConnectionFactory());
+        container.setTopicSerializer(new StringRedisSerializer());
         container.addMessageListener(recommendationEventAdapter, recommendationTopic());
+        container.addMessageListener(projectListener, projectTopic());
 
         return container;
     }
@@ -59,4 +65,15 @@ public class RedisConfig {
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
     }
+
+    @Bean
+    MessageListenerAdapter projectListener(ProjectEventListener projectEventListener) {
+        return new MessageListenerAdapter(projectEventListener);
+    }
+
+    @Bean
+    public ChannelTopic projectTopic() {
+        return new ChannelTopic(projectChannelName);
+    }
+
 }
