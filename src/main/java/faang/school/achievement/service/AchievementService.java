@@ -10,6 +10,8 @@ import faang.school.achievement.repository.AchievementProgressRepository;
 import faang.school.achievement.repository.UserAchievementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +41,7 @@ public class AchievementService {
     }
 
     @Transactional
+    @Retryable(retryFor = OptimisticLockingFailureException.class)
     public void incrementProgress(AchievementProgress achievementProgress) {
         achievementProgress.increment();
         achievementProgressRepository.save(achievementProgress);

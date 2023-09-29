@@ -2,7 +2,7 @@ package faang.school.achievement.config;
 
 import faang.school.achievement.listener.AchievementEventListener;
 import faang.school.achievement.listener.MentorshipStartEventListener;
-import faang.school.achievement.listener.PostEventListener;
+import faang.school.achievement.listener.PostWriterEventListener;
 import faang.school.achievement.listener.SkillEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class RedisConfig {
     }
 
     @Bean(name = "postAdapter")
-    public MessageListenerAdapter postAdapter(PostEventListener postEventListener) {
+    public MessageListenerAdapter postAdapter(PostWriterEventListener postEventListener) {
         return new MessageListenerAdapter(postEventListener);
     }
     @Bean(name = "achievementAdapter")
