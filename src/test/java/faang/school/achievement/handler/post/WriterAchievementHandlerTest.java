@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 class WriterAchievementHandlerTest {
 
     @InjectMocks
-    private WriterAchievementHandler writerAchievementHandler;
+    private WriterHandler writerAchievementHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock

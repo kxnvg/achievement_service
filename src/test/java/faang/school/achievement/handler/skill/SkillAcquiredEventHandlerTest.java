@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SkillAcquiredEventHandlerTest {
     @InjectMocks
-    private SkillAcquiredEventHandler skillAcquiredEventHandler;
+    private SkillAcquiredHandler skillAcquiredEventHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock

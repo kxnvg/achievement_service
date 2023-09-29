@@ -14,7 +14,7 @@ public class PostEventListener extends AbstractListener<PostEventDto> {
 
     public PostEventListener(ObjectMapper objectMapper,
                              List<EventHandler<PostEventDto>> eventHandlers,
-                             @Value("${spring.achievements.post.title}") String achievementTitle) {
+                             @Value("${spring.achievements.post.writer.title}") String achievementTitle) {
         super(objectMapper, eventHandlers, achievementTitle);
     }
 

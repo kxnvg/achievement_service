@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RecursionAchievementEventHandlerTest {
     @InjectMocks
-    private RecursionAchievementEventHandler recursionAchievementEventHandler;
+    private RecursionHandler recursionAchievementEventHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock

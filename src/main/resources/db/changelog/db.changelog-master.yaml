@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/changeset/achievement_V004__insert_mentorship_achievement.sql
   - include:
       file: db/changelog/changeset/achievement_V005__insert_achievement.sql
+  - include:
+      file: db/changelog/changeset/achievement_V006__insert_opinionLeader.sql

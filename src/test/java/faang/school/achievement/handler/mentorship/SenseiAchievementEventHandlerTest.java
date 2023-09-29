@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SenseiAchievementEventHandlerTest {
     @InjectMocks
-    private SenseiAchievementEventHandler senseiAchievementEventHandler;
+    private SenseiHandler senseiAchievementEventHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock
