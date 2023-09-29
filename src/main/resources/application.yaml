@@ -27,6 +27,7 @@ spring:
         skill: skill-acquired-channel
         post: post-channel
         mentorship_channel: mentorship-accepted-channel
+        comment: comment-channel
 
   async:
     corePoolSize: 8
