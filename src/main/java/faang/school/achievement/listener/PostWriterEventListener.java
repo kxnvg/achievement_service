@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class PostEventListener extends AbstractListener<PostEventDto> {
+public class PostWriterEventListener extends AbstractListener<PostEventDto> {
 
-    public PostEventListener(ObjectMapper objectMapper,
-                             List<EventHandler<PostEventDto>> eventHandlers,
-                             @Value("${spring.achievements.post.title}") String achievementTitle) {
+    public PostWriterEventListener(ObjectMapper objectMapper,
+                                   List<EventHandler<PostEventDto>> eventHandlers,
+                                   @Value("${spring.achievements.post.writer.title}") String achievementTitle) {
         super(objectMapper, eventHandlers, achievementTitle);
     }
 

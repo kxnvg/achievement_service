@@ -1,9 +1,9 @@
-package faang.school.achievement.handler.post;
+package faang.school.achievement.handler.mentorship;
 
 import faang.school.achievement.cache.AchievementCache;
+import faang.school.achievement.dto.MentorshipStartEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
-import faang.school.achievement.dto.PostEventDto;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.service.AchievementService;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,95 +16,94 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class WriterAchievementHandlerTest {
-
+class SenseiHandlerTest {
     @InjectMocks
-    private WriterAchievementHandler writerAchievementHandler;
+    private SenseiHandler senseiHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock
     private AchievementService achievementService;
     private Achievement achievement;
     private AchievementProgress progress;
-    private PostEventDto postEventDto;
-
+    private MentorshipStartEventDto mentorshipStartEventDto;
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(writerAchievementHandler, "achievementTitle", "Writer");
+        ReflectionTestUtils.setField(senseiHandler, "achievementTitle", "Achievement-Sensei");
 
-        postEventDto = PostEventDto.builder()
+        mentorshipStartEventDto = MentorshipStartEventDto.builder()
                 .authorId(1L)
-                .postId(1L)
+                .receiverId(2L)
                 .build();
 
         achievement = Achievement.builder()
                 .id(1L)
-                .title("Writer")
+                .title("Achievement-Sensei")
                 .description("Description")
                 .rarity(Rarity.UNCOMMON)
-                .points(100)
+                .points(3)
                 .build();
 
         progress = AchievementProgress.builder()
-                .id(1L)
+                .userId(1L)
                 .achievement(achievement)
-                .currentPoints(99)
+                .currentPoints(2)
                 .build();
 
-        when(achievementCache.get("Writer")).thenReturn(achievement);
-        when(achievementService.userHasAchievement(1L, 1L)).thenReturn(false);
-        when(achievementService.getProgress(1L, 1L)).thenReturn(progress);
+        when(achievementCache.get("Achievement-Sensei")).thenReturn(achievement);
+        when(achievementService.userHasAchievement(2L, 1L)).thenReturn(false);
+        when(achievementService.getProgress(2L, 1L)).thenReturn(progress);
     }
 
     @Test
-    void getAchievementTitle_shouldReturnAchievementTitle() {
-        assertEquals("Writer", writerAchievementHandler.getAchievementTitle());
+    void getAchievementTitle_shouldReturnSkillMaster() {
+        assertEquals("Achievement-Sensei", senseiHandler.getAchievementTitle());
     }
 
     @Test
     void handle_shouldInvokeAchievementCacheGetMethod() {
-        writerAchievementHandler.handle(postEventDto);
-        verify(achievementCache).get("Writer");
+        senseiHandler.handle(mentorshipStartEventDto);
+        verify(achievementCache).get("Achievement-Sensei");
     }
 
     @Test
     void handle_shouldStopExecuting() {
-        when(achievementService.userHasAchievement(1L, 1L)).thenReturn(true);
+        when(achievementService.userHasAchievement(2L, 1L)).thenReturn(true);
 
-        writerAchievementHandler.handle(postEventDto);
-        verify(achievementService).userHasAchievement(1L, 1L);
+        senseiHandler.handle(mentorshipStartEventDto);
+        verify(achievementService).userHasAchievement(2L, 1L);
         verifyNoMoreInteractions(achievementService);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceCreateProgressIfNecessaryMethod() {
-        writerAchievementHandler.handle(postEventDto);
-        verify(achievementService).createProgressIfNecessary(1L, 1L);
+        senseiHandler.handle(mentorshipStartEventDto);
+        verify(achievementService).createProgressIfNecessary(2L, 1L);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceGetProgressMethod() {
-        writerAchievementHandler.handle(postEventDto);
-        verify(achievementService).getProgress(1L, 1L);
+        senseiHandler.handle(mentorshipStartEventDto);
+        verify(achievementService).getProgress(2L, 1L);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceIncrementProgressMethod() {
-        writerAchievementHandler.handle(postEventDto);
+        senseiHandler.handle(mentorshipStartEventDto);
         verify(achievementService).incrementProgress(progress);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceGiveAchievementMethod() {
-        progress.setCurrentPoints(100);
+        progress.setCurrentPoints(3);
 
-        writerAchievementHandler.handle(postEventDto);
-        verify(achievementService).giveAchievement(1L, achievement);
+        senseiHandler.handle(mentorshipStartEventDto);
+        verify(achievementService).giveAchievement(2L, achievement);
     }
 }

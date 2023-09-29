@@ -20,10 +20,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class PostEventListenerTest {
+class PostWriterEventListenerTest {
 
     @InjectMocks
-    private PostEventListener postEventListener;
+    private PostWriterEventListener postEventListener;
     @Mock
     private ObjectMapper objectMapper;
 

@@ -23,7 +23,6 @@ spring:
       host: localhost
       channels:
         achievement: achievement-channel
-        follower: follower-channel
         skill: skill-acquired-channel
         post: post-channel
         mentorship_channel: mentorship-accepted-channel
@@ -36,14 +35,26 @@ spring:
 
   achievements:
     skill:
-      title: Skill-Master
+      master:
+        title: Skill-Master
+
     post:
-      title: Writer
+      writer:
+        title: Writer
+      leader:
+        title: Opinion-Leader
+
     mentorship:
-      title: Achievement-Sensei
+      sensei:
+        title: Sensei
+
     achievement:
       recursion:
         title: Recursion
+
+    comment:
+      expert:
+        title: Expert
 
 server:
   port: 8085
