@@ -23,9 +23,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class RecursionAchievementEventHandlerTest {
+class RecursionHandlerTest {
     @InjectMocks
-    private RecursionHandler recursionAchievementEventHandler;
+    private RecursionHandler recursionHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock
@@ -36,7 +36,7 @@ class RecursionAchievementEventHandlerTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(recursionAchievementEventHandler, "achievementTitle", "Recursion");
+        ReflectionTestUtils.setField(recursionHandler, "achievementTitle", "Recursion");
 
         achievementEventDto = AchievementEventDto.builder()
                 .authorId(1L)
@@ -64,12 +64,12 @@ class RecursionAchievementEventHandlerTest {
 
     @Test
     void getAchievementTitle_shouldReturnSkillMaster() {
-        assertEquals("Recursion", recursionAchievementEventHandler.getAchievementTitle());
+        assertEquals("Recursion", recursionHandler.getAchievementTitle());
     }
 
     @Test
     void handle_shouldInvokeAchievementCacheGetMethod() {
-        recursionAchievementEventHandler.handle(achievementEventDto);
+        recursionHandler.handle(achievementEventDto);
         verify(achievementCache).get("Recursion");
     }
 
@@ -77,26 +77,26 @@ class RecursionAchievementEventHandlerTest {
     void handle_shouldStopExecuting() {
         when(achievementService.userHasAchievement(1L, 3L)).thenReturn(true);
 
-        recursionAchievementEventHandler.handle(achievementEventDto);
+        recursionHandler.handle(achievementEventDto);
         verify(achievementService).userHasAchievement(1L, 3L);
         verifyNoMoreInteractions(achievementService);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceCreateProgressIfNecessaryMethod() {
-        recursionAchievementEventHandler.handle(achievementEventDto);
+        recursionHandler.handle(achievementEventDto);
         verify(achievementService).createProgressIfNecessary(1L, 3L);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceGetProgressMethod() {
-        recursionAchievementEventHandler.handle(achievementEventDto);
+        recursionHandler.handle(achievementEventDto);
         verify(achievementService).getProgress(1L, 3L);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceIncrementProgressMethod() {
-        recursionAchievementEventHandler.handle(achievementEventDto);
+        recursionHandler.handle(achievementEventDto);
         verify(achievementService).incrementProgress(progress);
     }
 
@@ -104,7 +104,7 @@ class RecursionAchievementEventHandlerTest {
     void handle_shouldInvokeAchievementServiceGiveAchievementMethod() {
         progress.setCurrentPoints(30);
 
-        recursionAchievementEventHandler.handle(achievementEventDto);
+        recursionHandler.handle(achievementEventDto);
         verify(achievementService).giveAchievement(1L, achievement);
     }
 }

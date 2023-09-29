@@ -1,9 +1,9 @@
-package faang.school.achievement.handler.post;
+package faang.school.achievement.handler.skill;
 
 import faang.school.achievement.cache.AchievementCache;
+import faang.school.achievement.dto.SkillAcquiredEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
-import faang.school.achievement.dto.PostEventDto;
 import faang.school.achievement.model.Rarity;
 import faang.school.achievement.service.AchievementService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,94 +17,94 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class WriterAchievementHandlerTest {
-
+class SkillAcquiredHandlerTest {
     @InjectMocks
-    private WriterHandler writerAchievementHandler;
+    private SkillAcquiredHandler skillAcquiredHandler;
     @Mock
     private AchievementCache achievementCache;
     @Mock
     private AchievementService achievementService;
     private Achievement achievement;
     private AchievementProgress progress;
-    private PostEventDto postEventDto;
-
+    private SkillAcquiredEventDto skillAcquiredEventDto;
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(writerAchievementHandler, "achievementTitle", "Writer");
+        ReflectionTestUtils.setField(skillAcquiredHandler, "achievementTitle", "Skill-Master");
 
-        postEventDto = PostEventDto.builder()
-                .authorId(1L)
-                .postId(1L)
+        skillAcquiredEventDto = SkillAcquiredEventDto.builder()
+                .skillId(1L)
+                .receiverId(1L)
                 .build();
 
         achievement = Achievement.builder()
                 .id(1L)
-                .title("Writer")
+                .title("Skill-Master")
                 .description("Description")
                 .rarity(Rarity.UNCOMMON)
-                .points(100)
+                .points(3)
                 .build();
 
         progress = AchievementProgress.builder()
-                .id(1L)
+                .userId(1L)
                 .achievement(achievement)
-                .currentPoints(99)
+                .currentPoints(2)
                 .build();
 
-        when(achievementCache.get("Writer")).thenReturn(achievement);
+        when(achievementCache.get("Skill-Master")).thenReturn(achievement);
         when(achievementService.userHasAchievement(1L, 1L)).thenReturn(false);
         when(achievementService.getProgress(1L, 1L)).thenReturn(progress);
     }
 
     @Test
-    void getAchievementTitle_shouldReturnAchievementTitle() {
-        assertEquals("Writer", writerAchievementHandler.getAchievementTitle());
+    void getAchievementTitle_shouldReturnSkillMaster() {
+        assertEquals("Skill-Master", skillAcquiredHandler.getAchievementTitle());
     }
 
     @Test
     void handle_shouldInvokeAchievementCacheGetMethod() {
-        writerAchievementHandler.handle(postEventDto);
-        verify(achievementCache).get("Writer");
+        skillAcquiredHandler.handle(skillAcquiredEventDto);
+        verify(achievementCache).get("Skill-Master");
     }
 
     @Test
     void handle_shouldStopExecuting() {
         when(achievementService.userHasAchievement(1L, 1L)).thenReturn(true);
 
-        writerAchievementHandler.handle(postEventDto);
+        skillAcquiredHandler.handle(skillAcquiredEventDto);
         verify(achievementService).userHasAchievement(1L, 1L);
         verifyNoMoreInteractions(achievementService);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceCreateProgressIfNecessaryMethod() {
-        writerAchievementHandler.handle(postEventDto);
+        skillAcquiredHandler.handle(skillAcquiredEventDto);
         verify(achievementService).createProgressIfNecessary(1L, 1L);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceGetProgressMethod() {
-        writerAchievementHandler.handle(postEventDto);
+        skillAcquiredHandler.handle(skillAcquiredEventDto);
         verify(achievementService).getProgress(1L, 1L);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceIncrementProgressMethod() {
-        writerAchievementHandler.handle(postEventDto);
+        skillAcquiredHandler.handle(skillAcquiredEventDto);
         verify(achievementService).incrementProgress(progress);
     }
 
     @Test
     void handle_shouldInvokeAchievementServiceGiveAchievementMethod() {
-        progress.setCurrentPoints(100);
+        progress.setCurrentPoints(3);
 
-        writerAchievementHandler.handle(postEventDto);
+        skillAcquiredHandler.handle(skillAcquiredEventDto);
         verify(achievementService).giveAchievement(1L, achievement);
     }
 }
