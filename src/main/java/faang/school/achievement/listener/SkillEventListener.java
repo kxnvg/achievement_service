@@ -15,7 +15,7 @@ public class SkillEventListener extends AbstractListener<SkillAcquiredEventDto> 
     public SkillEventListener(
             ObjectMapper objectMapper,
             List<EventHandler<SkillAcquiredEventDto>> handlers,
-            @Value("${spring.achievements.skill.title}") String achievementTitle) {
+            @Value("${spring.achievements.skill.master.title}") String achievementTitle) {
         super(objectMapper, handlers, achievementTitle);
     }
 

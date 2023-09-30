@@ -1,6 +1,7 @@
 package faang.school.achievement.config;
 
 import faang.school.achievement.listener.AchievementEventListener;
+import faang.school.achievement.listener.CommentEventListener;
 import faang.school.achievement.listener.MentorshipStartEventListener;
 import faang.school.achievement.listener.PostWriterEventListener;
 import faang.school.achievement.listener.SkillEventListener;
