@@ -2,30 +2,31 @@ package faang.school.achievement.listener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.achievement.listener.event.InviteSentEvent;
-import lombok.Data;
+import faang.school.achievement.dto.InviteSentEventDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-@Service
-@Data
+@Component
+@RequiredArgsConstructor
+@Slf4j
 public class InviteEventListener implements MessageListener {
+
     private final ObjectMapper objectMapper;
-    private List<InviteSentEvent> eventList = new ArrayList<>();
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String eventString = String.valueOf(message.getBody());
-        InviteSentEvent event;
+        log.info("InviteEventListener has received a new message from Redis");
+        InviteSentEventDto event;
         try {
-            event = objectMapper.readValue(eventString, InviteSentEvent.class);
-        } catch (JsonProcessingException e) {
+            event = objectMapper.readValue(message.getBody(), InviteSentEventDto.class);
+        } catch (IOException e) {
+            log.error("IOException while parsing message in InviteEventListener...");
             throw new RuntimeException(e);
         }
-        eventList.add(event);
     }
 }
