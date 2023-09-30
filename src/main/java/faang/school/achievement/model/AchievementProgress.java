@@ -3,14 +3,16 @@ package faang.school.achievement.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -48,5 +50,22 @@ public class AchievementProgress {
 
     public void increment() {
         currentPoints++;
+    }
+
+    @Override
+    public String toString() {
+        return "AchievementProgress{" +
+                "id=" + id +
+                ", achievement=" + achievement.getTitle() +
+                ", userId=" + userId +
+                ", currentPoints=" + currentPoints +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", version=" + version +
+                '}';
+    }
+
+    public long getCurrentPoints() {
+        return currentPoints;
     }
 }
