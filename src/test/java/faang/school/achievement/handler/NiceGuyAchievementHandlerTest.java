@@ -57,7 +57,7 @@ class NiceGuyAchievementHandlerTest {
     }
 
     @Test
-    public void testHandler() {
+    void testHandler() {
         Mockito.when(achievementService.getAchievement(titleAchievement)).thenReturn(achievement);
 
         Mockito.when(userAchievementService.hasAchievement(recommendationEventDto.getAuthorId(), achievement.getId())).thenReturn(false);
@@ -70,7 +70,7 @@ class NiceGuyAchievementHandlerTest {
         Mockito.when(achievementProgressService.updateProgress(achievementProgress)).thenReturn(achievementProgress);
         Mockito.when(userAchievementService.hasAchievement(recommendationEventDto.getAuthorId(), achievement.getId())).thenReturn(false);
 
-        niceGuyAchievementHandler.handle(recommendationEventDto);
+        niceGuyAchievementHandler.handle(recommendationEventDto.getAuthorId());
 
         Mockito.verify(userAchievementService, Mockito.times(1))
                 .hasAchievement(recommendationEventDto.getAuthorId(), achievement.getId());
