@@ -1,6 +1,7 @@
 package faang.school.achievement.config;
 
 
+import faang.school.achievement.listener.PostEventListener;
 import faang.school.achievement.listener.RecommendationEventListener;
 import faang.school.achievement.listener.InviteEventListener;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,12 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.recommendation}")
     private String recommendationChannel;
-  
+
     @Value("${spring.data.redis.channels.invite}")
     private String inviteEventChannelName;
+
+    @Value("${spring.data.redis.channels.post_achievement}")
+    private String postEventChannel;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -39,7 +43,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter recommendationEventAdapter (RecommendationEventListener recommendationEventListener) {
+    public MessageListenerAdapter recommendationEventAdapter(RecommendationEventListener recommendationEventListener) {
         return new MessageListenerAdapter(recommendationEventListener, "onMessage");
     }
 
@@ -49,11 +53,19 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter, MessageListenerAdapter inviteEventAdapter) {
+    public MessageListenerAdapter postEventAdapter(PostEventListener postEventListener) {
+        return new MessageListenerAdapter(postEventListener, "onMessage");
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
+                                                 MessageListenerAdapter inviteEventAdapter,
+                                                 MessageListenerAdapter postEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(inviteEventAdapter, topicInviteEvent());
+        container.addMessageListener(postEventAdapter, topicPostEvent());
         return container;
     }
 
@@ -61,10 +73,15 @@ public class RedisConfig {
     ChannelTopic topicRecommendation() {
         return new ChannelTopic(recommendationChannel);
     }
-  
-   @Bean
+
+    @Bean
+    ChannelTopic topicPostEvent() {
+        return new ChannelTopic(postEventChannel);
+    }
+
+    @Bean
     ChannelTopic topicInviteEvent() {
         return new ChannelTopic(inviteEventChannelName);
     }
- 
+
 }
