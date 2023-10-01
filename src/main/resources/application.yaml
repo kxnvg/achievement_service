@@ -21,12 +21,13 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
+      channels:
         achievement: achievement_channel
         follower: follower_channel
         post: post_channel
         invitation_channel:
           name: invitation_channel
+
 
 async:
   thread-pool:
@@ -45,3 +46,13 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+achievement-service:
+  follower-handler:
+    thread-pool:
+      corePoolSize: 1
+      maximumPoolSize: 10
+      keepAliveTime: 0
+  achievement:
+    followers:
+      name: subscribers

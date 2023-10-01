@@ -1,11 +1,12 @@
 package faang.school.achievement.config;
 
+import faang.school.achievement.listener.FollowerEventListener;
 import faang.school.achievement.listener.InviteEventListener;
+import faang.school.achievement.listener.PostEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -19,22 +20,24 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    private final MessageListener postEventListener;
+    private final PostEventListener postEventListener;
+    private final FollowerEventListener followerEventListener;
     private final InviteEventListener inviteEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value("${spring.data.redis.channel.post}")
+    @Value("${spring.data.redis.channels.post}")
     private String postTopicName;
-    @Value("spring.data.redis.channels.invitation_channel.name")
+    @Value("${spring.data.redis.channels.follower}")
+    private String followerTopicName;
+    @Value("${spring.data.redis.channels.invitation_channel.name}")
     private String invitationTopicName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-
         return new JedisConnectionFactory(config);
     }
 
@@ -43,8 +46,8 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(postEventListener), new ChannelTopic(postTopicName));
+        container.addMessageListener(new MessageListenerAdapter(followerEventListener), new ChannelTopic(followerTopicName));
         container.addMessageListener(new MessageListenerAdapter(inviteEventListener), new ChannelTopic(invitationTopicName));
-
         return container;
     }
 

@@ -2,6 +2,9 @@ package faang.school.achievement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,6 +20,17 @@ import java.util.concurrent.Executors;
 @EnableFeignClients("faang.school.achievement.client")
 @EnableAsync
 @EnableRetry
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Achievement Service",
+                version = "1.0.0",
+                description = "OpenApi documentation for Achievement Service",
+                contact = @Contact(
+                        name = "Faang School",
+                        url = "https://faang.school/"
+                )
+        )
+)
 public class AchievementServiceApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder(AchievementServiceApp.class)
