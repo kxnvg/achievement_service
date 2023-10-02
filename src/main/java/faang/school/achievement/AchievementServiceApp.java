@@ -13,9 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 @SpringBootApplication
 @EnableFeignClients("faang.school.achievement.client")
 @EnableAsync
