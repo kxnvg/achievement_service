@@ -44,9 +44,4 @@ public class AchievementServiceApp {
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
-
-    @Bean
-    public Executor eventHandleExecutor() {
-        return Executors.newFixedThreadPool(5);
-    }
 }
