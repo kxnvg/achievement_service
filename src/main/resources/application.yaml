@@ -54,5 +54,7 @@ achievement-service:
       maximumPoolSize: 10
       keepAliveTime: 0
   achievement:
+    organizer:
+      name: Organizer
     followers:
       name: subscribers
