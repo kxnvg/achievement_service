@@ -1,9 +1,6 @@
 package faang.school.achievement.handler;
 
-import faang.school.achievement.dto.EventPostDto;
 import faang.school.achievement.dto.InviteSentEventDto;
-import faang.school.achievement.model.Achievement;
-import faang.school.achievement.service.AchievementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
