@@ -25,7 +25,7 @@ public abstract class AbstractHandler<T> implements EventHandler<T> {
     public void handle(Long userId) {
         Achievement achievement = achievementService.getAchievement(title);
 
-        boolean existsAchievement = userAchievementService.hasAchievement(achievement.getId(), userId);
+        boolean existsAchievement = userAchievementService.hasAchievement(userId, achievement.getId());
 
         if (!existsAchievement) {
             AchievementProgress achievementProgress = achievementProgressService.getProgress(userId, achievement.getId());
