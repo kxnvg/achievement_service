@@ -1,6 +1,7 @@
 package faang.school.achievement.config;
 
 import faang.school.achievement.listener.AchievementEventListener;
+import faang.school.achievement.listener.CommentEventListener;
 import faang.school.achievement.listener.MentorshipStartEventListener;
 import faang.school.achievement.listener.PostWriterEventListener;
 import faang.school.achievement.listener.SkillEventListener;
@@ -35,6 +36,8 @@ public class RedisConfig {
     private String postChannel;
     @Value("${spring.data.redis.channels.achievement}")
     private String achievementChannel;
+    @Value("${spring.data.redis.channels.comment}")
+    private String commentChanel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -62,6 +65,11 @@ public class RedisConfig {
         return new MessageListenerAdapter(achievementEventListener);
     }
 
+    @Bean(name = "commentAdapter")
+    public MessageListenerAdapter commentAdapter(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
     @Bean
     public ChannelTopic skillTopic() {
         return new ChannelTopic(skillChannel);
@@ -77,6 +85,11 @@ public class RedisConfig {
         return new ChannelTopic(postChannel);
     }
 
+    @Bean
+    public ChannelTopic commentTopic() {
+        return new ChannelTopic(commentChanel);
+    }
+
 
     @Bean
     public ChannelTopic achievementTopic() {
@@ -87,13 +100,15 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer(@Qualifier("skillAdapter") MessageListenerAdapter skillAdapter,
                                                         @Qualifier("mentorshipAdapter") MessageListenerAdapter mentorshipAdapter,
                                                         @Qualifier("postAdapter") MessageListenerAdapter postAdapter,
-                                                        @Qualifier("achievementAdapter") MessageListenerAdapter achievementAdapter) {
+                                                        @Qualifier("achievementAdapter") MessageListenerAdapter achievementAdapter,
+                                                        @Qualifier("commentAdapter") MessageListenerAdapter commentAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(skillAdapter, skillTopic());
         container.addMessageListener(mentorshipAdapter, mentorshipTopic());
         container.addMessageListener(postAdapter, postTopic());
         container.addMessageListener(achievementAdapter, achievementTopic());
+        container.addMessageListener(commentAdapter, commentTopic());
         return container;
     }
 

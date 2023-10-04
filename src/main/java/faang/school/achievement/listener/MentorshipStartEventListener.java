@@ -17,7 +17,7 @@ public class MentorshipStartEventListener extends AbstractListener<MentorshipSta
     public MentorshipStartEventListener(
             ObjectMapper objectMapper,
             List<EventHandler<MentorshipStartEventDto>> eventHandlers,
-            @Value("${spring.achievements.mentorship.title}") String mentorshipChannel) {
+            @Value("${spring.achievements.mentorship.sensei.title}") String mentorshipChannel) {
         super(objectMapper, eventHandlers, mentorshipChannel);
     }
 
