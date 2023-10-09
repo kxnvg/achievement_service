@@ -25,6 +25,9 @@ spring:
         achievement: achievement_channel
         follower: follower_channel
         post: post_channel
+        invitation_channel:
+          name: invitation_channel
+
 
 async:
   thread-pool:
@@ -51,5 +54,7 @@ achievement-service:
       maximumPoolSize: 10
       keepAliveTime: 0
   achievement:
+    organizer:
+      name: Organizer
     followers:
       name: subscribers

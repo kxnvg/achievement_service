@@ -27,4 +27,15 @@ public class SpringAsyncConfig {
         executor.initialize();
         return executor;
     }
+
+    @Bean("inviteSentEventThreadPoolExecutor")
+    public ThreadPoolTaskExecutor inviteSentEventThreadPoolExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
+        executor.setCorePoolSize(corePoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(queueCapacity);
+        executor.initialize();
+        return executor;
+    }
 }
