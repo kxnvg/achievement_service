@@ -1,10 +1,6 @@
 package faang.school.achievement.config;
 
-import faang.school.achievement.listener.AchievementEventListener;
-import faang.school.achievement.listener.CommentEventListener;
-import faang.school.achievement.listener.MentorshipStartEventListener;
-import faang.school.achievement.listener.PostWriterEventListener;
-import faang.school.achievement.listener.SkillEventListener;
+import faang.school.achievement.listener.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,6 +34,8 @@ public class RedisConfig {
     private String achievementChannel;
     @Value("${spring.data.redis.channels.comment}")
     private String commentChanel;
+    @Value("${spring.data.redis.channels.profile_pic_channel}")
+    private String profilePicChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -70,6 +68,11 @@ public class RedisConfig {
         return new MessageListenerAdapter(commentEventListener);
     }
 
+    @Bean(name = "profilePicAdapter")
+    public MessageListenerAdapter profilePicAdapter(ProfilePicEventListener profilePicEventListener) {
+        return new MessageListenerAdapter(profilePicEventListener);
+    }
+
     @Bean
     public ChannelTopic skillTopic() {
         return new ChannelTopic(skillChannel);
@@ -97,11 +100,15 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic profilePicTopic() { return new ChannelTopic(profilePicChannel); }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer(@Qualifier("skillAdapter") MessageListenerAdapter skillAdapter,
                                                         @Qualifier("mentorshipAdapter") MessageListenerAdapter mentorshipAdapter,
                                                         @Qualifier("postAdapter") MessageListenerAdapter postAdapter,
                                                         @Qualifier("achievementAdapter") MessageListenerAdapter achievementAdapter,
-                                                        @Qualifier("commentAdapter") MessageListenerAdapter commentAdapter) {
+                                                        @Qualifier("commentAdapter") MessageListenerAdapter commentAdapter,
+                                                        @Qualifier("profilePicAdapter") MessageListenerAdapter profilePicAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(skillAdapter, skillTopic());
@@ -109,6 +116,7 @@ public class RedisConfig {
         container.addMessageListener(postAdapter, postTopic());
         container.addMessageListener(achievementAdapter, achievementTopic());
         container.addMessageListener(commentAdapter, commentTopic());
+        container.addMessageListener(profilePicAdapter, profilePicTopic());
         return container;
     }
 

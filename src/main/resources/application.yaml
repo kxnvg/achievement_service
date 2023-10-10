@@ -27,6 +27,7 @@ spring:
         post: post-channel
         mentorship_channel: mentorship-accepted-channel
         comment: comment-channel
+        profile_pic_channel: profile-picture-channel
 
   async:
     corePoolSize: 8
@@ -56,6 +57,10 @@ spring:
     comment:
       expert:
         title: Expert
+
+    profile:
+      handsome:
+        title: Handsome
 
 server:
   port: 8085
