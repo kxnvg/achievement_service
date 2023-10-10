@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,8 +25,11 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.recommendation_chanel.name}")
     private String recommendationChannel;
 
-    @Value("${spring.data.redis.channel.projectTopic}")
+    @Value("${spring.data.redis.channels.follower_chanel.name}")
     private String projectChannelName;
+
+    @Value("${spring.data.redis.channels.achievement_chanel.name}")
+    private String achievementChannelName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -76,4 +78,8 @@ public class RedisConfig {
         return new ChannelTopic(projectChannelName);
     }
 
+    @Bean
+    ChannelTopic achievementTopic() {
+        return new ChannelTopic(achievementChannelName);
+    }
 }

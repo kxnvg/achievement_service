@@ -1,7 +1,9 @@
 package faang.school.achievement.handler;
 
+import faang.school.achievement.dto.UserAchievementEventDto;
 import faang.school.achievement.model.Achievement;
 import faang.school.achievement.model.AchievementProgress;
+import faang.school.achievement.publisher.AchievementEventPublisher;
 import faang.school.achievement.service.AchievementProgressService;
 import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.UserAchievementService;
@@ -17,6 +19,8 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
     private final AchievementService achievementService;
     private final AchievementProgressService achievementProgressService;
     private final UserAchievementService userAchievementService;
+
+    private final AchievementEventPublisher achievementEventPublisher;
     private final String title;
 
     @Async("taskExecutor")
@@ -36,6 +40,7 @@ public abstract class AbstractAchievementHandler<T> implements EventHandler<T> {
 
         if (progress.getCurrentPoints() == achievement.getPoints()) {
             userAchievementService.createUserAchievementIfNecessary(userId, achievementId);
+            achievementEventPublisher.publish(new UserAchievementEventDto(title, userId));
             log.info("User: {} has earned the achievement: {}", userId, title);
         }
     }
