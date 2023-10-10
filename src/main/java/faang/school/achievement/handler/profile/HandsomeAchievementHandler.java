@@ -3,7 +3,7 @@ package faang.school.achievement.handler.profile;
 import faang.school.achievement.cache.AchievementCache;
 import faang.school.achievement.dto.ProfilePicEventDto;
 import faang.school.achievement.service.AchievementService;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 
 public class HandsomeAchievementHandler extends AbstractProfileEventHandler<ProfilePicEventDto>{
     @Value("${spring.achievements.profile.handsome.title}")
