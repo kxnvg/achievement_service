@@ -27,6 +27,7 @@ spring:
         recommendation: recommendation_channel
         invite: invitation-channel
         post_achievement: post-achievement-channel
+        comment: comment_channel
 
   config:
     import: classpath:resource_achievement/achievement.yaml
@@ -47,3 +48,7 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+achievement:
+    title:
+      expert: expert
