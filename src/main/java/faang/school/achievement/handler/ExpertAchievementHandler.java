@@ -6,8 +6,8 @@ import faang.school.achievement.service.AchievementService;
 import faang.school.achievement.service.UserAchievementService;
 import org.springframework.beans.factory.annotation.Value;
 
-public class CommentEventHandler extends AbstractHandler<CommentEventDto>{
-    public CommentEventHandler(AchievementService achievementService,
+public class ExpertAchievementHandler extends AbstractHandler<CommentEventDto>{
+    public ExpertAchievementHandler(AchievementService achievementService,
                                UserAchievementService userAchievementService,
                                AchievementProgressService achievementProgressService,
                                @Value("${expert.title}") String title) {

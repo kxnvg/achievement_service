@@ -37,7 +37,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.post_achievement}")
     private String postEventChannel;
 
-    @Value("${spring.data.redis.channels.comment_channel}")
+    @Value("${spring.data.redis.channels.comment}")
     private String commentEventChannel;
 
     @Bean
