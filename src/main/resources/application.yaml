@@ -26,6 +26,7 @@ spring:
         follower: follower_channel
         recommendation: recommendation_channel
         invite: invitation-channel
+        skill: skill-channel
 
   config:
     import: classpath:resource_achievement/achievement.yaml
