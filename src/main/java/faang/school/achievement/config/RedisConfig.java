@@ -76,7 +76,7 @@ public class RedisConfig {
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(inviteEventAdapter, topicInviteEvent());
         container.addMessageListener(postEventAdapter, topicPostEvent());
-        container.addMessageListener(commentEventAdapter, topicPostEvent());
+        container.addMessageListener(commentEventAdapter, topicCommentEvent());
         return container;
     }
 
