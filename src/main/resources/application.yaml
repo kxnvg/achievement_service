@@ -27,6 +27,7 @@ spring:
         recommendation: recommendation_channel
         invite: invitation-channel
         post_achievement: post-achievement-channel
+        comment: comment-channel
 
   config:
     import: classpath:resource_achievement/achievement.yaml

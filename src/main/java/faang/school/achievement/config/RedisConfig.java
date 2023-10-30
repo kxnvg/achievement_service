@@ -1,6 +1,7 @@
 package faang.school.achievement.config;
 
 
+import faang.school.achievement.listener.CommentEventListener;
 import faang.school.achievement.listener.PostEventListener;
 import faang.school.achievement.listener.RecommendationEventListener;
 import faang.school.achievement.listener.InviteEventListener;
@@ -36,6 +37,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.post_achievement}")
     private String postEventChannel;
 
+    @Value("${spring.data.redis.channels.comment}")
+    private String commentEventChannel;
+
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -58,14 +62,21 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter commentEventAdapter(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener, "onMessage");
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
                                                  MessageListenerAdapter inviteEventAdapter,
-                                                 MessageListenerAdapter postEventAdapter) {
+                                                 MessageListenerAdapter postEventAdapter,
+                                                 MessageListenerAdapter commentEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(inviteEventAdapter, topicInviteEvent());
         container.addMessageListener(postEventAdapter, topicPostEvent());
+        container.addMessageListener(commentEventAdapter, topicCommentEvent());
         return container;
     }
 
@@ -84,4 +95,8 @@ public class RedisConfig {
         return new ChannelTopic(inviteEventChannelName);
     }
 
+    @Bean
+    ChannelTopic topicCommentEvent() {
+        return new ChannelTopic(commentEventChannel);
+    }
 }
