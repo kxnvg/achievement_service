@@ -5,6 +5,7 @@ import faang.school.achievement.listener.CommentEventListener;
 import faang.school.achievement.listener.PostEventListener;
 import faang.school.achievement.listener.RecommendationEventListener;
 import faang.school.achievement.listener.InviteEventListener;
+import faang.school.achievement.listener.SkillEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.comment}")
     private String commentEventChannel;
 
+    @Value("${spring.data.redis.channels.skill}")
+    private String skillChannelName;
+
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -71,12 +75,21 @@ public class RedisConfig {
                                                  MessageListenerAdapter inviteEventAdapter,
                                                  MessageListenerAdapter postEventAdapter,
                                                  MessageListenerAdapter commentEventAdapter) {
+    public MessageListenerAdapter skillAcquiredEventAdapter (SkillEventListener skillEventListener) {
+        return new MessageListenerAdapter(skillEventListener, "onMessage");
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
+                                                 MessageListenerAdapter inviteEventAdapter,
+                                                 MessageListenerAdapter skillAcquiredEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(inviteEventAdapter, topicInviteEvent());
         container.addMessageListener(postEventAdapter, topicPostEvent());
         container.addMessageListener(commentEventAdapter, topicCommentEvent());
+        container.addMessageListener(skillAcquiredEventAdapter, topicSkill());
         return container;
     }
 
@@ -99,4 +112,7 @@ public class RedisConfig {
     ChannelTopic topicCommentEvent() {
         return new ChannelTopic(commentEventChannel);
     }
+
+    @Bean
+    ChannelTopic topicSkill(){ return new ChannelTopic(skillChannelName);}
 }
