@@ -69,12 +69,7 @@ public class RedisConfig {
     public MessageListenerAdapter commentEventAdapter(CommentEventListener commentEventListener) {
         return new MessageListenerAdapter(commentEventListener, "onMessage");
     }
-
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
-                                                 MessageListenerAdapter inviteEventAdapter,
-                                                 MessageListenerAdapter postEventAdapter,
-                                                 MessageListenerAdapter commentEventAdapter) {
     public MessageListenerAdapter skillAcquiredEventAdapter (SkillEventListener skillEventListener) {
         return new MessageListenerAdapter(skillEventListener, "onMessage");
     }
